@@ -15,6 +15,7 @@ import {
   MapPin,
   LogOut,
   SlidersHorizontal,
+  Crown,
 } from 'lucide-react';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -39,6 +40,8 @@ export const Header: React.FC = () => {
   const location = useLocation();
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<HTMLDivElement>(null);
+
+  const isUserAdmin = currentUser?.role === 'admin';
 
   // Sticky header shadow on scroll
   useEffect(() => {
@@ -102,7 +105,7 @@ export const Header: React.FC = () => {
   };
 
   const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `text-sm font-semibold transition-all px-3 py-1.5 rounded-full ${
+    `text-xs lg:text-sm font-semibold transition-all px-3 py-1.5 rounded-full ${
       isActive
         ? 'text-[#075B2A] bg-[#EFF7E9] font-bold shadow-xs'
         : 'text-[#18251B] hover:text-[#075B2A] hover:bg-[#EFF7E9]/50'
@@ -111,36 +114,36 @@ export const Header: React.FC = () => {
   return (
     <header className="w-full z-40 sticky top-0 transition-all duration-300">
       {/* 1. Top Announcement Bar */}
-      <div className="bg-[#075B2A] text-white text-[11px] sm:text-xs py-1.5 px-4">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <span className="bg-[#8CCB55] text-[#06451F] text-[10px] font-extrabold px-1.5 py-0.5 rounded">
+      <div className="bg-[#075B2A] text-white text-[11px] sm:text-xs py-1.5 px-3 sm:px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 sm:gap-2 truncate">
+            <span className="bg-[#8CCB55] text-[#06451F] text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded shrink-0">
               FREE SHIPPING
             </span>
-            <span className="hidden sm:inline font-medium text-emerald-100">
+            <span className="hidden sm:inline font-medium text-emerald-100 truncate">
               On all traditional & organic grocery orders above ₹499
             </span>
-            <span className="sm:hidden font-medium text-emerald-100">
+            <span className="sm:hidden font-medium text-emerald-100 truncate text-[10px]">
               Free delivery above ₹499
             </span>
           </div>
 
-          <div className="flex items-center gap-4 text-emerald-100">
+          <div className="flex items-center gap-3 sm:gap-4 text-emerald-100 shrink-0 text-[11px]">
             <a
               href="https://wa.me/919876543210"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1 hover:text-white transition-colors"
+              className="hidden md:flex items-center gap-1 hover:text-white transition-colors"
             >
               <MessageCircle className="w-3.5 h-3.5 text-[#8CCB55]" />
-              <span className="hidden md:inline">WhatsApp: +91 98765 43210</span>
+              <span>WhatsApp: +91 98765 43210</span>
             </a>
             <span className="hidden md:inline text-emerald-300/40">|</span>
             <Link
               to="/track-order"
-              className="hover:text-white transition-colors flex items-center gap-1"
+              className="hover:text-white transition-colors flex items-center gap-1 font-semibold"
             >
-              <Package className="w-3.5 h-3.5" />
+              <Package className="w-3.5 h-3.5 text-[#8CCB55]" />
               <span>Track Order</span>
             </Link>
           </div>
@@ -150,16 +153,16 @@ export const Header: React.FC = () => {
       {/* 2. Main Navigation Bar */}
       <nav
         className={`bg-white border-b border-[#E1E9DC] transition-all duration-300 ${
-          isScrolled ? 'shadow-md py-2.5' : 'py-3.5'
+          isScrolled ? 'shadow-md py-2' : 'py-2.5 sm:py-3.5'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-between gap-2 sm:gap-4">
             {/* Mobile Menu Toggle & Logo */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 sm:gap-3">
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2 text-[#18251B] hover:text-[#075B2A] hover:bg-[#EFF7E9] rounded-xl transition-colors"
+                className="lg:hidden p-1.5 text-[#18251B] hover:text-[#075B2A] hover:bg-[#EFF7E9] rounded-xl transition-colors cursor-pointer"
                 aria-label="Toggle navigation menu"
               >
                 {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
@@ -170,13 +173,13 @@ export const Header: React.FC = () => {
                 <img
                   src="/assets/graminum-logo.png"
                   alt="Graminum (గ్రామీణం)"
-                  className="h-10 sm:h-12 w-auto object-contain transition-transform group-hover:scale-102"
+                  className="h-9 sm:h-11 md:h-12 w-auto object-contain transition-transform group-hover:scale-102"
                 />
-                <div className="hidden sm:flex flex-col">
-                  <span className="text-xl font-extrabold tracking-tight text-[#075B2A] font-serif-title leading-tight">
+                <div className="hidden xs:flex sm:flex flex-col">
+                  <span className="text-base sm:text-xl font-extrabold tracking-tight text-[#075B2A] font-serif-title leading-tight">
                     GRAMINUM
                   </span>
-                  <span className="text-[11px] text-[#4D963C] font-telugu font-semibold -mt-1 tracking-wider">
+                  <span className="text-[10px] sm:text-[11px] text-[#4D963C] font-telugu font-semibold -mt-1 tracking-wider">
                     గ్రామీణం ఆర్గానిక్స్
                   </span>
                 </div>
@@ -262,7 +265,7 @@ export const Header: React.FC = () => {
             </div>
 
             {/* Right Action Controls: Wishlist, User, Cart */}
-            <div className="flex items-center gap-2 sm:gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3">
               {/* Wishlist Link */}
               <Link
                 to="/shop?filter=wishlist"
@@ -281,7 +284,7 @@ export const Header: React.FC = () => {
               <div ref={dropdownRef} className="relative">
                 <button
                   onClick={() => setIsUserDropdownOpen(!isUserDropdownOpen)}
-                  className="flex items-center gap-1.5 p-2 text-[#18251B] hover:text-[#075B2A] hover:bg-[#EFF7E9] rounded-xl transition-colors"
+                  className="flex items-center gap-1 p-2 text-[#18251B] hover:text-[#075B2A] hover:bg-[#EFF7E9] rounded-xl transition-colors cursor-pointer"
                   aria-label="User account menu"
                 >
                   <UserIcon className="w-5 h-5" />
@@ -297,7 +300,7 @@ export const Header: React.FC = () => {
                     {isAuthenticated ? (
                       <>
                         <div className="px-4 py-2.5 bg-[#EFF7E9] border-b border-[#E1E9DC]">
-                          <p className="text-xs text-[#667267]">Signed in as</p>
+                          <p className="text-[10px] text-[#667267] uppercase font-bold tracking-wider">Signed in as</p>
                           <p className="text-sm font-bold text-[#075B2A] truncate">
                             {currentUser?.name}
                           </p>
@@ -312,37 +315,36 @@ export const Header: React.FC = () => {
                           <span>My Account</span>
                         </Link>
                         <Link
-                          to="/account/orders"
-                          onClick={() => setIsUserDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-[#18251B] hover:bg-[#EFF7E9] hover:text-[#075B2A] transition-colors"
-                        >
-                          <Package className="w-4 h-4 text-[#4D963C]" />
-                          <span>My Orders</span>
-                        </Link>
-                        <Link
                           to="/track-order"
                           onClick={() => setIsUserDropdownOpen(false)}
                           className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-[#18251B] hover:bg-[#EFF7E9] hover:text-[#075B2A] transition-colors"
                         >
-                          <MapPin className="w-4 h-4 text-[#4D963C]" />
+                          <Package className="w-4 h-4 text-[#4D963C]" />
                           <span>Track Live Order</span>
                         </Link>
-                        <div className="border-t border-gray-100 my-1"></div>
-                        <Link
-                          to="/admin"
-                          onClick={() => setIsUserDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-emerald-800 hover:bg-emerald-50 transition-colors"
-                        >
-                          <ShieldCheck className="w-4 h-4 text-[#075B2A]" />
-                          <span>Admin Portal</span>
-                        </Link>
+
+                        {/* Admin Portal is ONLY shown if user has admin role */}
+                        {isUserAdmin && (
+                          <>
+                            <div className="border-t border-gray-100 my-1"></div>
+                            <Link
+                              to="/admin"
+                              onClick={() => setIsUserDropdownOpen(false)}
+                              className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-emerald-900 bg-emerald-50/70 hover:bg-emerald-100 transition-colors"
+                            >
+                              <Crown className="w-4 h-4 text-amber-500" />
+                              <span>Admin Console</span>
+                            </Link>
+                          </>
+                        )}
+
                         <div className="border-t border-gray-100 my-1"></div>
                         <button
                           onClick={() => {
                             logoutCustomer();
                             setIsUserDropdownOpen(false);
                           }}
-                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors text-left"
+                          className="w-full flex items-center gap-2.5 px-4 py-2 text-xs font-semibold text-red-600 hover:bg-red-50 transition-colors text-left cursor-pointer"
                         >
                           <LogOut className="w-4 h-4" />
                           <span>Sign Out</span>
@@ -379,14 +381,6 @@ export const Header: React.FC = () => {
                           <Package className="w-4 h-4 text-[#4D963C]" />
                           <span>Track Order</span>
                         </Link>
-                        <Link
-                          to="/admin/login"
-                          onClick={() => setIsUserDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-emerald-800 hover:bg-emerald-50 transition-colors"
-                        >
-                          <ShieldCheck className="w-4 h-4 text-[#075B2A]" />
-                          <span>Admin Portal</span>
-                        </Link>
                       </>
                     )}
                   </div>
@@ -396,7 +390,7 @@ export const Header: React.FC = () => {
               {/* Shopping Cart Button */}
               <Link
                 to="/cart"
-                className="flex items-center gap-2 bg-[#075B2A] hover:bg-[#06451F] text-white text-xs sm:text-sm font-bold px-3.5 sm:px-4 py-2 rounded-xl shadow-sm transition-all active:scale-95 group"
+                className="flex items-center gap-1.5 sm:gap-2 bg-[#075B2A] hover:bg-[#06451F] text-white text-xs sm:text-sm font-bold px-3 sm:px-4 py-2 rounded-xl shadow-sm transition-all active:scale-95 group"
                 aria-label={`Shopping cart with ${itemCount} items`}
               >
                 <div className="relative">
@@ -415,7 +409,7 @@ export const Header: React.FC = () => {
           </div>
 
           {/* Mobile Search Bar (under logo on small screens) */}
-          <div className="mt-2.5 md:hidden">
+          <div className="mt-2 md:hidden">
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
@@ -440,7 +434,7 @@ export const Header: React.FC = () => {
           ></div>
 
           {/* Drawer Content */}
-          <div className="relative w-4/5 max-w-sm bg-white h-full shadow-2xl flex flex-col justify-between p-6 z-10 overflow-y-auto">
+          <div className="relative w-4/5 max-w-sm bg-white h-full shadow-2xl flex flex-col justify-between p-5 sm:p-6 z-10 overflow-y-auto">
             <div>
               {/* Drawer Header with Logo */}
               <div className="flex items-center justify-between pb-4 border-b border-[#E1E9DC]">
@@ -461,16 +455,16 @@ export const Header: React.FC = () => {
                 </div>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="p-1.5 text-gray-500 hover:text-gray-800 rounded-lg"
+                  className="p-1.5 text-gray-500 hover:text-gray-800 rounded-lg cursor-pointer"
                 >
                   <X className="w-5 h-5" />
                 </button>
               </div>
 
-              {/* Categories & Navigation */}
+              {/* Navigation Links */}
               <div className="py-4 space-y-1">
-                <p className="text-[11px] font-bold text-[#667267] uppercase tracking-wider mb-2">
-                  Menu
+                <p className="text-[10px] font-bold text-[#667267] uppercase tracking-wider mb-2">
+                  Navigation
                 </p>
                 <Link
                   to="/"
@@ -485,6 +479,13 @@ export const Header: React.FC = () => {
                   className="block px-3 py-2 text-sm font-bold text-[#18251B] hover:bg-[#EFF7E9] rounded-xl"
                 >
                   Shop All Products
+                </Link>
+                <Link
+                  to="/track-order"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="block px-3 py-2 text-sm font-bold text-[#18251B] hover:bg-[#EFF7E9] rounded-xl"
+                >
+                  Track Order
                 </Link>
                 <Link
                   to="/about"
@@ -511,7 +512,7 @@ export const Header: React.FC = () => {
 
               {/* Shop Categories Quick Links */}
               <div className="py-3 border-t border-[#E1E9DC]">
-                <p className="text-[11px] font-bold text-[#667267] uppercase tracking-wider mb-2">
+                <p className="text-[10px] font-bold text-[#667267] uppercase tracking-wider mb-2">
                   Categories
                 </p>
                 <div className="grid grid-cols-1 gap-1.5">
@@ -559,16 +560,20 @@ export const Header: React.FC = () => {
                 className="flex items-center justify-center gap-2 w-full py-2.5 bg-[#EFF7E9] text-[#075B2A] rounded-xl text-xs font-bold"
               >
                 <UserIcon className="w-4 h-4" />
-                <span>{isAuthenticated ? 'My Account' : 'Customer Login'}</span>
+                <span>{isAuthenticated ? 'My Account' : 'Sign In / Register'}</span>
               </Link>
-              <Link
-                to="/admin/login"
-                onClick={() => setIsMobileMenuOpen(false)}
-                className="flex items-center justify-center gap-2 w-full py-2 bg-[#FBF8EF] text-gray-700 hover:text-[#075B2A] rounded-xl text-xs font-semibold border border-[#E1E9DC]"
-              >
-                <ShieldCheck className="w-4 h-4 text-[#075B2A]" />
-                <span>Admin Portal</span>
-              </Link>
+
+              {/* Admin Portal is ONLY displayed if the user has admin role */}
+              {isUserAdmin && (
+                <Link
+                  to="/admin"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center justify-center gap-2 w-full py-2 bg-emerald-100 text-emerald-900 font-extrabold rounded-xl text-xs border border-emerald-300"
+                >
+                  <Crown className="w-4 h-4 text-amber-600" />
+                  <span>Admin Management Console</span>
+                </Link>
+              )}
             </div>
           </div>
         </div>

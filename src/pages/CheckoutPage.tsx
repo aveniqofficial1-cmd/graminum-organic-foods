@@ -159,11 +159,10 @@ export const CheckoutPage: React.FC = () => {
 
     setTimeout(() => {
       setIsPlacingOrder(false);
-      // Attempt opening WhatsApp in a new tab for instant convenience
       try {
         window.open(whatsappUrl, '_blank');
       } catch {
-        // popup might be blocked, OrderConfirmationPage also has direct button
+        // popup might be blocked
       }
       navigate(`/order-confirmation/${newOrder.orderNumber}`);
     }, 600);
@@ -193,17 +192,17 @@ export const CheckoutPage: React.FC = () => {
 
   return (
     <div className="w-full bg-[#FBF8EF] min-h-screen py-6 sm:py-10">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         {/* Breadcrumb */}
         <Breadcrumb items={[{ label: 'Cart', link: '/cart' }, { label: 'Secure Checkout' }]} />
 
         {/* 3-Step Progress Indicator */}
-        <div className="bg-white p-4 sm:p-5 rounded-3xl border border-[#E1E9DC] shadow-xs">
+        <div className="bg-white p-3.5 sm:p-5 rounded-3xl border border-[#E1E9DC] shadow-xs">
           <div className="flex items-center justify-between max-w-xl mx-auto">
             {/* Step 1: Details */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <div
-                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold ${
+                className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold ${
                   checkoutStep >= 1
                     ? 'bg-[#075B2A] text-white shadow-sm'
                     : 'bg-gray-100 text-gray-500'
@@ -212,24 +211,24 @@ export const CheckoutPage: React.FC = () => {
                 1
               </div>
               <span
-                className={`text-xs font-bold ${
+                className={`text-[11px] sm:text-xs font-bold ${
                   checkoutStep >= 1 ? 'text-[#075B2A]' : 'text-gray-400'
                 }`}
               >
-                Delivery Details
+                Delivery
               </span>
             </div>
 
             <div
-              className={`flex-1 h-0.5 mx-2 sm:mx-4 ${
+              className={`flex-1 h-0.5 mx-1.5 sm:mx-4 ${
                 checkoutStep >= 2 ? 'bg-[#075B2A]' : 'bg-[#E1E9DC]'
               }`}
             ></div>
 
             {/* Step 2: Payment */}
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1.5 sm:gap-2">
               <div
-                className={`w-7 h-7 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold ${
+                className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center text-xs font-bold ${
                   checkoutStep >= 2
                     ? 'bg-[#075B2A] text-white shadow-sm'
                     : 'bg-gray-100 text-gray-500'
@@ -238,41 +237,41 @@ export const CheckoutPage: React.FC = () => {
                 2
               </div>
               <span
-                className={`text-xs font-bold ${
+                className={`text-[11px] sm:text-xs font-bold ${
                   checkoutStep >= 2 ? 'text-[#075B2A]' : 'text-gray-400'
                 }`}
               >
-                QR Scanner Payment
+                QR Payment
               </span>
             </div>
 
-            <div className="flex-1 h-0.5 mx-2 sm:mx-4 bg-[#E1E9DC]"></div>
+            <div className="flex-1 h-0.5 mx-1.5 sm:mx-4 bg-[#E1E9DC]"></div>
 
             {/* Step 3: Confirmation */}
-            <div className="flex items-center gap-2">
-              <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-bold">
+            <div className="flex items-center gap-1.5 sm:gap-2">
+              <div className="w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-gray-100 text-gray-400 flex items-center justify-center text-xs font-bold">
                 3
               </div>
-              <span className="text-xs font-bold text-gray-400 hidden sm:inline">
-                WhatsApp Approval
+              <span className="text-[11px] sm:text-xs font-bold text-gray-400">
+                Confirm
               </span>
             </div>
           </div>
         </div>
 
         {/* Main 2-Column Checkout Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           {/* ================= LEFT: STEP FORMS ================= */}
           <div className="lg:col-span-8 space-y-6">
             {/* STEP 1: CONTACT & DELIVERY ADDRESS */}
             {checkoutStep === 1 && (
               <form
                 onSubmit={handleContinueToPayment}
-                className="bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 shadow-sm space-y-6"
+                className="bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-8 shadow-sm space-y-6"
               >
                 {/* 1. Delivery Mode Selection */}
                 <div>
-                  <h2 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider mb-3">
+                  <h2 className="text-xs sm:text-sm font-bold text-[#075B2A] uppercase tracking-wider mb-3">
                     1. Choose Delivery Method
                   </h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -334,7 +333,7 @@ export const CheckoutPage: React.FC = () => {
 
                 {/* 2. Customer Contact Details */}
                 <div className="pt-4 border-t border-[#E1E9DC] space-y-4">
-                  <h2 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider">
+                  <h2 className="text-xs sm:text-sm font-bold text-[#075B2A] uppercase tracking-wider">
                     2. Customer Contact Coordinates
                   </h2>
 
@@ -386,7 +385,7 @@ export const CheckoutPage: React.FC = () => {
                 {/* 3. Shipping Address (If Home Delivery) */}
                 {deliveryMethod === 'Home Delivery' && (
                   <div className="pt-4 border-t border-[#E1E9DC] space-y-4">
-                    <h2 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider">
+                    <h2 className="text-xs sm:text-sm font-bold text-[#075B2A] uppercase tracking-wider">
                       3. Shipping Destination
                     </h2>
 
@@ -457,10 +456,10 @@ export const CheckoutPage: React.FC = () => {
                 )}
 
                 {/* Continue to Payment Button */}
-                <div className="pt-4 border-t border-[#E1E9DC] flex items-center justify-between">
+                <div className="pt-4 border-t border-[#E1E9DC] flex flex-col sm:flex-row items-center justify-between gap-3">
                   <Link
                     to="/cart"
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-gray-800"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-gray-800 order-2 sm:order-1"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Back to Cart</span>
@@ -468,7 +467,7 @@ export const CheckoutPage: React.FC = () => {
 
                   <button
                     type="submit"
-                    className="inline-flex items-center gap-2 bg-[#075B2A] hover:bg-[#06451F] text-white py-3 px-6 rounded-2xl text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#075B2A] hover:bg-[#06451F] text-white py-3 px-6 rounded-2xl text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer order-1 sm:order-2"
                   >
                     <span>Proceed to Scanner Payment</span>
                     <ArrowRight className="w-4 h-4" />
@@ -481,14 +480,14 @@ export const CheckoutPage: React.FC = () => {
             {checkoutStep === 2 && (
               <form
                 onSubmit={handlePlaceOrder}
-                className="bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 shadow-sm space-y-6"
+                className="bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-8 shadow-sm space-y-6"
               >
                 <div className="flex items-center justify-between pb-3 border-b border-[#E1E9DC]">
                   <div>
                     <span className="text-[10px] font-extrabold text-[#4D963C] uppercase tracking-wider">
                       Step 2 of 2
                     </span>
-                    <h2 className="text-base sm:text-lg font-bold text-[#075B2A] font-serif-title">
+                    <h2 className="text-sm sm:text-lg font-bold text-[#075B2A] font-serif-title">
                       Pay via UPI QR Scanner
                     </h2>
                   </div>
@@ -497,47 +496,47 @@ export const CheckoutPage: React.FC = () => {
                     onClick={() => setCheckoutStep(1)}
                     className="text-xs font-bold text-[#075B2A] hover:underline cursor-pointer"
                   >
-                    Edit Delivery Info
+                    Edit Info
                   </button>
                 </div>
 
                 {/* Scanner Payment Showcase Box */}
-                <div className="p-5 sm:p-6 rounded-3xl bg-[#EFF7E9]/70 border-2 border-[#8CCB55] space-y-5">
+                <div className="p-4 sm:p-6 rounded-3xl bg-[#EFF7E9]/70 border-2 border-[#8CCB55] space-y-5">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-[#075B2A] text-white flex items-center justify-center shadow-sm">
+                    <div className="w-10 h-10 rounded-2xl bg-[#075B2A] text-white flex items-center justify-center shadow-sm shrink-0">
                       <QrCode className="w-5 h-5" />
                     </div>
                     <div>
                       <h3 className="text-sm sm:text-base font-black text-[#075B2A]">
                         Scan QR Code & Pay ₹{effectiveTotal}
                       </h3>
-                      <p className="text-xs text-[#667267]">
-                        Google Pay • PhonePe • Paytm • BHIM • Any Bank UPI App
+                      <p className="text-[11px] sm:text-xs text-[#667267]">
+                        Google Pay • PhonePe • Paytm • BHIM • Any UPI App
                       </p>
                     </div>
                   </div>
 
                   {/* QR Code & Merchant Coordinates */}
-                  <div className="bg-white p-5 rounded-2xl border border-[#8CCB55] flex flex-col sm:flex-row items-center gap-6 shadow-xs">
+                  <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#8CCB55] flex flex-col sm:flex-row items-center gap-5 sm:gap-6 shadow-xs">
                     {/* Live QR Image */}
                     <div className="p-3 bg-[#FBF8EF] rounded-2xl border-2 border-[#075B2A]/20 text-center shrink-0 shadow-xs">
                       <img
                         src={qrCodeUrl}
                         alt="Graminum UPI QR Scanner"
-                        className="w-44 h-44 sm:w-48 sm:h-48 object-contain mx-auto rounded-lg"
+                        className="w-40 h-40 sm:w-48 sm:h-48 object-contain mx-auto rounded-lg"
                       />
-                      <span className="inline-block text-[10px] font-bold text-[#075B2A] bg-white px-2 py-0.5 rounded-full mt-2 border border-[#E1E9DC]">
+                      <span className="inline-block text-[10px] font-bold text-[#075B2A] bg-white px-2.5 py-0.5 rounded-full mt-2 border border-[#E1E9DC]">
                         Amount: ₹{effectiveTotal}
                       </span>
                     </div>
 
                     {/* Step by Step Guide & UPI Details */}
-                    <div className="space-y-3 flex-1 text-xs">
+                    <div className="space-y-3 flex-1 text-xs w-full">
                       <div className="p-3 bg-[#FBF8EF] rounded-xl border border-[#E1E9DC] space-y-1">
                         <p className="text-[10px] text-gray-500 font-bold uppercase">Official Merchant</p>
                         <p className="font-extrabold text-[#18251B] text-sm">{settings.merchantName}</p>
-                        <div className="flex items-center justify-between pt-1">
-                          <span className="font-mono text-xs text-[#075B2A] font-bold bg-white px-2 py-1 rounded border border-[#E1E9DC]">
+                        <div className="flex items-center justify-between pt-1 flex-wrap gap-1">
+                          <span className="font-mono text-xs text-[#075B2A] font-bold bg-white px-2 py-0.5 rounded border border-[#E1E9DC]">
                             {settings.upiId}
                           </span>
                           <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">
@@ -546,25 +545,25 @@ export const CheckoutPage: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="space-y-1.5 text-gray-600 leading-relaxed">
+                      <div className="space-y-1.5 text-gray-600 leading-relaxed text-[11px] sm:text-xs">
                         <div className="flex items-start gap-2">
                           <span className="w-4 h-4 rounded-full bg-[#075B2A] text-white text-[10px] flex items-center justify-center font-bold shrink-0 mt-0.5">
                             1
                           </span>
-                          <span>Open your UPI app & scan the QR code above.</span>
+                          <span>Open any UPI app & scan the QR code.</span>
                         </div>
                         <div className="flex items-start gap-2">
                           <span className="w-4 h-4 rounded-full bg-[#075B2A] text-white text-[10px] flex items-center justify-center font-bold shrink-0 mt-0.5">
                             2
                           </span>
-                          <span>Pay the exact total amount: <strong>₹{effectiveTotal}</strong></span>
+                          <span>Pay exact amount: <strong>₹{effectiveTotal}</strong></span>
                         </div>
                         <div className="flex items-start gap-2">
                           <span className="w-4 h-4 rounded-full bg-[#075B2A] text-white text-[10px] flex items-center justify-center font-bold shrink-0 mt-0.5">
                             3
                           </span>
                           <span>
-                            Click <strong>"Place Order & Share on WhatsApp"</strong> below. All order details will be auto-filled to WhatsApp number <strong>{settings.whatsappNumber}</strong>.
+                            Click <strong>"Place Order & Share on WhatsApp"</strong> to notify admin instantly.
                           </span>
                         </div>
                       </div>
@@ -573,10 +572,10 @@ export const CheckoutPage: React.FC = () => {
 
                   {/* Optional Payment Receipt Attachment on Checkout */}
                   <div className="bg-white p-4 rounded-2xl border border-[#E1E9DC] space-y-3 text-xs">
-                    <div className="flex items-center justify-between">
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
                       <span className="font-bold text-[#18251B] flex items-center gap-1.5">
                         <Upload className="w-4 h-4 text-[#075B2A]" />
-                        <span>Attach Payment Screenshot / UTR Number (Optional)</span>
+                        <span>Payment Screenshot / UTR (Optional)</span>
                       </span>
                       <span className="text-[10px] text-gray-400 font-medium">
                         Speeds up admin approval
@@ -586,7 +585,7 @@ export const CheckoutPage: React.FC = () => {
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
                         <label className="block text-[11px] font-semibold text-gray-600 mb-1">
-                          Payment Screenshot / Receipt:
+                          Payment Screenshot:
                         </label>
                         <input
                           type="file"
@@ -624,7 +623,7 @@ export const CheckoutPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => setReceiptImage('')}
-                          className="text-red-500 hover:text-red-700 text-xs p-1"
+                          className="text-red-500 hover:text-red-700 text-xs p-1 cursor-pointer"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -636,17 +635,17 @@ export const CheckoutPage: React.FC = () => {
                 {/* Submit & WhatsApp Sharing Info */}
                 <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 flex items-start gap-3 text-xs text-amber-900">
                   <MessageCircle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
-                  <p className="leading-relaxed">
+                  <p className="leading-relaxed text-[11px] sm:text-xs">
                     <strong>Auto-Filled WhatsApp Sharing:</strong> When you place this order, we will automatically pre-fill your order summary, item list, address, and amount into WhatsApp to our support team (<strong>{settings.whatsappNumber}</strong>). Our admin will verify the receipt and confirm your order immediately!
                   </p>
                 </div>
 
                 {/* Place Order Button */}
-                <div className="pt-4 border-t border-[#E1E9DC] flex items-center justify-between">
+                <div className="pt-4 border-t border-[#E1E9DC] flex flex-col sm:flex-row items-center justify-between gap-3">
                   <button
                     type="button"
                     onClick={() => setCheckoutStep(1)}
-                    className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-gray-800 cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs font-bold text-gray-500 hover:text-gray-800 cursor-pointer order-2 sm:order-1"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Back to Delivery Info</span>
@@ -655,7 +654,7 @@ export const CheckoutPage: React.FC = () => {
                   <button
                     type="submit"
                     disabled={isPlacingOrder}
-                    className="inline-flex items-center gap-2 bg-[#075B2A] hover:bg-[#06451F] disabled:opacity-50 text-white py-3.5 px-7 rounded-2xl text-xs sm:text-sm font-black shadow-lg transition-all active:scale-95 cursor-pointer"
+                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#075B2A] hover:bg-[#06451F] disabled:opacity-50 text-white py-3.5 px-7 rounded-2xl text-xs sm:text-sm font-black shadow-lg transition-all active:scale-95 cursor-pointer order-1 sm:order-2"
                   >
                     {isPlacingOrder ? (
                       <span>Placing Order...</span>
@@ -673,9 +672,9 @@ export const CheckoutPage: React.FC = () => {
           </div>
 
           {/* ================= RIGHT: ORDER SUMMARY (4 Cols) ================= */}
-          <div className="lg:col-span-4 bg-white p-6 rounded-3xl border border-[#E1E9DC] shadow-sm sticky top-28 space-y-6">
+          <div className="lg:col-span-4 bg-white p-5 sm:p-6 rounded-3xl border border-[#E1E9DC] shadow-sm lg:sticky lg:top-28 space-y-5">
             <div className="flex items-center justify-between pb-3 border-b border-[#E1E9DC]">
-              <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider font-serif-title">
+              <h3 className="text-xs sm:text-sm font-bold text-[#075B2A] uppercase tracking-wider font-serif-title">
                 Order Summary ({items.length} items)
               </h3>
               <Link to="/cart" className="text-xs font-bold text-[#075B2A] hover:underline">

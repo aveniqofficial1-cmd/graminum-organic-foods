@@ -10,15 +10,20 @@ import {
   CheckCircle2,
   Sparkles,
   QrCode,
+  Crown,
 } from 'lucide-react';
 import { useToast } from '../../context/ToastContext';
 import { useStoreSettings } from '../../context/StoreSettingsContext';
+import { useAuth } from '../../context/AuthContext';
 
 export const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { showToast } = useToast();
   const { settings } = useStoreSettings();
+  const { currentUser } = useAuth();
+
+  const isUserAdmin = currentUser?.role === 'admin';
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -34,39 +39,39 @@ export const Footer: React.FC = () => {
   const cleanPhone = settings.whatsappNumber.replace(/[^0-9]/g, '');
 
   return (
-    <footer className="bg-[#06451F] text-white pt-16 pb-8 relative overflow-hidden border-t-4 border-[#8CCB55]">
+    <footer className="bg-[#06451F] text-white pt-12 sm:pt-16 pb-8 relative overflow-hidden border-t-4 border-[#8CCB55]">
       {/* Botanical Background Pattern Overlay */}
       <div className="absolute inset-0 opacity-5 pointer-events-none bg-[radial-gradient(#8CCB55_1px,transparent_1px)] [background-size:24px_24px]"></div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Top Trust Row */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 pb-12 border-b border-emerald-800/60 mb-12">
-          <div className="flex items-center gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
-            <span className="text-2xl">🌱</span>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 pb-8 sm:pb-12 border-b border-emerald-800/60 mb-8 sm:mb-12">
+          <div className="flex items-center gap-2.5 sm:gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
+            <span className="text-xl sm:text-2xl">🌱</span>
             <div>
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider">100% Pure</h4>
-              <p className="text-[11px] text-emerald-200">Zero synthetic chemicals</p>
+              <h4 className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">100% Pure</h4>
+              <p className="text-[10px] sm:text-[11px] text-emerald-200">Zero chemicals</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
-            <span className="text-2xl">🌾</span>
+          <div className="flex items-center gap-2.5 sm:gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
+            <span className="text-xl sm:text-2xl">🌾</span>
             <div>
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Direct Farm Sourced</h4>
-              <p className="text-[11px] text-emerald-200">Supporting native farmers</p>
+              <h4 className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">Direct Farm</h4>
+              <p className="text-[10px] sm:text-[11px] text-emerald-200">Native farmers</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
-            <span className="text-2xl">🛡️</span>
+          <div className="flex items-center gap-2.5 sm:gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
+            <span className="text-xl sm:text-2xl">🛡️</span>
             <div>
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Ancient Vedic Ways</h4>
-              <p className="text-[11px] text-emerald-200">Stone ground & wood pressed</p>
+              <h4 className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">Ancient Vedic</h4>
+              <p className="text-[10px] sm:text-[11px] text-emerald-200">Wood pressed</p>
             </div>
           </div>
-          <div className="flex items-center gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
-            <span className="text-2xl">🚚</span>
+          <div className="flex items-center gap-2.5 sm:gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
+            <span className="text-xl sm:text-2xl">🚚</span>
             <div>
-              <h4 className="text-xs font-bold text-white uppercase tracking-wider">Pan-India Delivery</h4>
-              <p className="text-[11px] text-emerald-200">Express 24-48 hr dispatch</p>
+              <h4 className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">Express Dispatch</h4>
+              <p className="text-[10px] sm:text-[11px] text-emerald-200">24-48 hr shipping</p>
             </div>
           </div>
         </div>
@@ -97,7 +102,7 @@ export const Footer: React.FC = () => {
               and wholesome multigrain nutrition for generations to come.
             </p>
 
-            <div className="pt-2 flex items-center gap-3">
+            <div className="pt-2 flex flex-wrap items-center gap-3">
               <a
                 href={`https://wa.me/${cleanPhone}`}
                 target="_blank"
@@ -191,7 +196,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link to="/account" className="hover:text-[#8CCB55] transition-colors">
-                  My Account / Login
+                  My Account / Sign In
                 </Link>
               </li>
               <li>
@@ -199,14 +204,18 @@ export const Footer: React.FC = () => {
                   View Cart
                 </Link>
               </li>
-              <li>
-                <Link
-                  to="/admin/login"
-                  className="text-emerald-300/80 hover:text-white font-medium"
-                >
-                  Admin Control Panel
-                </Link>
-              </li>
+              {/* Admin Portal is ONLY shown if user is an admin */}
+              {isUserAdmin && (
+                <li>
+                  <Link
+                    to="/admin"
+                    className="text-amber-300 hover:text-white font-bold flex items-center gap-1"
+                  >
+                    <Crown className="w-3.5 h-3.5" />
+                    <span>Admin Console</span>
+                  </Link>
+                </li>
+              )}
             </ul>
           </div>
 
@@ -254,11 +263,11 @@ export const Footer: React.FC = () => {
 
         {/* Bottom Bar: Copyright & Payment badges */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-emerald-200/60">
-          <div>
+          <div className="text-center sm:text-left">
             © {new Date().getFullYear()} Graminum (గ్రామీణం) Organic Foods. All rights reserved.
           </div>
 
-          <div className="flex items-center gap-2 flex-wrap justify-center text-[11px] text-emerald-200/80">
+          <div className="flex items-center gap-2 flex-wrap justify-center text-[10px] sm:text-[11px] text-emerald-200/80">
             <span className="bg-emerald-900/60 px-2.5 py-1 rounded-md border border-emerald-800 font-bold text-white flex items-center gap-1">
               <QrCode className="w-3 h-3 text-[#8CCB55]" />
               <span>UPI Scanner Only</span>
@@ -269,9 +278,6 @@ export const Footer: React.FC = () => {
             <span className="bg-emerald-900/60 px-2.5 py-1 rounded-md border border-emerald-800 flex items-center gap-1">
               <MessageCircle className="w-3 h-3 text-[#25D366]" />
               <span>WhatsApp Auto-Fill Receipt</span>
-            </span>
-            <span className="bg-emerald-900/60 px-2.5 py-1 rounded-md border border-emerald-800">
-              Direct Farmer Sourced
             </span>
           </div>
         </div>

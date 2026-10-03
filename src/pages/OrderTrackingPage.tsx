@@ -15,9 +15,13 @@ import {
   Sparkles,
   QrCode,
   ExternalLink,
+  Lock,
+  ArrowRight,
+  User as UserIcon,
 } from 'lucide-react';
 import { useOrders } from '../context/OrderContext';
 import { useStoreSettings } from '../context/StoreSettingsContext';
+import { useAuth } from '../context/AuthContext';
 import { Breadcrumb } from '../components/common/Breadcrumb';
 import { OrderStatus } from '../types';
 
@@ -26,17 +30,36 @@ export const OrderTrackingPage: React.FC = () => {
   const navigate = useNavigate();
   const { getOrderById, orders } = useOrders();
   const { settings, generateWhatsAppOrderUrl } = useStoreSettings();
+  const { currentUser, isAuthenticated, loginWithGoogle } = useAuth();
 
   const [searchQuery, setSearchQuery] = useState(orderId || '');
-  const [currentOrder, setCurrentOrder] = useState(() => getOrderById(orderId || 'GRM-89241'));
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  // Filter orders relevant to current user
+  const userOrders = orders.filter(
+    (o) =>
+      !currentUser ||
+      o.customerEmail.toLowerCase() === currentUser.email.toLowerCase() ||
+      o.customerName.toLowerCase().includes(currentUser.name.split(' ')[0].toLowerCase())
+  );
+
+  const initialOrder = orderId
+    ? getOrderById(orderId)
+    : userOrders.length > 0
+    ? userOrders[0]
+    : getOrderById('GRM-89241');
+
+  const [currentOrder, setCurrentOrder] = useState(initialOrder);
 
   useEffect(() => {
     if (orderId) {
       setSearchQuery(orderId);
       const found = getOrderById(orderId);
       if (found) setCurrentOrder(found);
+    } else if (userOrders.length > 0 && !currentOrder) {
+      setCurrentOrder(userOrders[0]);
     }
-  }, [orderId, orders]);
+  }, [orderId, orders, userOrders]);
 
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
@@ -45,6 +68,15 @@ export const OrderTrackingPage: React.FC = () => {
       navigate(`/track-order/${clean}`);
       const found = getOrderById(clean);
       setCurrentOrder(found);
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    try {
+      await loginWithGoogle();
+    } finally {
+      setIsGoogleLoading(false);
     }
   };
 
@@ -73,27 +105,104 @@ export const OrderTrackingPage: React.FC = () => {
     }
   };
 
+  // ================= UNAUTHENTICATED STATE: LOGIN / SIGNUP REQUIRED =================
+  if (!isAuthenticated) {
+    return (
+      <div className="w-full bg-[#FBF8EF] min-h-[80vh] flex items-center justify-center py-8 sm:py-12 px-4 sm:px-6">
+        <div className="max-w-md w-full bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 shadow-xl text-center space-y-6">
+          <div className="w-16 h-16 bg-[#EFF7E9] text-[#075B2A] rounded-3xl flex items-center justify-center mx-auto border border-[#8CCB55] shadow-xs">
+            <Lock className="w-8 h-8 text-[#075B2A]" />
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-[11px] font-extrabold text-[#4D963C] uppercase tracking-wider bg-[#EFF7E9] px-3 py-1 rounded-full border border-[#8CCB55]">
+              Account Verification Required
+            </span>
+            <h1 className="text-xl sm:text-2xl font-black text-[#075B2A] font-serif-title">
+              Sign In to Track Your Orders
+            </h1>
+            <p className="text-xs sm:text-sm text-[#667267] leading-relaxed">
+              To protect customer order information, dispatch coordinates, and live payment receipts, please sign in or create a Graminum customer account.
+            </p>
+          </div>
+
+          {/* 1-Click Google Login */}
+          <button
+            type="button"
+            disabled={isGoogleLoading}
+            onClick={handleGoogleSignIn}
+            className="w-full bg-white hover:bg-gray-50 text-gray-700 border-2 border-[#E1E9DC] hover:border-[#075B2A] py-3 px-4 rounded-2xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center gap-3 shadow-xs active:scale-98 cursor-pointer disabled:opacity-60"
+          >
+            <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+              <path
+                fill="#4285F4"
+                d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+              />
+              <path
+                fill="#34A853"
+                d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+              />
+              <path
+                fill="#FBBC05"
+                d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+              />
+              <path
+                fill="#EA4335"
+                d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+              />
+            </svg>
+            <span>{isGoogleLoading ? 'Signing in with Google...' : 'Continue with Google'}</span>
+          </button>
+
+          <div className="relative flex items-center justify-center">
+            <div className="border-t border-[#E1E9DC] w-full"></div>
+            <span className="bg-white px-3 text-[10px] text-gray-400 font-extrabold uppercase tracking-wider">
+              Or with email
+            </span>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <Link
+              to="/login"
+              className="w-full bg-[#075B2A] hover:bg-[#06451F] text-white text-xs sm:text-sm font-bold py-3 px-4 rounded-xl shadow-md transition-all active:scale-95 flex items-center justify-center gap-1.5"
+            >
+              <UserIcon className="w-4 h-4" />
+              <span>Sign In</span>
+            </Link>
+            <Link
+              to="/signup"
+              className="w-full bg-[#EFF7E9] hover:bg-[#8CCB55]/30 text-[#075B2A] border border-[#8CCB55] text-xs sm:text-sm font-bold py-3 px-4 rounded-xl transition-all active:scale-95 flex items-center justify-center gap-1.5"
+            >
+              <span>Create Account</span>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // ================= AUTHENTICATED STATE: FULL ORDER TRACKER =================
   return (
     <div className="w-full bg-[#FBF8EF] min-h-screen py-6 sm:py-10">
-      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6 sm:space-y-8">
         {/* Breadcrumb Header */}
         <Breadcrumb items={[{ label: 'Track Order' }]} />
 
         {/* Search Order Form Banner */}
-        <div className="bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 shadow-sm space-y-4">
+        <div className="bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-8 shadow-sm space-y-4">
           <div className="text-center max-w-lg mx-auto space-y-1">
             <span className="text-xs font-extrabold text-[#4D963C] uppercase tracking-wider">
               Live Fulfillment Tracking
             </span>
-            <h1 className="text-2xl sm:text-3xl font-black text-[#075B2A] font-serif-title">
+            <h1 className="text-xl sm:text-3xl font-black text-[#075B2A] font-serif-title">
               Track Your Organic Order
             </h1>
             <p className="text-xs sm:text-sm text-[#667267]">
-              Enter your Order ID (e.g. GRM-89241) to monitor harvest packaging, payment approval, and delivery stages.
+              Monitor harvest packaging, admin payment approval, and delivery stages.
             </p>
           </div>
 
-          <form onSubmit={handleSearch} className="max-w-md mx-auto flex gap-2 pt-2">
+          <form onSubmit={handleSearch} className="max-w-md mx-auto flex flex-col sm:flex-row gap-2 pt-2">
             <div className="relative flex-1">
               <input
                 type="text"
@@ -108,39 +217,45 @@ export const OrderTrackingPage: React.FC = () => {
               type="submit"
               className="bg-[#075B2A] hover:bg-[#06451F] text-white text-xs sm:text-sm font-bold px-6 py-3 rounded-2xl shadow-md transition-all active:scale-95 shrink-0 cursor-pointer"
             >
-              Track
+              Track Order
             </button>
           </form>
 
-          {/* Quick Demo Orders Pill List */}
-          <div className="flex items-center justify-center gap-2 flex-wrap text-xs pt-1">
-            <span className="text-gray-400 font-medium">Try demo IDs:</span>
-            {orders.slice(0, 3).map((o) => (
-              <button
-                key={o.id}
-                onClick={() => {
-                  setSearchQuery(o.orderNumber);
-                  navigate(`/track-order/${o.orderNumber}`);
-                  setCurrentOrder(o);
-                }}
-                className="bg-[#EFF7E9] text-[#075B2A] hover:bg-[#8CCB55] hover:text-[#06451F] font-bold px-2.5 py-1 rounded-lg border border-[#8CCB55] transition-colors cursor-pointer"
-              >
-                #{o.orderNumber}
-              </button>
-            ))}
-          </div>
+          {/* Quick Select for Logged-In User's Orders */}
+          {userOrders.length > 0 && (
+            <div className="flex items-center justify-center gap-2 flex-wrap text-xs pt-1">
+              <span className="text-gray-400 font-medium">Your recent orders:</span>
+              {userOrders.slice(0, 4).map((o) => (
+                <button
+                  key={o.id}
+                  onClick={() => {
+                    setSearchQuery(o.orderNumber);
+                    navigate(`/track-order/${o.orderNumber}`);
+                    setCurrentOrder(o);
+                  }}
+                  className={`font-bold px-3 py-1 rounded-xl border transition-colors cursor-pointer text-xs ${
+                    currentOrder?.orderNumber === o.orderNumber
+                      ? 'bg-[#075B2A] text-white border-[#075B2A]'
+                      : 'bg-[#EFF7E9] text-[#075B2A] hover:bg-[#8CCB55] hover:text-[#06451F] border-[#8CCB55]'
+                  }`}
+                >
+                  #{o.orderNumber}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Order Details & Live Timeline Render */}
         {currentOrder ? (
           <div className="space-y-6">
             {/* Header Summary Card */}
-            <div className="bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 shadow-sm">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[#E1E9DC]">
+            <div className="bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-8 shadow-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-5 border-b border-[#E1E9DC]">
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-xs text-gray-400 font-bold uppercase">Order ID</span>
-                    <h2 className="text-xl sm:text-2xl font-black text-[#075B2A] font-serif-title">
+                    <h2 className="text-lg sm:text-2xl font-black text-[#075B2A] font-serif-title">
                       #{currentOrder.orderNumber}
                     </h2>
                   </div>
@@ -156,10 +271,12 @@ export const OrderTrackingPage: React.FC = () => {
                   </p>
                 </div>
 
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
+                <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
+                  <div className="text-left sm:text-right">
                     <p className="text-[10px] text-gray-400 font-bold uppercase">Total Bill</p>
-                    <p className="text-lg font-black text-[#075B2A]">₹{currentOrder.grandTotal}</p>
+                    <p className="text-base sm:text-lg font-black text-[#075B2A]">
+                      ₹{currentOrder.grandTotal}
+                    </p>
                   </div>
                   <span
                     className={`text-xs font-bold px-3 py-1 rounded-full ${
@@ -208,7 +325,7 @@ export const OrderTrackingPage: React.FC = () => {
                   href={generateWhatsAppOrderUrl(currentOrder)}
                   target="_blank"
                   rel="noreferrer"
-                  className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition-all active:scale-95"
+                  className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-[11px] font-bold px-3.5 py-2 rounded-xl shadow-xs transition-all active:scale-95"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
                   <span>Resend Receipt on WhatsApp</span>
@@ -216,15 +333,14 @@ export const OrderTrackingPage: React.FC = () => {
               </div>
 
               {/* 5-STAGE STATUS TIMELINE */}
-              <div className="pt-8 pb-4">
+              <div className="pt-6 sm:pt-8 pb-4">
                 <h3 className="text-xs font-bold text-[#18251B] uppercase tracking-wider mb-6">
                   Fulfillment Progress
                 </h3>
 
                 <div className="relative">
-                  {/* Desktop / Tablet Horizontal Timeline */}
+                  {/* Desktop Horizontal Timeline */}
                   <div className="hidden sm:grid grid-cols-5 gap-2 relative">
-                    {/* Connecting background bar */}
                     <div className="absolute top-5 left-8 right-8 h-1 bg-[#E1E9DC] z-0"></div>
 
                     {statusOrder.map((stageName, idx) => {
@@ -275,7 +391,7 @@ export const OrderTrackingPage: React.FC = () => {
                       return (
                         <div key={idx} className="relative">
                           <div
-                            className={`absolute -left-[31px] top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] ${
+                            className={`absolute -left-[31px] top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-bold ${
                               isCompleted
                                 ? 'bg-[#075B2A] text-white'
                                 : isCurrentActive
@@ -309,7 +425,7 @@ export const OrderTrackingPage: React.FC = () => {
             {/* Bottom 2 Columns: Purchased Items & Shipping Address */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
               {/* Items List (8 Cols) */}
-              <div className="md:col-span-8 bg-white rounded-3xl border border-[#E1E9DC] p-6 shadow-sm space-y-4">
+              <div className="md:col-span-8 bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-6 shadow-sm space-y-4">
                 <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider pb-3 border-b border-[#E1E9DC]">
                   Items in this Package
                 </h3>
@@ -344,7 +460,7 @@ export const OrderTrackingPage: React.FC = () => {
               </div>
 
               {/* Delivery Details (4 Cols) */}
-              <div className="md:col-span-4 bg-white rounded-3xl border border-[#E1E9DC] p-6 shadow-sm space-y-4 flex flex-col justify-between">
+              <div className="md:col-span-4 bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-6 shadow-sm space-y-4 flex flex-col justify-between">
                 <div className="space-y-3">
                   <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider pb-2 border-b border-[#E1E9DC]">
                     Delivery Address
@@ -375,14 +491,20 @@ export const OrderTrackingPage: React.FC = () => {
             </div>
           </div>
         ) : (
-          <div className="bg-white rounded-3xl border border-[#E1E9DC] p-12 text-center space-y-4 shadow-sm">
+          <div className="bg-white rounded-3xl border border-[#E1E9DC] p-8 sm:p-12 text-center space-y-4 shadow-sm">
             <AlertCircle className="w-12 h-12 text-amber-500 mx-auto" />
-            <h3 className="text-lg font-bold text-[#18251B] font-serif-title">
-              Order ID Not Found
+            <h3 className="text-base sm:text-lg font-bold text-[#18251B] font-serif-title">
+              No Matching Order Found
             </h3>
             <p className="text-xs sm:text-sm text-[#667267] max-w-sm mx-auto">
-              Please verify your order number from your confirmation SMS or email, or browse available products.
+              Please check your order number from your confirmation message, or explore our fresh harvests.
             </p>
+            <Link
+              to="/shop"
+              className="inline-block bg-[#075B2A] text-white text-xs font-bold px-6 py-2.5 rounded-xl"
+            >
+              Browse Products
+            </Link>
           </div>
         )}
       </div>
