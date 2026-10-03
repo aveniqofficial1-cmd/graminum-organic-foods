@@ -1,0 +1,391 @@
+import React, { useState, useEffect } from 'react';
+import { useParams, useNavigate, Link } from 'react-router-dom';
+import {
+  Search,
+  Package,
+  CheckCircle2,
+  Clock,
+  Truck,
+  MapPin,
+  Home,
+  MessageCircle,
+  Phone,
+  ShieldCheck,
+  AlertCircle,
+  Sparkles,
+  QrCode,
+  ExternalLink,
+} from 'lucide-react';
+import { useOrders } from '../context/OrderContext';
+import { useStoreSettings } from '../context/StoreSettingsContext';
+import { Breadcrumb } from '../components/common/Breadcrumb';
+import { OrderStatus } from '../types';
+
+export const OrderTrackingPage: React.FC = () => {
+  const { orderId } = useParams<{ orderId: string }>();
+  const navigate = useNavigate();
+  const { getOrderById, orders } = useOrders();
+  const { settings, generateWhatsAppOrderUrl } = useStoreSettings();
+
+  const [searchQuery, setSearchQuery] = useState(orderId || '');
+  const [currentOrder, setCurrentOrder] = useState(() => getOrderById(orderId || 'GRM-89241'));
+
+  useEffect(() => {
+    if (orderId) {
+      setSearchQuery(orderId);
+      const found = getOrderById(orderId);
+      if (found) setCurrentOrder(found);
+    }
+  }, [orderId, orders]);
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      const clean = searchQuery.trim().replace('#', '');
+      navigate(`/track-order/${clean}`);
+      const found = getOrderById(clean);
+      setCurrentOrder(found);
+    }
+  };
+
+  const statusOrder: OrderStatus[] = [
+    'Order Placed',
+    'Accepted',
+    'Preparing',
+    'Out for Delivery',
+    'Delivered',
+  ];
+
+  const getStageIcon = (status: OrderStatus) => {
+    switch (status) {
+      case 'Order Placed':
+        return <Package className="w-5 h-5" />;
+      case 'Accepted':
+        return <CheckCircle2 className="w-5 h-5" />;
+      case 'Preparing':
+        return <Clock className="w-5 h-5" />;
+      case 'Out for Delivery':
+        return <Truck className="w-5 h-5" />;
+      case 'Delivered':
+        return <Home className="w-5 h-5" />;
+      default:
+        return <Package className="w-5 h-5" />;
+    }
+  };
+
+  return (
+    <div className="w-full bg-[#FBF8EF] min-h-screen py-6 sm:py-10">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        {/* Breadcrumb Header */}
+        <Breadcrumb items={[{ label: 'Track Order' }]} />
+
+        {/* Search Order Form Banner */}
+        <div className="bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 shadow-sm space-y-4">
+          <div className="text-center max-w-lg mx-auto space-y-1">
+            <span className="text-xs font-extrabold text-[#4D963C] uppercase tracking-wider">
+              Live Fulfillment Tracking
+            </span>
+            <h1 className="text-2xl sm:text-3xl font-black text-[#075B2A] font-serif-title">
+              Track Your Organic Order
+            </h1>
+            <p className="text-xs sm:text-sm text-[#667267]">
+              Enter your Order ID (e.g. GRM-89241) to monitor harvest packaging, payment approval, and delivery stages.
+            </p>
+          </div>
+
+          <form onSubmit={handleSearch} className="max-w-md mx-auto flex gap-2 pt-2">
+            <div className="relative flex-1">
+              <input
+                type="text"
+                placeholder="Enter Order # (e.g. GRM-89241)"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                className="w-full bg-[#FBF8EF] text-xs sm:text-sm pl-9 pr-4 py-3 rounded-2xl border border-[#E1E9DC] uppercase font-bold focus:outline-none focus:border-[#075B2A]"
+              />
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+            </div>
+            <button
+              type="submit"
+              className="bg-[#075B2A] hover:bg-[#06451F] text-white text-xs sm:text-sm font-bold px-6 py-3 rounded-2xl shadow-md transition-all active:scale-95 shrink-0 cursor-pointer"
+            >
+              Track
+            </button>
+          </form>
+
+          {/* Quick Demo Orders Pill List */}
+          <div className="flex items-center justify-center gap-2 flex-wrap text-xs pt-1">
+            <span className="text-gray-400 font-medium">Try demo IDs:</span>
+            {orders.slice(0, 3).map((o) => (
+              <button
+                key={o.id}
+                onClick={() => {
+                  setSearchQuery(o.orderNumber);
+                  navigate(`/track-order/${o.orderNumber}`);
+                  setCurrentOrder(o);
+                }}
+                className="bg-[#EFF7E9] text-[#075B2A] hover:bg-[#8CCB55] hover:text-[#06451F] font-bold px-2.5 py-1 rounded-lg border border-[#8CCB55] transition-colors cursor-pointer"
+              >
+                #{o.orderNumber}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Order Details & Live Timeline Render */}
+        {currentOrder ? (
+          <div className="space-y-6">
+            {/* Header Summary Card */}
+            <div className="bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 shadow-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 pb-6 border-b border-[#E1E9DC]">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <span className="text-xs text-gray-400 font-bold uppercase">Order ID</span>
+                    <h2 className="text-xl sm:text-2xl font-black text-[#075B2A] font-serif-title">
+                      #{currentOrder.orderNumber}
+                    </h2>
+                  </div>
+                  <p className="text-xs text-[#667267] mt-0.5">
+                    Placed on{' '}
+                    {new Date(currentOrder.createdAt).toLocaleDateString('en-IN', {
+                      day: 'numeric',
+                      month: 'short',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                    })}
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <div className="text-right">
+                    <p className="text-[10px] text-gray-400 font-bold uppercase">Total Bill</p>
+                    <p className="text-lg font-black text-[#075B2A]">₹{currentOrder.grandTotal}</p>
+                  </div>
+                  <span
+                    className={`text-xs font-bold px-3 py-1 rounded-full ${
+                      currentOrder.orderStatus === 'Delivered'
+                        ? 'bg-emerald-100 text-emerald-800'
+                        : currentOrder.orderStatus === 'Cancelled'
+                        ? 'bg-red-100 text-red-800'
+                        : currentOrder.orderStatus === 'Accepted'
+                        ? 'bg-blue-100 text-blue-800'
+                        : 'bg-amber-100 text-amber-900 animate-pulse'
+                    }`}
+                  >
+                    {currentOrder.orderStatus}
+                  </span>
+                </div>
+              </div>
+
+              {/* Payment Verification Status Ribbon */}
+              <div className="mt-4 p-3.5 rounded-2xl bg-[#EFF7E9] border border-[#8CCB55] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2.5">
+                  <QrCode className="w-5 h-5 text-[#075B2A] shrink-0" />
+                  <div>
+                    <span className="font-bold text-[#18251B]">
+                      Payment:{' '}
+                      <span
+                        className={
+                          currentOrder.paymentStatus === 'Verified'
+                            ? 'text-emerald-700 font-black'
+                            : 'text-amber-700 font-bold'
+                        }
+                      >
+                        {currentOrder.paymentStatus === 'Verified'
+                          ? '✓ Verified & Approved by Admin'
+                          : '⏳ Awaiting Admin Approval'}
+                      </span>
+                    </span>
+                    {currentOrder.paymentUtr && (
+                      <p className="text-[11px] text-gray-500 font-mono">
+                        UTR Ref: {currentOrder.paymentUtr}
+                      </p>
+                    )}
+                  </div>
+                </div>
+
+                <a
+                  href={generateWhatsAppOrderUrl(currentOrder)}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-[11px] font-bold px-3 py-1.5 rounded-xl shadow-xs transition-all active:scale-95"
+                >
+                  <MessageCircle className="w-3.5 h-3.5" />
+                  <span>Resend Receipt on WhatsApp</span>
+                </a>
+              </div>
+
+              {/* 5-STAGE STATUS TIMELINE */}
+              <div className="pt-8 pb-4">
+                <h3 className="text-xs font-bold text-[#18251B] uppercase tracking-wider mb-6">
+                  Fulfillment Progress
+                </h3>
+
+                <div className="relative">
+                  {/* Desktop / Tablet Horizontal Timeline */}
+                  <div className="hidden sm:grid grid-cols-5 gap-2 relative">
+                    {/* Connecting background bar */}
+                    <div className="absolute top-5 left-8 right-8 h-1 bg-[#E1E9DC] z-0"></div>
+
+                    {statusOrder.map((stageName, idx) => {
+                      const timelineEvent = currentOrder.timeline.find((t) => t.status === stageName);
+                      const isCompleted = timelineEvent?.completed || false;
+                      const isCurrentActive =
+                        currentOrder.orderStatus === stageName &&
+                        currentOrder.orderStatus !== 'Delivered' &&
+                        currentOrder.orderStatus !== 'Cancelled';
+
+                      return (
+                        <div key={idx} className="relative z-10 flex flex-col items-center text-center">
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center transition-all ${
+                              isCompleted
+                                ? 'bg-[#075B2A] text-white shadow-md'
+                                : isCurrentActive
+                                ? 'bg-[#8CCB55] text-[#06451F] ring-4 ring-[#8CCB55]/30 shadow-md animate-bounce'
+                                : 'bg-white border-2 border-[#E1E9DC] text-gray-400'
+                            }`}
+                          >
+                            {getStageIcon(stageName)}
+                          </div>
+                          <p
+                            className={`text-xs font-bold mt-2.5 ${
+                              isCompleted || isCurrentActive ? 'text-[#075B2A]' : 'text-gray-400'
+                            }`}
+                          >
+                            {stageName}
+                          </p>
+                          <p className="text-[10px] text-gray-500 mt-0.5 line-clamp-2 px-1">
+                            {timelineEvent?.timestamp || 'Pending'}
+                          </p>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Mobile Vertical Timeline */}
+                  <div className="sm:hidden space-y-6 relative pl-6 border-l-2 border-[#E1E9DC] ml-3">
+                    {statusOrder.map((stageName, idx) => {
+                      const timelineEvent = currentOrder.timeline.find((t) => t.status === stageName);
+                      const isCompleted = timelineEvent?.completed || false;
+                      const isCurrentActive =
+                        currentOrder.orderStatus === stageName &&
+                        currentOrder.orderStatus !== 'Delivered';
+
+                      return (
+                        <div key={idx} className="relative">
+                          <div
+                            className={`absolute -left-[31px] top-0 w-6 h-6 rounded-full flex items-center justify-center text-[10px] ${
+                              isCompleted
+                                ? 'bg-[#075B2A] text-white'
+                                : isCurrentActive
+                                ? 'bg-[#8CCB55] text-[#06451F] ring-4 ring-[#8CCB55]/30'
+                                : 'bg-white border-2 border-[#E1E9DC] text-gray-400'
+                            }`}
+                          >
+                            {idx + 1}
+                          </div>
+                          <p
+                            className={`text-xs font-bold ${
+                              isCompleted || isCurrentActive ? 'text-[#075B2A]' : 'text-gray-400'
+                            }`}
+                          >
+                            {stageName}
+                          </p>
+                          <p className="text-[11px] text-[#667267] mt-0.5">
+                            {timelineEvent?.description || 'Awaiting stage trigger'}
+                          </p>
+                          <span className="text-[10px] text-gray-400 block mt-0.5">
+                            {timelineEvent?.timestamp || 'Pending'}
+                          </span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom 2 Columns: Purchased Items & Shipping Address */}
+            <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
+              {/* Items List (8 Cols) */}
+              <div className="md:col-span-8 bg-white rounded-3xl border border-[#E1E9DC] p-6 shadow-sm space-y-4">
+                <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider pb-3 border-b border-[#E1E9DC]">
+                  Items in this Package
+                </h3>
+
+                <div className="divide-y divide-[#E1E9DC]">
+                  {currentOrder.items.map((item, idx) => (
+                    <div key={idx} className="py-3 flex items-center justify-between gap-3 text-xs">
+                      <div className="flex items-center gap-3 min-w-0">
+                        <img
+                          src={item.product.image}
+                          alt={item.product.name}
+                          className="w-12 h-12 object-cover rounded-xl border shrink-0 bg-[#EFF7E9]"
+                        />
+                        <div className="min-w-0">
+                          <Link
+                            to={`/product/${item.product.slug}`}
+                            className="font-bold text-[#18251B] hover:text-[#075B2A] truncate block"
+                          >
+                            {item.product.name}
+                          </Link>
+                          <p className="text-[11px] text-[#667267]">
+                            {item.selectedPackSize} × {item.quantity} units
+                          </p>
+                        </div>
+                      </div>
+                      <span className="font-extrabold text-[#075B2A] shrink-0">
+                        ₹{item.unitPrice * item.quantity}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* Delivery Details (4 Cols) */}
+              <div className="md:col-span-4 bg-white rounded-3xl border border-[#E1E9DC] p-6 shadow-sm space-y-4 flex flex-col justify-between">
+                <div className="space-y-3">
+                  <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider pb-2 border-b border-[#E1E9DC]">
+                    Delivery Address
+                  </h3>
+                  <div className="text-xs text-[#18251B] space-y-1">
+                    <p className="font-bold">{currentOrder.shippingAddress.fullName}</p>
+                    <p className="text-gray-600">{currentOrder.shippingAddress.addressLine}</p>
+                    <p className="text-gray-600">
+                      {currentOrder.shippingAddress.city}, {currentOrder.shippingAddress.state} —{' '}
+                      {currentOrder.shippingAddress.pincode}
+                    </p>
+                    <p className="text-gray-600 pt-1">📞 {currentOrder.shippingAddress.phone}</p>
+                  </div>
+                </div>
+
+                <div className="pt-3 border-t border-[#E1E9DC] space-y-2">
+                  <a
+                    href={`https://wa.me/${settings.whatsappNumber.replace(/[^0-9]/g, '')}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-full flex items-center justify-center gap-2 bg-[#EFF7E9] hover:bg-[#8CCB55] text-[#075B2A] hover:text-[#06451F] text-xs font-bold py-2.5 rounded-xl border border-[#8CCB55] transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>Need Help? Chat on WhatsApp</span>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-3xl border border-[#E1E9DC] p-12 text-center space-y-4 shadow-sm">
+            <AlertCircle className="w-12 h-12 text-amber-500 mx-auto" />
+            <h3 className="text-lg font-bold text-[#18251B] font-serif-title">
+              Order ID Not Found
+            </h3>
+            <p className="text-xs sm:text-sm text-[#667267] max-w-sm mx-auto">
+              Please verify your order number from your confirmation SMS or email, or browse available products.
+            </p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};

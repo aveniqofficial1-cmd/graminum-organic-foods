@@ -1,0 +1,107 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --forest: #075B2A;
+    --deep-forest: #06451F;
+    --leaf: #4D963C;
+    --fresh: #8CCB55;
+    --pale-green: #EFF7E9;
+    --warm-white: #FFFFFF;
+    --cream: #FBF8EF;
+    --beige: #F2E6CF;
+    --text-main: #18251B;
+    --text-muted: #667267;
+    --border-light: #E1E9DC;
+    --danger: #D92D20;
+    --warning: #E9A23B;
+  }
+
+  body {
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--cream);
+    color: var(--text-main);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, .font-serif-title {
+    font-family: 'DM Serif Display', Georgia, serif;
+    letter-spacing: -0.01em;
+  }
+
+  .font-telugu {
+    font-family: 'Noto Sans Telugu', 'Plus Jakarta Sans', sans-serif;
+  }
+}
+
+/* Custom Utilities for Graminum */
+.bg-forest { background-color: #075B2A; }
+.bg-deep-forest { background-color: #06451F; }
+.bg-leaf { background-color: #4D963C; }
+.bg-fresh { background-color: #8CCB55; }
+.bg-pale-green { background-color: #EFF7E9; }
+.bg-cream { background-color: #FBF8EF; }
+.bg-beige { background-color: #F2E6CF; }
+
+.text-forest { color: #075B2A; }
+.text-deep-forest { color: #06451F; }
+.text-leaf { color: #4D963C; }
+.text-fresh { color: #8CCB55; }
+.text-main { color: #18251B; }
+.text-muted-custom { color: #667267; }
+
+.border-forest { border-color: #075B2A; }
+.border-leaf { border-color: #4D963C; }
+.border-light-custom { border-color: #E1E9DC; }
+
+/* Organic Curves & Shadows */
+.shadow-organic {
+  box-shadow: 0 10px 30px -10px rgba(7, 91, 42, 0.08), 0 4px 6px -2px rgba(7, 91, 42, 0.04);
+}
+
+.shadow-organic-lg {
+  box-shadow: 0 20px 40px -15px rgba(7, 91, 42, 0.12), 0 8px 16px -4px rgba(7, 91, 42, 0.06);
+}
+
+.shadow-card-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.shadow-card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 20px 35px -10px rgba(7, 91, 42, 0.14), 0 8px 12px -3px rgba(7, 91, 42, 0.08);
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FBF8EF;
+}
+::-webkit-scrollbar-thumb {
+  background: #C7DCBC;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #8CCB55;
+}
+
+/* Botanical Floating Animation */
+@keyframes floatGentle {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-8px) rotate(2deg); }
+}
+
+.animate-float-gentle {
+  animation: floatGentle 6s ease-in-out infinite;
+}
+
+@keyframes pulseSubtle {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.03); opacity: 0.95; }
+}
+
+.animate-pulse-subtle {
+  animation: pulseSubtle 3s ease-in-out infinite;
+}

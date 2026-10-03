@@ -1,0 +1,21 @@
+// Import the functions you need from the SDKs you need
+import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
+// TODO: Add SDKs for Firebase products that you want to use
+// https://firebase.google.com/docs/web/setup#available-libraries
+
+// Your web app's Firebase configuration
+// For Firebase JS SDK v7.20.0 and later, measurementId is optional
+const firebaseConfig = {
+  apiKey: "AIzaSyDIouI6K5CYZAjVPde1Yvus3PIek6d8D4U",
+  authDomain: "graminum-organic-foods.firebaseapp.com",
+  projectId: "graminum-organic-foods",
+  storageBucket: "graminum-organic-foods.firebasestorage.app",
+  messagingSenderId: "530118920285",
+  appId: "1:530118920285:web:2327341d638878d11d25b4",
+  measurementId: "G-29W2QDXX1R"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+const analytics = getAnalytics(app);
