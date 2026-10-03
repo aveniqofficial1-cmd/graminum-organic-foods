@@ -55,10 +55,12 @@ export const ShopPage: React.FC = () => {
 
   const categories: string[] = [
     'All',
-    'Grains & Cereals',
-    'Herbal Products',
-    'Health Mixes',
+    'Personal Care',
+    'Herbal Oils',
     'Natural Foods',
+    'Herbal Wellness',
+    'Pooja Essentials',
+    'Fragrances',
   ];
 
   // Filtering & Sorting Logic

@@ -131,26 +131,18 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2.5 text-xs text-emerald-100/80">
               <li>
                 <Link
-                  to="/shop?category=Grains+%26+Cereals"
+                  to="/shop?category=Personal+Care"
                   className="hover:text-[#8CCB55] transition-colors flex items-center gap-1.5"
                 >
-                  <span>🌾 Grains & Cereals</span>
+                  <span>🌿 Personal Care</span>
                 </Link>
               </li>
               <li>
                 <Link
-                  to="/shop?category=Herbal+Products"
+                  to="/shop?category=Herbal+Oils"
                   className="hover:text-[#8CCB55] transition-colors flex items-center gap-1.5"
                 >
-                  <span>🌿 Herbal Products</span>
-                </Link>
-              </li>
-              <li>
-                <Link
-                  to="/shop?category=Health+Mixes"
-                  className="hover:text-[#8CCB55] transition-colors flex items-center gap-1.5"
-                >
-                  <span>🥣 Health Mixes</span>
+                  <span>🪔 Herbal Oils</span>
                 </Link>
               </li>
               <li>
@@ -163,10 +155,26 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link
-                  to="/shop?filter=bestseller"
-                  className="hover:text-[#8CCB55] transition-colors text-amber-300 font-semibold"
+                  to="/shop?category=Herbal+Wellness"
+                  className="hover:text-[#8CCB55] transition-colors flex items-center gap-1.5"
                 >
-                  ⭐ Bestselling Items
+                  <span>🌱 Herbal Wellness</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/shop?category=Pooja+Essentials"
+                  className="hover:text-[#8CCB55] transition-colors flex items-center gap-1.5"
+                >
+                  <span>🛕 Pooja Essentials</span>
+                </Link>
+              </li>
+              <li>
+                <Link
+                  to="/shop?category=Fragrances"
+                  className="hover:text-[#8CCB55] transition-colors flex items-center gap-1.5"
+                >
+                  <span>🌸 Fragrances</span>
                 </Link>
               </li>
             </ul>

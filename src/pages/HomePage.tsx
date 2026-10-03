@@ -25,36 +25,52 @@ export const HomePage: React.FC = () => {
 
   const categories = [
     {
-      title: 'Grains & Cereals',
-      telugu: 'ధాన్యాలు & మిల్లెట్స్',
-      image: 'https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80',
-      description: 'Single polish rice, foxtail millets, kodo & unpolished whole grains.',
-      itemCount: '12+ Varieties',
-      link: '/shop?category=Grains+%26+Cereals',
+      title: 'Personal Care',
+      telugu: 'వ్యక్తిగత సంరక్షణ',
+      image: '/assets/products/sunnipendi-bath-powder.jpeg',
+      description: 'Reetha shampoo, Sunnipendi herbal bath powder, Rose water & Apamarga tooth powder.',
+      itemCount: '5+ Products',
+      link: '/shop?category=Personal+Care',
     },
     {
-      title: 'Herbal Products',
-      telugu: 'మూలికా ఉత్పత్తులు',
-      image: 'https://images.unsplash.com/photo-1608248597359-009772a08f5d?auto=format&fit=crop&w=600&q=80',
-      description: 'Ancient Sunnipindi, wild forest raw honey, moringa & herbal formulations.',
-      itemCount: '8+ Formulations',
-      link: '/shop?category=Herbal+Products',
-    },
-    {
-      title: 'Health Mixes',
-      telugu: 'ఆరోగ్య మిశ్రమాలు',
-      image: 'https://images.unsplash.com/photo-1546554137-f86b9593a222?auto=format&fit=crop&w=600&q=80',
-      description: 'Sprouted multigrain cere mixes, roasted sattu & diabetic nutrition.',
-      itemCount: '10+ Super Blends',
-      link: '/shop?category=Health+Mixes',
+      title: 'Herbal Oils',
+      telugu: 'మూలికా తైలాలు',
+      image: '/assets/products/kalachakra-thailam.jpeg',
+      description: 'Orthocare Plus, Kalachakra thailam, Neem, Kanuga, Mahua & cold-pressed oils.',
+      itemCount: '11+ Formulations',
+      link: '/shop?category=Herbal+Oils',
     },
     {
       title: 'Natural Foods',
       telugu: 'సహజ ఆహారాలు',
-      image: 'https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=600&q=80',
-      description: 'Wood-pressed cold oils, A2 Vedic Bilona ghee & pure palm jaggery.',
-      itemCount: '15+ Farm Items',
+      image: '/assets/products/honey.jpeg',
+      description: 'Pure raw honey, 14 grains multigrain cere mix, Bhavana Jeera & digestive chips.',
+      itemCount: '6+ Superfoods',
       link: '/shop?category=Natural+Foods',
+    },
+    {
+      title: 'Herbal Wellness',
+      telugu: 'ఆరోగ్య సంరక్షణ',
+      image: '/assets/products/vamu-water.jpeg',
+      description: 'Vamu water (Ajwain water), Madiphal Rasayanam & Nannari Sugandha sharbat.',
+      itemCount: '3+ Elixirs',
+      link: '/shop?category=Herbal+Wellness',
+    },
+    {
+      title: 'Pooja Essentials',
+      telugu: 'పూజా ద్రవ్యాలు',
+      image: '/assets/products/pooja-oil.jpeg',
+      description: 'Pooja deepam oil, pure edible Pacha Karpooram & sacred Mahua lamp oil.',
+      itemCount: '3+ Sacred Items',
+      link: '/shop?category=Pooja+Essentials',
+    },
+    {
+      title: 'Fragrances',
+      telugu: 'సుగంధ ద్రవ్యాలు',
+      image: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80',
+      description: '100% alcohol-free traditional herbal attars and pure botanical roll-on fragrances.',
+      itemCount: 'Pure Natural Attar',
+      link: '/shop?category=Fragrances',
     },
   ];
 
@@ -256,7 +272,7 @@ export const HomePage: React.FC = () => {
             </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {categories.map((cat, idx) => (
               <Link
                 key={idx}

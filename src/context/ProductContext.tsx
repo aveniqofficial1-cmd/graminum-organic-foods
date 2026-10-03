@@ -17,7 +17,7 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-const PRODUCTS_STORAGE_KEY = 'graminum_catalog_products_v2';
+const PRODUCTS_STORAGE_KEY = 'graminum_catalog_products_v3';
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { showToast } = useToast();
@@ -47,10 +47,12 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   }, [products]);
 
   const categories: ProductCategory[] = [
-    'Grains & Cereals',
-    'Herbal Products',
-    'Health Mixes',
+    'Personal Care',
+    'Herbal Oils',
     'Natural Foods',
+    'Herbal Wellness',
+    'Pooja Essentials',
+    'Fragrances',
   ];
 
   const getProductById = (id: string): Product | undefined => {
@@ -98,34 +100,29 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
         return p;
       })
     );
-    showToast(`Updated "${updatedData.name || 'product'}" details.`, 'success');
+    showToast('Product updated successfully!', 'success');
   };
 
   const deleteProduct = (productId: string) => {
     const target = products.find((p) => p.id === productId);
     setProducts((prev) => prev.filter((p) => p.id !== productId));
-    showToast(`Removed "${target?.name || 'Product'}" from catalog`, 'info');
+    showToast(`Deleted "${target?.name || 'Product'}" from catalog.`, 'info');
   };
 
   const bulkUploadProducts = (newProducts: Product[], replaceAll: boolean = false) => {
     if (replaceAll) {
       setProducts(newProducts);
-      showToast(`Replaced catalog with ${newProducts.length} uploaded items!`, 'success');
+      showToast(`Replaced entire catalog with ${newProducts.length} products!`, 'success');
     } else {
-      // Merge unique by ID / Name
-      setProducts((prev) => {
-        const existingIds = new Set(prev.map((p) => p.id));
-        const filteredNew = newProducts.filter((p) => !existingIds.has(p.id));
-        return [...filteredNew, ...prev];
-      });
-      showToast(`Imported ${newProducts.length} products into catalog!`, 'success');
+      setProducts((prev) => [...newProducts, ...prev]);
+      showToast(`Successfully imported ${newProducts.length} new products!`, 'success');
     }
   };
 
   const resetToDefaultCatalog = () => {
     setProducts(INITIAL_PRODUCTS);
-    localStorage.removeItem(PRODUCTS_STORAGE_KEY);
-    showToast('Reset catalog back to initial native harvests.', 'info');
+    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(INITIAL_PRODUCTS));
+    showToast('Catalog restored to default Graminum organic products!', 'success');
   };
 
   return (

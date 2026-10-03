@@ -517,27 +517,19 @@ export const Header: React.FC = () => {
                 </p>
                 <div className="grid grid-cols-1 gap-1.5">
                   <Link
-                    to="/shop?category=Grains+%26+Cereals"
+                    to="/shop?category=Personal+Care"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center justify-between px-3 py-1.5 text-xs text-[#18251B] hover:text-[#075B2A] rounded-lg hover:bg-emerald-50"
                   >
-                    <span>🌾 Grains & Cereals</span>
+                    <span>🌿 Personal Care</span>
                     <span className="text-[10px] text-gray-400">View →</span>
                   </Link>
                   <Link
-                    to="/shop?category=Herbal+Products"
+                    to="/shop?category=Herbal+Oils"
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center justify-between px-3 py-1.5 text-xs text-[#18251B] hover:text-[#075B2A] rounded-lg hover:bg-emerald-50"
                   >
-                    <span>🌿 Herbal Products</span>
-                    <span className="text-[10px] text-gray-400">View →</span>
-                  </Link>
-                  <Link
-                    to="/shop?category=Health+Mixes"
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center justify-between px-3 py-1.5 text-xs text-[#18251B] hover:text-[#075B2A] rounded-lg hover:bg-emerald-50"
-                  >
-                    <span>🥣 Health Mixes</span>
+                    <span>🪔 Herbal Oils</span>
                     <span className="text-[10px] text-gray-400">View →</span>
                   </Link>
                   <Link
@@ -546,6 +538,30 @@ export const Header: React.FC = () => {
                     className="flex items-center justify-between px-3 py-1.5 text-xs text-[#18251B] hover:text-[#075B2A] rounded-lg hover:bg-emerald-50"
                   >
                     <span>🍯 Natural Foods</span>
+                    <span className="text-[10px] text-gray-400">View →</span>
+                  </Link>
+                  <Link
+                    to="/shop?category=Herbal+Wellness"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-between px-3 py-1.5 text-xs text-[#18251B] hover:text-[#075B2A] rounded-lg hover:bg-emerald-50"
+                  >
+                    <span>🌱 Herbal Wellness</span>
+                    <span className="text-[10px] text-gray-400">View →</span>
+                  </Link>
+                  <Link
+                    to="/shop?category=Pooja+Essentials"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-between px-3 py-1.5 text-xs text-[#18251B] hover:text-[#075B2A] rounded-lg hover:bg-emerald-50"
+                  >
+                    <span>🛕 Pooja Essentials</span>
+                    <span className="text-[10px] text-gray-400">View →</span>
+                  </Link>
+                  <Link
+                    to="/shop?category=Fragrances"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="flex items-center justify-between px-3 py-1.5 text-xs text-[#18251B] hover:text-[#075B2A] rounded-lg hover:bg-emerald-50"
+                  >
+                    <span>🌸 Fragrances</span>
                     <span className="text-[10px] text-gray-400">View →</span>
                   </Link>
                 </div>

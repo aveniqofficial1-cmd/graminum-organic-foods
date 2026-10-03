@@ -5,7 +5,7 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-1',
     category: 'Ordering',
     question: 'How do I place an order on Graminum?',
-    answer: 'Browse our categories (Grains & Cereals, Herbal Products, Health Mixes, Natural Foods), select your desired pack size, and click "Add to Cart". When you are ready, go to the Cart page and proceed to Checkout where you can enter your delivery address and choose your preferred payment method.'
+    answer: 'Browse our 6 categories (Personal Care, Herbal Oils, Natural Foods, Herbal Wellness, Pooja Essentials, and Fragrances), select your desired pack size, and click "Add to Cart". When you are ready, go to the Cart page and proceed to Checkout where you can enter your delivery address and choose your preferred payment method.'
   },
   {
     id: 'faq-2',

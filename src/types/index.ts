@@ -1,8 +1,10 @@
 export type ProductCategory =
-  | 'Grains & Cereals'
-  | 'Herbal Products'
-  | 'Health Mixes'
-  | 'Natural Foods';
+  | 'Personal Care'
+  | 'Herbal Oils'
+  | 'Natural Foods'
+  | 'Herbal Wellness'
+  | 'Pooja Essentials'
+  | 'Fragrances';
 
 export interface ProductPackOption {
   size: string;

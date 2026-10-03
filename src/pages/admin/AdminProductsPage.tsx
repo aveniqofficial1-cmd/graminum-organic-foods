@@ -49,7 +49,7 @@ export const AdminProductsPage: React.FC = () => {
   // Single Product Form Fields
   const [formName, setFormName] = useState('');
   const [formTeluguName, setFormTeluguName] = useState('');
-  const [formCategory, setFormCategory] = useState<ProductCategory>('Grains & Cereals');
+  const [formCategory, setFormCategory] = useState<ProductCategory>('Personal Care');
   const [formDescription, setFormDescription] = useState('');
   const [formShortDescription, setFormShortDescription] = useState('');
   const [formIngredients, setFormIngredients] = useState('');
@@ -127,7 +127,7 @@ export const AdminProductsPage: React.FC = () => {
     setEditingProductId(null);
     setFormName('');
     setFormTeluguName('');
-    setFormCategory('Grains & Cereals');
+    setFormCategory('Personal Care');
     setFormDescription('');
     setFormShortDescription('');
     setFormIngredients('');
@@ -275,7 +275,7 @@ export const AdminProductsPage: React.FC = () => {
               name: item.name || `Organic Harvest ${idx + 1}`,
               teluguName: item.teluguName || '',
               slug: item.slug || (item.name || `harvest-${idx}`).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
-              category: (item.category as ProductCategory) || 'Grains & Cereals',
+              category: (item.category as ProductCategory) || 'Personal Care',
               price: Number(item.price) || 150,
               originalPrice: item.originalPrice ? Number(item.originalPrice) : undefined,
               packSize: item.packSize || '500g',
@@ -337,7 +337,7 @@ export const AdminProductsPage: React.FC = () => {
 
             const name = rowValues[headers.indexOf('name')] || rowValues[0];
             const teluguName = headers.indexOf('teluguname') !== -1 ? rowValues[headers.indexOf('teluguname')] : '';
-            const categoryRaw = headers.indexOf('category') !== -1 ? rowValues[headers.indexOf('category')] : 'Grains & Cereals';
+            const categoryRaw = headers.indexOf('category') !== -1 ? rowValues[headers.indexOf('category')] : 'Personal Care';
             const price = Number(rowValues[headers.indexOf('price')] || rowValues[1]) || 180;
             const origPrice = headers.indexOf('originalprice') !== -1 ? Number(rowValues[headers.indexOf('originalprice')]) : undefined;
             const stock = headers.indexOf('stock') !== -1 ? Number(rowValues[headers.indexOf('stock')]) : 50;
@@ -415,9 +415,9 @@ export const AdminProductsPage: React.FC = () => {
   const handleDownloadCsvTemplate = () => {
     const csvContent =
       'Name,TeluguName,Category,Price,OriginalPrice,Stock,PackSizes,Image,ShortDescription,FullDescription,IsFeatured,IsBestseller\n' +
-      '"Little Millet (సమలు)","సహజ సామల ధాన్యం","Grains & Cereals",175,210,60,"500g, 1kg, 2kg","https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=800&q=80","Unpolished nutrient-rich little millets","Grown using natural cow-manure methods in Mahabubnagar.",true,false\n' +
-      '"Cold Pressed Sesame Oil (నువ్వుల నూనె)","గానుగ నువ్వుల నూనె","Natural Foods",380,450,45,"500ml, 1L","https://images.unsplash.com/photo-1474979266404-7eaacbcd87c5?auto=format&fit=crop&w=800&q=80","Wood-ghani cold pressed black sesame oil","Extracted at low RPM preserving authentic aroma.",true,true\n' +
-      '"Organic Sunnipindi Herbal Bath Powder","సంప్రదాయ సున్నిపిండి","Herbal Products",220,260,80,"250g, 500g","https://images.unsplash.com/photo-1608248597359-009772a08f5d?auto=format&fit=crop&w=800&q=80","Ancient 14-herb traditional bath scrub","Handcrafted with green gram, rose petals, and wild turmeric.",false,true\n';
+      '"Reetha Shampoo","కుంకుడుకాయల షాంపూ","Personal Care",80,100,60,"450 ml","/assets/products/reetha-shampoo.jpeg","100% natural chemical-free hair cleanser","Herbal soapnut shampoo for silky strong hair.",true,true\n' +
+      '"Orthocare Plus Oil","ఆర్థోకేర్ ప్లస్ ఆయిల్","Herbal Oils",50,70,50,"60 ml","/assets/products/orthocare-plus-oil.jpeg","Targeted herbal joint and knee pain relief","Ayurvedic therapeutic joint oil.",true,true\n' +
+      '"Pure Natural Honey","స్వచ్ఛమైన తేనె","Natural Foods",250,300,60,"500 g","/assets/products/honey.jpeg","Raw unfiltered forest honey","Pure natural immunity booster.",true,true\n';
 
     const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
     const url = URL.createObjectURL(blob);
@@ -764,10 +764,11 @@ export const AdminProductsPage: React.FC = () => {
                     onChange={(e) => setFormCategory(e.target.value as ProductCategory)}
                     className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
                   >
-                    <option value="Grains & Cereals">Grains & Cereals</option>
-                    <option value="Herbal Products">Herbal Products</option>
-                    <option value="Health Mixes">Health Mixes</option>
-                    <option value="Natural Foods">Natural Foods</option>
+                    {categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
                   </select>
                 </div>
 
