@@ -35,11 +35,6 @@ export const CartPage: React.FC = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  // Free shipping threshold = ₹499
-  const freeShippingThreshold = 499;
-  const amountNeededForFreeShipping = Math.max(0, freeShippingThreshold - subtotal);
-  const shippingProgress = Math.min(100, Math.round((subtotal / freeShippingThreshold) * 100));
-
   const handleApplyCoupon = (e: React.FormEvent) => {
     e.preventDefault();
     const clean = couponCode.trim().toUpperCase();
@@ -106,28 +101,15 @@ export const CartPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Free Shipping Progress Notification Banner */}
-        <div className="bg-[#EFF7E9] border border-[#8CCB55] p-4 rounded-2xl shadow-xs space-y-2">
-          <div className="flex items-center justify-between text-xs sm:text-sm font-bold text-[#075B2A]">
-            <div className="flex items-center gap-2">
-              <Truck className="w-4 h-4 text-[#4D963C]" />
-              {amountNeededForFreeShipping === 0 ? (
-                <span>🎉 Congratulations! You have unlocked Free Standard Delivery!</span>
-              ) : (
-                <span>
-                  Add <strong className="text-[#075B2A]">₹{amountNeededForFreeShipping}</strong> more to unlock Free Delivery!
-                </span>
-              )}
-            </div>
-            <span className="text-[11px] font-extrabold">{shippingProgress}%</span>
+        {/* Free Delivery Storewide Banner */}
+        <div className="bg-[#EFF7E9] border border-[#8CCB55] p-3.5 sm:p-4 rounded-2xl shadow-xs flex items-center justify-between gap-3 text-xs sm:text-sm font-bold text-[#075B2A]">
+          <div className="flex items-center gap-2.5">
+            <Truck className="w-5 h-5 text-[#4D963C] shrink-0" />
+            <span>🎉 100% Free Delivery on all Graminum Organic Orders! Direct from Native Indian Farmers.</span>
           </div>
-          {/* Progress Bar */}
-          <div className="w-full bg-white h-2 rounded-full overflow-hidden border border-[#8CCB55]/30">
-            <div
-              className="bg-[#4D963C] h-full transition-all duration-500 rounded-full"
-              style={{ width: `${shippingProgress}%` }}
-            ></div>
-          </div>
+          <span className="bg-[#8CCB55] text-[#06451F] text-[10px] font-black px-2.5 py-1 rounded-full shrink-0">
+            ZERO DELIVERY CHARGE
+          </span>
         </div>
 
         {/* Main Cart Grid: Left Items List & Right Order Summary */}

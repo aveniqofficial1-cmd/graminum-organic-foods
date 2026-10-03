@@ -21,7 +21,7 @@ export const Footer: React.FC = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { showToast } = useToast();
   const { settings } = useStoreSettings();
-  const { currentUser } = useAuth();
+  const { currentUser, isAuthenticated } = useAuth();
 
   const isUserAdmin = currentUser?.role === 'admin';
 
@@ -112,13 +112,15 @@ export const Footer: React.FC = () => {
                 <MessageCircle className="w-4 h-4" />
                 <span>Chat on WhatsApp</span>
               </a>
-              <Link
-                to="/track-order"
-                className="inline-flex items-center gap-1.5 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold px-3 py-2 rounded-xl border border-emerald-700/50 transition-colors"
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-[#8CCB55]" />
-                <span>Track Order</span>
-              </Link>
+              {isAuthenticated && (
+                <Link
+                  to="/track-order"
+                  className="inline-flex items-center gap-1.5 bg-emerald-900/60 hover:bg-emerald-800 text-emerald-100 text-xs font-semibold px-3 py-2 rounded-xl border border-emerald-700/50 transition-colors"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#8CCB55]" />
+                  <span>Track Order</span>
+                </Link>
+              )}
             </div>
           </div>
 

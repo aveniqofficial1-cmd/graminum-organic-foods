@@ -118,13 +118,13 @@ export const Header: React.FC = () => {
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2">
           <div className="flex items-center gap-1.5 sm:gap-2 truncate">
             <span className="bg-[#8CCB55] text-[#06451F] text-[9px] sm:text-[10px] font-extrabold px-1.5 py-0.5 rounded shrink-0">
-              FREE SHIPPING
+              100% PURE & TRADITIONAL
             </span>
             <span className="hidden sm:inline font-medium text-emerald-100 truncate">
-              On all traditional & organic grocery orders above ₹499
+              Direct from Native Indian Farmers • Vedic Cold-Pressed & Chemical-Free Goodness
             </span>
             <span className="sm:hidden font-medium text-emerald-100 truncate text-[10px]">
-              Free delivery above ₹499
+              100% Pure Vedic Traditional Living
             </span>
           </div>
 
@@ -138,14 +138,18 @@ export const Header: React.FC = () => {
               <MessageCircle className="w-3.5 h-3.5 text-[#8CCB55]" />
               <span>WhatsApp: +91 98765 43210</span>
             </a>
-            <span className="hidden md:inline text-emerald-300/40">|</span>
-            <Link
-              to="/track-order"
-              className="hover:text-white transition-colors flex items-center gap-1 font-semibold"
-            >
-              <Package className="w-3.5 h-3.5 text-[#8CCB55]" />
-              <span>Track Order</span>
-            </Link>
+            {isAuthenticated && (
+              <>
+                <span className="hidden md:inline text-emerald-300/40">|</span>
+                <Link
+                  to="/track-order"
+                  className="hover:text-white transition-colors flex items-center gap-1 font-semibold"
+                >
+                  <Package className="w-3.5 h-3.5 text-[#8CCB55]" />
+                  <span>Track Order</span>
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -352,7 +356,7 @@ export const Header: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        <div className="p-3 text-center border-b border-gray-100 space-y-1.5">
+                        <div className="p-3 text-center space-y-1.5">
                           <p className="text-xs font-bold text-[#18251B]">
                             Welcome to Graminum
                           </p>
@@ -373,14 +377,6 @@ export const Header: React.FC = () => {
                             </Link>
                           </div>
                         </div>
-                        <Link
-                          to="/track-order"
-                          onClick={() => setIsUserDropdownOpen(false)}
-                          className="flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold text-[#18251B] hover:bg-[#EFF7E9] transition-colors"
-                        >
-                          <Package className="w-4 h-4 text-[#4D963C]" />
-                          <span>Track Order</span>
-                        </Link>
                       </>
                     )}
                   </div>
@@ -480,13 +476,15 @@ export const Header: React.FC = () => {
                 >
                   Shop All Products
                 </Link>
-                <Link
-                  to="/track-order"
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  className="block px-3 py-2 text-sm font-bold text-[#18251B] hover:bg-[#EFF7E9] rounded-xl"
-                >
-                  Track Order
-                </Link>
+                {isAuthenticated && (
+                  <Link
+                    to="/track-order"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="block px-3 py-2 text-sm font-bold text-[#18251B] hover:bg-[#EFF7E9] rounded-xl"
+                  >
+                    Track Order
+                  </Link>
+                )}
                 <Link
                   to="/about"
                   onClick={() => setIsMobileMenuOpen(false)}

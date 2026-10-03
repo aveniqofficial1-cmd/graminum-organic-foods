@@ -123,12 +123,12 @@ export const CartProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const subtotal = items.reduce((total, item) => total + item.unitPrice * item.quantity, 0);
 
-  // Free delivery for orders >= ₹499, else ₹50
-  const deliveryFee = subtotal === 0 ? 0 : subtotal >= 499 ? 0 : 50;
+  // Zero delivery fee across store
+  const deliveryFee = 0;
 
   const discount = 0; // standard promotional calculation
 
-  const grandTotal = Math.max(0, subtotal + deliveryFee - discount);
+  const grandTotal = Math.max(0, subtotal - discount);
 
   return (
     <CartContext.Provider

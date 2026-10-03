@@ -17,19 +17,19 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-3',
     category: 'Payment',
     question: 'What payment methods are supported on Graminum?',
-    answer: 'We support all popular Indian digital payment modes: UPI (Google Pay, PhonePe, Paytm, BHIM), Credit & Debit Cards (Visa, MasterCard, RuPay), Net Banking, Cash on Delivery (COD in serviceable PIN codes), and direct Manual Bank / UPI QR Transfer with screenshot verification.'
+    answer: 'We support fast and direct UPI QR Scanner payment via Google Pay, PhonePe, Paytm, BHIM, or any banking UPI app. After scanning and paying, your order details and payment confirmation receipt are automatically pre-filled and sent to our official WhatsApp support for instant verification and processing.'
   },
   {
     id: 'faq-4',
     category: 'Payment',
-    question: 'How does manual payment screenshot verification work?',
-    answer: 'If you choose "Manual Transfer / QR Payment", you can scan our Graminum business QR code and upload the payment receipt/screenshot or enter your 12-digit UTR reference number. Our finance team verifies the transfer against bank records within 15-30 minutes and advances your order to "Accepted" status.'
+    question: 'How does UPI Scanner payment and WhatsApp receipt verification work?',
+    answer: 'At checkout, our dynamic UPI scanner is displayed with your exact order amount. Simply scan with any UPI app to pay, optionally attach the payment screenshot or UTR number, and click "Place Order". The system automatically generates a formatted WhatsApp message to Graminum with your complete order breakdown so our team can approve and dispatch your order promptly.'
   },
   {
     id: 'faq-5',
     category: 'Payment',
-    question: 'Do you offer Cash on Delivery (COD)?',
-    answer: 'Yes! Cash on Delivery is available across major cities in Telangana, Andhra Pradesh, and tier-1 Indian metros for orders up to ₹3,000. For higher value bulk orders, digital prepayment is recommended.'
+    question: 'Is online payment completely secure on Graminum?',
+    answer: 'Yes! Payments go directly to our official verified merchant bank account via NPCI UPI protocol. No credit card or sensitive banking credentials are stored on our servers.'
   },
   {
     id: 'faq-6',
@@ -41,13 +41,13 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-7',
     category: 'Delivery',
     question: 'How are delivery charges calculated?',
-    answer: 'We offer Free Standard Delivery on all orders above ₹499. For orders below ₹499, a nominal shipping charge of ₹50 is applied at checkout to cover safe botanical protective packaging.'
+    answer: 'Delivery is 100% FREE on all Graminum orders across our entire organic catalog! There are zero shipping or packaging fees added to your subtotal.'
   },
   {
     id: 'faq-8',
     category: 'Delivery',
     question: 'Can I collect my order directly from the store (Store Pickup)?',
-    answer: 'Yes! If you are located in Hyderabad, you can select "Store Pickup" at checkout and collect your freshly packed order from our Graminum flagship fulfillment center without any delivery charges.'
+    answer: 'Yes! If you are located in Hyderabad, you can select "Store Pickup" at checkout and collect your freshly packed order directly from our Graminum flagship fulfillment center.'
   },
   {
     id: 'faq-9',
