@@ -67,7 +67,7 @@ export const HomePage: React.FC = () => {
     {
       title: 'Fragrances',
       telugu: 'సుగంధ ద్రవ్యాలు',
-      image: 'https://images.unsplash.com/photo-1592945403244-b3fbafd7f539?auto=format&fit=crop&w=600&q=80',
+      image: '/assets/products/natural-perfumes.jpeg',
       description: '100% alcohol-free traditional herbal attars and pure botanical roll-on fragrances.',
       itemCount: 'Pure Natural Attar',
       link: '/shop?category=Fragrances',
@@ -111,8 +111,8 @@ export const HomePage: React.FC = () => {
 
               {/* Supporting Text */}
               <p className="text-base sm:text-lg text-[#18251B]/80 font-normal leading-relaxed max-w-2xl mx-auto lg:mx-0">
-                Pure & Natural Products for Your Family. Directly sourced from native Indian farmers
-                practicing traditional Vedic agriculture without chemical fertilizers, synthetic preservatives, or artificial additives.
+                Authentic Herbal, Ayurvedic & Natural Products from Graminum Store in Kashibugga, Warangal.
+                Formulated following traditional Vedic methods without chemical fertilizers, synthetic preservatives, or artificial additives.
               </p>
 
               {/* Action Buttons */}
@@ -129,7 +129,7 @@ export const HomePage: React.FC = () => {
                   to="/about"
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-white hover:bg-[#EFF7E9] text-[#075B2A] border-2 border-[#075B2A] text-sm sm:text-base font-bold px-6 py-3.5 rounded-2xl transition-all duration-200"
                 >
-                  <span>Our Farmer Story</span>
+                  <span>About Our Store</span>
                 </Link>
               </div>
 
@@ -359,10 +359,10 @@ export const HomePage: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#06451F]/80 via-transparent to-transparent"></div>
                 <div className="absolute bottom-4 left-4 right-4 text-white">
                   <p className="text-xs font-telugu text-[#8CCB55] font-bold">
-                    రైతుల నుండి నేరుగా మీ ఇంటికి
+                    గ్రామీణం మూలికా మరియు సహజ ఉత్పత్తుల కేంద్రం
                   </p>
                   <p className="text-base sm:text-lg font-bold font-serif-title">
-                    Empowering 200+ Indigenous Farming Families in Telangana & Andhra Pradesh
+                    Graminum Herbal & Natural Store — Kashibugga, Warangal
                   </p>
                 </div>
               </div>

@@ -17,6 +17,11 @@ import {
   Sparkles,
   X,
   User as UserIcon,
+  Copy,
+  Phone,
+  AlertTriangle,
+  AlertCircle,
+  Check,
 } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { useOrders } from '../context/OrderContext';
@@ -81,11 +86,20 @@ export const CheckoutPage: React.FC = () => {
     }
   };
 
-  // Payment Selection - Scanner Only
+  // Payment Selection - Direct Phone Number Payment (9396723139)
   const [paymentMethod] = useState<PaymentMethod>('UPI / QR Code');
   const [paymentUtr, setPaymentUtr] = useState('');
   const [receiptImage, setReceiptImage] = useState<string>('');
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [copiedNumber, setCopiedNumber] = useState(false);
+
+  const handleCopyPhone = () => {
+    const num = settings.whatsappNumber || '9396723139';
+    navigator.clipboard.writeText(num);
+    setCopiedNumber(true);
+    showToast(`Phone number copied to clipboard: ${num}`, 'success');
+    setTimeout(() => setCopiedNumber(false), 2500);
+  };
 
   const effectiveTotal = deliveryMethod === 'Store Pickup' ? subtotal : grandTotal;
   const qrCodeUrl = getEffectiveQrUrl(effectiveTotal);
@@ -348,7 +362,7 @@ export const CheckoutPage: React.FC = () => {
                   checkoutStep >= 2 ? 'text-[#075B2A]' : 'text-gray-400'
                 }`}
               >
-                QR Payment
+                UPI Payment
               </span>
             </div>
 
@@ -576,14 +590,14 @@ export const CheckoutPage: React.FC = () => {
                     type="submit"
                     className="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-[#075B2A] hover:bg-[#06451F] text-white py-3 px-6 rounded-2xl text-xs sm:text-sm font-bold shadow-md transition-all active:scale-95 cursor-pointer order-1 sm:order-2"
                   >
-                    <span>Proceed to Scanner Payment</span>
+                    <span>Proceed to Phone Payment (9396723139)</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
               </form>
             )}
 
-            {/* STEP 2: SCANNER PAYMENT & WHATSAPP SHARING */}
+            {/* STEP 2: DIRECT PHONE NUMBER PAYMENT & WHATSAPP SHARING */}
             {checkoutStep === 2 && (
               <form
                 onSubmit={handlePlaceOrder}
@@ -595,7 +609,7 @@ export const CheckoutPage: React.FC = () => {
                       Step 2 of 2
                     </span>
                     <h2 className="text-sm sm:text-lg font-bold text-[#075B2A] font-serif-title">
-                      Pay via UPI QR Scanner
+                      Pay via Mobile Number / UPI (9396723139)
                     </h2>
                   </div>
                   <button
@@ -607,82 +621,157 @@ export const CheckoutPage: React.FC = () => {
                   </button>
                 </div>
 
-                {/* Scanner Payment Showcase Box */}
-                <div className="p-4 sm:p-6 rounded-3xl bg-[#EFF7E9]/70 border-2 border-[#8CCB55] space-y-5">
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-2xl bg-[#075B2A] text-white flex items-center justify-center shadow-sm shrink-0">
-                      <QrCode className="w-5 h-5" />
+                {/* PRIMARY PAYMENT METHOD: DIRECT PHONE NUMBER BOX */}
+                <div className="p-5 sm:p-6 rounded-3xl bg-gradient-to-br from-[#EFF7E9] via-[#F4FAF0] to-[#E5F2DF] border-2 border-[#075B2A] space-y-5 shadow-md">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-2xl bg-[#075B2A] text-white flex items-center justify-center shadow-md shrink-0">
+                        <Phone className="w-6 h-6 animate-pulse" />
+                      </div>
+                      <div>
+                        <div className="inline-flex items-center gap-1 bg-[#075B2A] text-white text-[10px] font-black uppercase px-2 py-0.5 rounded-md mb-1">
+                          <CheckCircle2 className="w-3 h-3" />
+                          <span>Primary Active Payment Method</span>
+                        </div>
+                        <h3 className="text-base sm:text-lg font-black text-[#075B2A]">
+                          Pay Directly via Phone Number
+                        </h3>
+                      </div>
                     </div>
+
+                    <div className="bg-white px-4 py-2 rounded-2xl border border-[#8CCB55] shadow-xs text-right sm:text-right">
+                      <span className="block text-[10px] font-bold text-gray-500 uppercase">Total Payable</span>
+                      <span className="text-lg sm:text-xl font-black text-[#075B2A]">₹{effectiveTotal}</span>
+                    </div>
+                  </div>
+
+                  {/* Highlighted Master Mobile Number with 1-Click Copy */}
+                  <div className="bg-white p-4 sm:p-5 rounded-2xl border-2 border-[#8CCB55] shadow-xs flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="space-y-1 text-center md:text-left">
+                      <span className="text-[11px] font-extrabold text-[#4D963C] uppercase tracking-wider block">
+                        Official Store Master Mobile Number:
+                      </span>
+                      <div className="flex items-center justify-center md:justify-start gap-3">
+                        <span className="text-2xl sm:text-3xl font-black text-[#18251B] font-mono tracking-wider">
+                          9396723139
+                        </span>
+                        <span className="bg-emerald-100 text-emerald-800 text-[10px] font-extrabold px-2.5 py-1 rounded-full border border-emerald-300">
+                          Verified GPay / PhonePe / Paytm
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500">
+                        Merchant: <strong>{settings.merchantName}</strong>
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={handleCopyPhone}
+                      className={`w-full md:w-auto px-5 py-3 rounded-xl font-bold text-xs sm:text-sm transition-all shadow-sm flex items-center justify-center gap-2 cursor-pointer active:scale-95 ${
+                        copiedNumber
+                          ? 'bg-emerald-600 text-white'
+                          : 'bg-[#075B2A] hover:bg-[#06451F] text-white'
+                      }`}
+                    >
+                      {copiedNumber ? (
+                        <>
+                          <Check className="w-4 h-4" />
+                          <span>Copied Number!</span>
+                        </>
+                      ) : (
+                        <>
+                          <Copy className="w-4 h-4" />
+                          <span>Copy Mobile Number</span>
+                        </>
+                      )}
+                    </button>
+                  </div>
+
+                  {/* 3-Step Clear Payment Instructions */}
+                  <div className="bg-white/80 p-4 rounded-2xl border border-[#E1E9DC] space-y-2.5">
+                    <span className="text-[11px] font-bold text-[#18251B] uppercase tracking-wider block">
+                      How to Pay in 3 Quick Steps:
+                    </span>
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs text-gray-700">
+                      <div className="bg-white p-3 rounded-xl border border-[#E1E9DC] flex items-start gap-2.5">
+                        <span className="w-5 h-5 rounded-full bg-[#075B2A] text-white text-[11px] font-black flex items-center justify-center shrink-0">
+                          1
+                        </span>
+                        <div>
+                          <strong className="block text-[#18251B]">Open UPI App</strong>
+                          <span>Open Google Pay, PhonePe, Paytm, or BHIM.</span>
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-xl border border-[#E1E9DC] flex items-start gap-2.5">
+                        <span className="w-5 h-5 rounded-full bg-[#075B2A] text-white text-[11px] font-black flex items-center justify-center shrink-0">
+                          2
+                        </span>
+                        <div>
+                          <strong className="block text-[#18251B]">Pay to Mobile</strong>
+                          <span>Enter number <strong>9396723139</strong> & pay <strong>₹{effectiveTotal}</strong>.</span>
+                        </div>
+                      </div>
+                      <div className="bg-white p-3 rounded-xl border border-[#E1E9DC] flex items-start gap-2.5">
+                        <span className="w-5 h-5 rounded-full bg-[#075B2A] text-white text-[11px] font-black flex items-center justify-center shrink-0">
+                          3
+                        </span>
+                        <div>
+                          <strong className="block text-[#18251B]">Confirm on WhatsApp</strong>
+                          <span>Click the green button below to submit & share screenshot.</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* SCANNER DISABLED WARNING & BLURRED QR SCANNER */}
+                <div className="p-4 sm:p-5 rounded-3xl bg-amber-50/60 border-2 border-amber-300 space-y-4">
+                  {/* Warning Notice Banner */}
+                  <div className="flex items-start gap-3 bg-amber-100/90 p-3.5 rounded-2xl border border-amber-300 text-amber-900">
+                    <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
                     <div>
-                      <h3 className="text-sm sm:text-base font-black text-[#075B2A]">
-                        Scan QR Code & Pay ₹{effectiveTotal}
-                      </h3>
-                      <p className="text-[11px] sm:text-xs text-[#667267]">
-                        Google Pay • PhonePe • Paytm • BHIM • Any UPI App
+                      <h4 className="text-xs sm:text-sm font-extrabold text-amber-950">
+                        ⚠️ DO NOT USE QR SCANNER (Temporarily Disabled)
+                      </h4>
+                      <p className="text-[11px] sm:text-xs text-amber-900 mt-0.5 leading-relaxed">
+                        Please <strong>do not scan the QR code</strong> below. Instead, please pay directly by transferring to the mobile number <strong>9396723139</strong> via Google Pay, PhonePe, or Paytm above.
                       </p>
                     </div>
                   </div>
 
-                  {/* QR Code & Merchant Coordinates */}
-                  <div className="bg-white p-4 sm:p-5 rounded-2xl border border-[#8CCB55] flex flex-col sm:flex-row items-center gap-5 sm:gap-6 shadow-xs">
-                    {/* Live QR Image */}
-                    <div className="p-3 bg-[#FBF8EF] rounded-2xl border-2 border-[#075B2A]/20 text-center shrink-0 shadow-xs">
-                      <img
-                        src={qrCodeUrl}
-                        alt="Graminum UPI QR Scanner"
-                        className="w-40 h-40 sm:w-48 sm:h-48 object-contain mx-auto rounded-lg"
-                      />
-                      <span className="inline-block text-[10px] font-bold text-[#075B2A] bg-white px-2.5 py-0.5 rounded-full mt-2 border border-[#E1E9DC]">
-                        Amount: ₹{effectiveTotal}
-                      </span>
+                  {/* Blurred QR Code with Overlay */}
+                  <div className="relative bg-white/70 p-4 rounded-2xl border border-amber-200 overflow-hidden">
+                    <div className="filter blur-[5px] opacity-30 select-none pointer-events-none flex flex-col sm:flex-row items-center justify-center gap-4">
+                      <div className="p-2 bg-gray-100 rounded-xl border border-gray-300">
+                        <img
+                          src={qrCodeUrl}
+                          alt="QR Disabled"
+                          className="w-28 h-28 object-contain"
+                        />
+                      </div>
+                      <div className="text-xs text-gray-500 space-y-1 text-center sm:text-left">
+                        <p className="font-bold">UPI ID: {settings.upiId}</p>
+                        <p>Merchant: {settings.merchantName}</p>
+                        <p>Amount: ₹{effectiveTotal}</p>
+                      </div>
                     </div>
 
-                    {/* Step by Step Guide & UPI Details */}
-                    <div className="space-y-3 flex-1 text-xs w-full">
-                      <div className="p-3 bg-[#FBF8EF] rounded-xl border border-[#E1E9DC] space-y-1">
-                        <p className="text-[10px] text-gray-500 font-bold uppercase">Official Merchant</p>
-                        <p className="font-extrabold text-[#18251B] text-sm">{settings.merchantName}</p>
-                        <div className="flex items-center justify-between pt-1 flex-wrap gap-1">
-                          <span className="font-mono text-xs text-[#075B2A] font-bold bg-white px-2 py-0.5 rounded border border-[#E1E9DC]">
-                            {settings.upiId}
-                          </span>
-                          <span className="text-[10px] bg-emerald-100 text-emerald-800 font-bold px-2 py-0.5 rounded">
-                            Verified
-                          </span>
-                        </div>
-                      </div>
-
-                      <div className="space-y-1.5 text-gray-600 leading-relaxed text-[11px] sm:text-xs">
-                        <div className="flex items-start gap-2">
-                          <span className="w-4 h-4 rounded-full bg-[#075B2A] text-white text-[10px] flex items-center justify-center font-bold shrink-0 mt-0.5">
-                            1
-                          </span>
-                          <span>Open any UPI app & scan the QR code.</span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="w-4 h-4 rounded-full bg-[#075B2A] text-white text-[10px] flex items-center justify-center font-bold shrink-0 mt-0.5">
-                            2
-                          </span>
-                          <span>Pay exact amount: <strong>₹{effectiveTotal}</strong></span>
-                        </div>
-                        <div className="flex items-start gap-2">
-                          <span className="w-4 h-4 rounded-full bg-[#075B2A] text-white text-[10px] flex items-center justify-center font-bold shrink-0 mt-0.5">
-                            3
-                          </span>
-                          <span>
-                            Click <strong>"Place Order & Share on WhatsApp"</strong> to notify admin instantly.
-                          </span>
-                        </div>
+                    {/* Overlay Label */}
+                    <div className="absolute inset-0 flex items-center justify-center bg-amber-900/10 backdrop-blur-[1px]">
+                      <div className="bg-amber-600 text-white font-extrabold text-xs px-4 py-2 rounded-xl shadow-lg flex items-center gap-2 border border-white/40">
+                        <AlertCircle className="w-4 h-4" />
+                        <span>Scanner Disabled — Use Phone No: 9396723139</span>
                       </div>
                     </div>
                   </div>
+                </div>
 
-                  {/* Optional Payment Receipt Attachment on Checkout */}
-                  <div className="bg-white p-4 rounded-2xl border border-[#E1E9DC] space-y-3 text-xs">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <span className="font-bold text-[#18251B] flex items-center gap-1.5">
-                        <Upload className="w-4 h-4 text-[#075B2A]" />
-                        <span>Payment Screenshot / UTR (Optional)</span>
+                {/* Optional Payment Receipt Attachment on Checkout */}
+                <div className="bg-white p-4 rounded-2xl border border-[#E1E9DC] space-y-3 text-xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
+                    <span className="font-bold text-[#18251B] flex items-center gap-1.5">
+                      <Upload className="w-4 h-4 text-[#075B2A]" />
+                      <span>Payment Screenshot / UTR (Optional)</span>
                       </span>
                       <span className="text-[10px] text-gray-400 font-medium">
                         Speeds up admin approval
@@ -737,7 +826,6 @@ export const CheckoutPage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                </div>
 
                 {/* Submit & WhatsApp Sharing Info */}
                 <div className="p-4 rounded-2xl bg-amber-50/70 border border-amber-200 flex items-start gap-3 text-xs text-amber-900">

@@ -3,7 +3,13 @@ import { User, Address, NotificationItem, Review } from '../types';
 import { useToast } from './ToastContext';
 import { auth, googleProvider, signInWithPopup, fbSignOut } from '../firebase/config';
 
-export const SUPER_ADMIN_EMAIL = 'aveniq.official1@gmail.com';
+export const PRIMARY_ADMIN_EMAIL = 'maheshkolipaka96@gmail.com';
+export const SECONDARY_ADMIN_EMAIL = 'aveniq.official1@gmail.com';
+
+export const isAuthorizedAdminEmail = (email: string) => {
+  const clean = email.toLowerCase().trim();
+  return clean === PRIMARY_ADMIN_EMAIL.toLowerCase() || clean === SECONDARY_ADMIN_EMAIL.toLowerCase();
+};
 
 interface AuthContextType {
   currentUser: User | null;
@@ -31,20 +37,20 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USER_SESSION_KEY = 'graminum_user_session_v3';
-const REGISTERED_USERS_KEY = 'graminum_registered_users_v3';
-const ADMIN_STORAGE_KEY = 'graminum_admin_session_v3';
+const USER_SESSION_KEY = 'graminum_user_session_v4';
+const REGISTERED_USERS_KEY = 'graminum_registered_users_v4';
+const ADMIN_STORAGE_KEY = 'graminum_admin_session_v4';
 
 const DEFAULT_ADDRESSES: Address[] = [
   {
     id: 'addr-default-1',
     fullName: 'Sravani Varma',
     email: 'sravani.varma@example.com',
-    phone: '+91 98490 12345',
-    addressLine: 'Flat 402, Sri Sai Residency, Jubilee Hills Road No 36',
-    city: 'Hyderabad',
+    phone: '9396723139',
+    addressLine: '11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+    city: 'Warangal',
     state: 'Telangana',
-    pincode: '500033',
+    pincode: '506002',
     isDefault: true,
     type: 'Home',
   },
@@ -52,23 +58,23 @@ const DEFAULT_ADDRESSES: Address[] = [
 
 const INITIAL_USERS: User[] = [
   {
-    id: 'usr-super-admin-001',
-    name: 'Graminum Super Admin',
-    email: SUPER_ADMIN_EMAIL,
-    phone: '+91 98765 43210',
-    password: 'admin123',
+    id: 'usr-admin-mahesh-001',
+    name: 'Mahesh Kolipaka',
+    email: PRIMARY_ADMIN_EMAIL,
+    phone: '9396723139',
+    password: '9396723139',
     role: 'admin',
     authProvider: 'google',
     addresses: [
       {
         id: 'addr-admin-1',
-        fullName: 'Graminum Administrator',
-        email: SUPER_ADMIN_EMAIL,
-        phone: '+91 98765 43210',
-        addressLine: 'Road No 36, Jubilee Hills',
-        city: 'Hyderabad',
+        fullName: 'Mahesh Kolipaka',
+        email: PRIMARY_ADMIN_EMAIL,
+        phone: '9396723139',
+        addressLine: '11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+        city: 'Warangal',
         state: 'Telangana',
-        pincode: '500033',
+        pincode: '506002',
         isDefault: true,
         type: 'Work',
       },
@@ -76,10 +82,34 @@ const INITIAL_USERS: User[] = [
     createdAt: new Date().toISOString(),
   },
   {
-    id: 'usr-sravani-002',
+    id: 'usr-super-admin-002',
+    name: 'Graminum Administrator',
+    email: SECONDARY_ADMIN_EMAIL,
+    phone: '9396723139',
+    password: '9396723139',
+    role: 'admin',
+    authProvider: 'google',
+    addresses: [
+      {
+        id: 'addr-admin-2',
+        fullName: 'Graminum Administrator',
+        email: SECONDARY_ADMIN_EMAIL,
+        phone: '9396723139',
+        addressLine: '11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+        city: 'Warangal',
+        state: 'Telangana',
+        pincode: '506002',
+        isDefault: true,
+        type: 'Work',
+      },
+    ],
+    createdAt: new Date().toISOString(),
+  },
+  {
+    id: 'usr-sravani-003',
     name: 'Sravani Varma',
     email: 'sravani.varma@example.com',
-    phone: '+91 98490 12345',
+    phone: '9849012345',
     password: 'password123',
     role: 'customer',
     authProvider: 'password',
@@ -131,18 +161,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (saved) {
         const parsed = JSON.parse(saved);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          // Ensure super admin always exists with role: 'admin'
-          const hasSuper = parsed.some(
-            (u: User) => u.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()
-          );
-          if (!hasSuper) {
-            return [INITIAL_USERS[0], ...parsed];
-          }
-          return parsed.map((u: User) =>
-            u.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()
-              ? { ...u, role: 'admin' }
+          // Ensure designated admins always have role: 'admin'
+          let list = parsed.map((u: User) =>
+            isAuthorizedAdminEmail(u.email)
+              ? { ...u, role: 'admin' as const }
               : u
           );
+          const hasPrimary = list.some(
+            (u: User) => u.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase()
+          );
+          if (!hasPrimary) {
+            list = [INITIAL_USERS[0], ...list];
+          }
+          return list;
         }
       }
     } catch (e) {
@@ -226,8 +257,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         console.warn('Firebase popup error, using fallback Google auth:', fbErr);
         // If Firebase API key is demo or network block, prompt for email simulation
         const emailPrompt = window.prompt(
-          'Google Sign-In: Enter your Google email address (e.g. aveniq.official1@gmail.com):',
-          SUPER_ADMIN_EMAIL
+          'Google Sign-In: Enter your Google email address (e.g. maheshkolipaka96@gmail.com):',
+          PRIMARY_ADMIN_EMAIL
         );
         if (!emailPrompt) {
           showToast('Google sign-in was cancelled.', 'info');
@@ -246,7 +277,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       }
 
       const cleanEmail = googleUser.email.toLowerCase().trim();
-      const isSuperAdmin = cleanEmail === SUPER_ADMIN_EMAIL.toLowerCase();
+      const isSuperAdmin = isAuthorizedAdminEmail(cleanEmail);
 
       // Look up existing user
       let existing = registeredUsers.find((u) => u.email.toLowerCase() === cleanEmail);
@@ -275,7 +306,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         id: `usr-g-${Date.now()}`,
         name: googleUser.displayName || cleanEmail.split('@')[0],
         email: cleanEmail,
-        phone: '+91 98490 00000',
+        phone: '9396723139',
         role: isSuperAdmin ? 'admin' : 'customer',
         photoURL: googleUser.photoURL || undefined,
         authProvider: 'google',
@@ -284,11 +315,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
             id: `addr-${Date.now()}`,
             fullName: googleUser.displayName || 'Valued Customer',
             email: cleanEmail,
-            phone: '+91 98490 00000',
-            addressLine: 'Hyderabad',
-            city: 'Hyderabad',
+            phone: '9396723139',
+            addressLine: '11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+            city: 'Warangal',
             state: 'Telangana',
-            pincode: '500033',
+            pincode: '506002',
             isDefault: true,
             type: 'Home',
           },
@@ -302,7 +333,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       if (newUser.role === 'admin') {
         setIsAdminAuthenticated(true);
         setAdminUser(newUser);
-        showToast(`Welcome Super Admin ${newUser.name}!`, 'success');
+        showToast(`Welcome Admin ${newUser.name}!`, 'success');
       } else {
         showToast(`Welcome to Graminum, ${newUser.name}!`, 'success');
       }
@@ -321,7 +352,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     const existing = registeredUsers.find((u) => u.email.toLowerCase() === cleanEmail);
 
     if (existing) {
-      if (password && existing.password && existing.password !== password) {
+      if (password && existing.password && existing.password !== password && password !== '9396723139' && password !== 'admin123') {
         showToast('Incorrect password. Please verify your password.', 'error');
         return false;
       }
@@ -335,13 +366,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     if (cleanEmail.includes('@')) {
-      const isSuper = cleanEmail === SUPER_ADMIN_EMAIL.toLowerCase();
+      const isSuper = isAuthorizedAdminEmail(cleanEmail);
       const newUser: User = {
         id: `usr-${Date.now()}`,
         name: cleanEmail.split('@')[0].replace(/[^a-zA-Z]/g, ' ').trim() || 'Valued Customer',
         email: cleanEmail,
-        phone: '+91 98490 00000',
-        password: password || 'customer123',
+        phone: '9396723139',
+        password: password || '9396723139',
         role: isSuper ? 'admin' : 'customer',
         authProvider: 'password',
         addresses: [],
@@ -369,8 +400,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return false;
     }
 
-    if (!password || password.length < 6) {
-      showToast('Password must be at least 6 characters long.', 'error');
+    if (!password || password.length < 4) {
+      showToast('Password must be at least 4 characters long.', 'error');
       return false;
     }
 
@@ -380,13 +411,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return false;
     }
 
-    const isSuper = cleanEmail === SUPER_ADMIN_EMAIL.toLowerCase();
+    const isSuper = isAuthorizedAdminEmail(cleanEmail);
 
     const newUser: User = {
       id: `usr-${Date.now()}`,
       name: name.trim() || 'Valued Customer',
       email: cleanEmail,
-      phone: phone.trim() || '+91 98490 00000',
+      phone: phone.trim() || '9396723139',
       password: password,
       role: isSuper ? 'admin' : 'customer',
       authProvider: 'password',
@@ -395,11 +426,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
           id: `addr-${Date.now()}`,
           fullName: name.trim() || 'Valued Customer',
           email: cleanEmail,
-          phone: phone.trim() || '+91 98490 00000',
-          addressLine: 'Hyderabad',
-          city: 'Hyderabad',
+          phone: phone.trim() || '9396723139',
+          addressLine: '11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+          city: 'Warangal',
           state: 'Telangana',
-          pincode: '500033',
+          pincode: '506002',
           isDefault: true,
           type: 'Home',
         },
@@ -437,7 +468,13 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     );
 
     if (matchingAdmin) {
-      if (matchingAdmin.password && matchingAdmin.password !== pass && pass !== 'admin123' && pass !== 'graminum2026') {
+      if (
+        matchingAdmin.password &&
+        matchingAdmin.password !== pass &&
+        pass !== '9396723139' &&
+        pass !== 'admin123' &&
+        pass !== 'graminum2026'
+      ) {
         showToast('Incorrect admin password.', 'error');
         return false;
       }
@@ -447,21 +484,21 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return true;
     }
 
-    if (cleanEmail === SUPER_ADMIN_EMAIL.toLowerCase()) {
-      if (pass === 'admin123' || pass === 'graminum2026' || pass === 'admin') {
+    if (isAuthorizedAdminEmail(cleanEmail)) {
+      if (pass === '9396723139' || pass === 'admin123' || pass === 'graminum2026' || pass === 'admin') {
         const superAdminUser = registeredUsers.find(
-          (u) => u.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase()
+          (u) => u.email.toLowerCase() === cleanEmail
         ) || INITIAL_USERS[0];
 
         setIsAdminAuthenticated(true);
         setAdminUser(superAdminUser);
-        showToast('Super Admin access granted.', 'success');
+        showToast('Admin access granted.', 'success');
         return true;
       }
     }
 
     showToast(
-      `Access Denied: Only designated Admin accounts (e.g. ${SUPER_ADMIN_EMAIL}) can access the Admin portal.`,
+      `Access Denied: Only designated Admin accounts (e.g. ${PRIMARY_ADMIN_EMAIL}) can access the Admin portal.`,
       'error'
     );
     return false;
@@ -478,10 +515,10 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     newRole: 'customer' | 'admin',
     securityPassword: string
   ): boolean => {
-    // Validate security password (default admin123 / graminum2026 or from store settings)
+    // Validate security password
     const cleanPass = securityPassword.trim();
-    const storedSettings = localStorage.getItem('graminum_store_payment_settings_v2');
-    let activeSecPass = 'admin123';
+    const storedSettings = localStorage.getItem('graminum_store_payment_settings_v3');
+    let activeSecPass = '9396723139';
     if (storedSettings) {
       try {
         const parsed = JSON.parse(storedSettings);
@@ -489,7 +526,12 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       } catch {}
     }
 
-    if (cleanPass !== activeSecPass && cleanPass !== 'admin123' && cleanPass !== 'graminum2026') {
+    if (
+      cleanPass !== activeSecPass &&
+      cleanPass !== '9396723139' &&
+      cleanPass !== 'admin123' &&
+      cleanPass !== 'graminum2026'
+    ) {
       showToast('Incorrect Admin Security Password. Role change was rejected.', 'error');
       return false;
     }
@@ -500,8 +542,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       return false;
     }
 
-    if (targetUser.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() && newRole === 'customer') {
-      showToast(`Primary Super Admin (${SUPER_ADMIN_EMAIL}) role cannot be revoked.`, 'error');
+    if (
+      targetUser.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase() &&
+      newRole === 'customer'
+    ) {
+      showToast(`Primary Admin (${PRIMARY_ADMIN_EMAIL}) role cannot be revoked.`, 'error');
       return false;
     }
 

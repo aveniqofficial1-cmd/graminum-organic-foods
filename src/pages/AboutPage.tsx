@@ -37,14 +37,14 @@ export const AboutPage: React.FC = () => {
           </div>
 
           <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black font-serif-title leading-tight">
-            Rooted in Telugu Soil, <br />
-            <span className="text-[#8CCB55]">Nourishing Modern Lives</span>
+            Rooted in Telugu Heritage, <br />
+            <span className="text-[#8CCB55]">Nourishing Pure Lives</span>
           </h1>
 
           <p className="text-sm sm:text-base text-[#EFF7E9]/90 max-w-2xl mx-auto leading-relaxed pt-2">
-            Graminum (గ్రామీణం) was founded to revive the timeless nutritional wisdom of ancient
-            Indian agriculture — delivering unadulterated, chemical-free grains, cold-pressed oils,
-            and herbal superfoods straight from generational farmer collectives to your family.
+            Graminum (గ్రామీణం) Herbal & Natural Store in Kashibugga, Warangal is dedicated to reviving
+            the timeless healing and nutritional wisdom of ancient Ayurveda — delivering authentic herbal oils,
+            traditional wellness remedies, natural foods, and sacred pooja essentials to your family.
           </p>
         </div>
 
@@ -84,35 +84,33 @@ export const AboutPage: React.FC = () => {
                   Our Genesis & Heritage
                 </span>
                 <h2 className="text-2xl sm:text-4xl font-black text-[#075B2A] font-serif-title">
-                  Returning to Native Grains & Sacred Soil
+                  Preserving Traditional Herbal Wisdom & Purity
                 </h2>
               </div>
 
               <p className="text-xs sm:text-sm text-[#18251B] leading-relaxed">
-                For thousands of years, the agrarian heartlands of Andhra Pradesh and Telangana
-                thrived on hearty millets (Siri Dhanyalu), cold-pressed unrefined oils (Gaana Noone),
-                and nutrient-dense stone-ground flours. As industrial refining replaced nutritious
-                whole foods with ultra-processed staples, chronic lifestyle disorders surged.
+                Located opposite Sai Baba Temple in Kashibugga, Warangal, Graminum Herbal & Natural Store
+                was established to provide families with unadulterated, time-honored Ayurvedic formulations,
+                cold-pressed herbal oils (Tailams), digestive rasayanams, and chemical-free personal care essentials.
               </p>
 
               <p className="text-xs sm:text-sm text-[#667267] leading-relaxed">
-                Graminum began as a mission to restore that broken link. We partner directly with
-                over 450 certified natural farmers who practice zero-budget natural farming (ZBNF),
-                protecting desi heirloom seeds and reviving traditional crop cycles without chemical
-                fertilizers or toxic pesticides.
+                Every formulation in our catalog — from classical Kesavardhini and Maharshi Tailams to
+                authentic Madiphal Rasayanam, Nannari Sharbat, and pure Pacha Karpooram — is prepared following
+                revered traditional methods, keeping the healing essence of nature intact.
               </p>
 
               <div className="grid grid-cols-2 gap-4 pt-2">
                 <div className="p-4 bg-white rounded-2xl border border-[#E1E9DC] shadow-xs">
-                  <span className="text-2xl font-black text-[#075B2A]">450+</span>
-                  <p className="text-xs font-bold text-[#18251B] mt-0.5">Partner Farmers</p>
-                  <p className="text-[10px] text-gray-500">Fair trade compensation</p>
+                  <span className="text-2xl font-black text-[#075B2A]">28+</span>
+                  <p className="text-xs font-bold text-[#18251B] mt-0.5">Authentic Products</p>
+                  <p className="text-[10px] text-gray-500">6 Specialized categories</p>
                 </div>
 
                 <div className="p-4 bg-white rounded-2xl border border-[#E1E9DC] shadow-xs">
                   <span className="text-2xl font-black text-[#075B2A]">100%</span>
-                  <p className="text-xs font-bold text-[#18251B] mt-0.5">Residue-Free</p>
-                  <p className="text-[10px] text-gray-500">NABL lab batch tested</p>
+                  <p className="text-xs font-bold text-[#18251B] mt-0.5">Purity Guaranteed</p>
+                  <p className="text-[10px] text-gray-500">Zero synthetic adulterants</p>
                 </div>
               </div>
             </div>

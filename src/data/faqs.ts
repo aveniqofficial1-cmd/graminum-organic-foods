@@ -17,13 +17,13 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-3',
     category: 'Payment',
     question: 'What payment methods are supported on Graminum?',
-    answer: 'We support fast and direct UPI QR Scanner payment via Google Pay, PhonePe, Paytm, BHIM, or any banking UPI app. After scanning and paying, your order details and payment confirmation receipt are automatically pre-filled and sent to our official WhatsApp support for instant verification and processing.'
+    answer: 'We support fast and direct Phone Number UPI payment to 9396723139 via Google Pay, PhonePe, Paytm, BHIM, or any UPI app. After sending payment to 9396723139, your order details and payment confirmation receipt are automatically pre-filled and sent to our official WhatsApp support for instant verification and processing.'
   },
   {
     id: 'faq-4',
     category: 'Payment',
-    question: 'How does UPI Scanner payment and WhatsApp receipt verification work?',
-    answer: 'At checkout, our dynamic UPI scanner is displayed with your exact order amount. Simply scan with any UPI app to pay, optionally attach the payment screenshot or UTR number, and click "Place Order". The system automatically generates a formatted WhatsApp message to Graminum with your complete order breakdown so our team can approve and dispatch your order promptly.'
+    question: 'How does Direct Phone UPI payment and WhatsApp receipt verification work?',
+    answer: 'At checkout, our master mobile number (9396723139) is displayed with your exact order amount and a 1-click copy button. Simply transfer via Google Pay, PhonePe, or Paytm to 9396723139, optionally attach your payment screenshot or 12-digit UTR number, and click "Place Order & Share on WhatsApp". The system automatically generates a formatted WhatsApp message to Graminum with your complete order breakdown so our team can approve and dispatch your order promptly.'
   },
   {
     id: 'faq-5',
@@ -47,7 +47,7 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-8',
     category: 'Delivery',
     question: 'Can I collect my order directly from the store (Store Pickup)?',
-    answer: 'Yes! If you are located in Hyderabad, you can select "Store Pickup" at checkout and collect your freshly packed order directly from our Graminum flagship fulfillment center.'
+    answer: 'Yes! You can select "Store Pickup" at checkout and collect your freshly packed order directly from Graminum Herbal & Natural Store, 11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga, Warangal-506002.'
   },
   {
     id: 'faq-9',
@@ -59,13 +59,13 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-10',
     category: 'Products',
     question: 'Are all Graminum products 100% natural, unadulterated and chemical-free?',
-    answer: 'Absolutely. We directly partner with smallholder organic farmers practicing natural farming (Subhash Palekar Natural Farming & Vedic Agriculture) without synthetic pesticides, chemical fertilizers, urea, or GMO seeds. All products undergo rigorous quality and purity checks.'
+    answer: 'Absolutely. We formulate and source our traditional Ayurvedic herbal oils, personal care items, digestives, natural foods, and pooja essentials following strict traditional methods without synthetic pesticides, chemical fertilizers, mineral oils, artificial colors, or animal fats. All products undergo rigorous quality and purity checks.'
   },
   {
     id: 'faq-11',
     category: 'Products',
-    question: 'Why are Graminum grains unpolished / single polished?',
-    answer: 'Hyper-polishing strips the nutrient-dense aleurone layer and cereal germ, removing essential dietary fiber, B-vitamins, and minerals. Our single polish and unpolished grains retain maximum natural nutrition and low glycemic index benefits.'
+    question: 'Why are Graminum grains and herbal oils unique?',
+    answer: 'Our herbal oils are prepared via slow traditional extraction, preserving active phytonutrients and botanical essences. Our multigrain mixes and natural foods retain maximum natural dietary fiber, whole grain germ, and therapeutic benefits.'
   },
   {
     id: 'faq-12',
@@ -83,7 +83,7 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-14',
     category: 'Returns & Support',
     question: 'How can I contact Graminum customer support?',
-    answer: 'You can reach us directly via WhatsApp at +91 98765 43210 (9:00 AM – 7:00 PM IST), call our helpline, or email us at support@graminum.in. We take pride in swift, caring customer support.'
+    answer: 'You can reach us directly via WhatsApp or Call at +91 93967 23139 (9:00 AM – 9:00 PM IST) or email us at care@graminum.com. We take pride in swift, caring customer support.'
   }
 ];
 

@@ -14,15 +14,15 @@ interface StoreSettingsContextType {
 
 const StoreSettingsContext = createContext<StoreSettingsContextType | undefined>(undefined);
 
-const SETTINGS_STORAGE_KEY = 'graminum_store_payment_settings_v2';
+const SETTINGS_STORAGE_KEY = 'graminum_store_payment_settings_v3';
 
 const DEFAULT_SETTINGS: StorePaymentSettings = {
-  whatsappNumber: '+91 98765 43210',
-  upiId: 'graminum@icici',
-  merchantName: 'Graminum Organic Foods',
+  whatsappNumber: '9396723139',
+  upiId: '9396723139@upi',
+  merchantName: 'Graminum Natural & Herbal Store',
   customQrCodeUrl: '',
-  adminSecurityPassword: 'admin123',
-  instructions: 'Scan QR code with any UPI app (GPay, PhonePe, Paytm), complete payment, and share screenshot on WhatsApp.',
+  adminSecurityPassword: '9396723139',
+  instructions: 'Pay directly via Phone Number / UPI: 9396723139 using Google Pay, PhonePe, Paytm, or BHIM. Share screenshot on WhatsApp.',
 };
 
 export const StoreSettingsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
@@ -65,9 +65,9 @@ export const StoreSettingsProvider: React.FC<{ children: ReactNode }> = ({ child
 
   const verifyAdminPassword = (password: string): boolean => {
     const cleanInput = password.trim();
-    const correctPass = settings.adminSecurityPassword || 'admin123';
-    // Also accept master demo pass 'admin123' or 'graminum2026'
-    if (cleanInput === correctPass || cleanInput === 'admin123' || cleanInput === 'graminum2026') {
+    const correctPass = settings.adminSecurityPassword || '9396723139';
+    // Accept configured pass or master admin phone number password
+    if (cleanInput === correctPass || cleanInput === '9396723139' || cleanInput === 'admin123') {
       return true;
     }
     return false;
@@ -99,7 +99,7 @@ export const StoreSettingsProvider: React.FC<{ children: ReactNode }> = ({ child
   };
 
   const generateWhatsAppOrderUrl = (order: Order): string => {
-    const cleanPhone = getCleanWhatsAppNumber() || '919876543210';
+    const cleanPhone = getCleanWhatsAppNumber() || '9396723139';
 
     const itemsSummary = order.items
       .map(
@@ -112,10 +112,10 @@ export const StoreSettingsProvider: React.FC<{ children: ReactNode }> = ({ child
 
     const addressText =
       order.deliveryMethod === 'Store Pickup'
-        ? '🏬 *Store Pickup:* Graminum Flagship Store, Jubilee Hills, Hyderabad'
+        ? '🏬 *Store Pickup:* Graminum Herbal Store, 11-18-356/3/A, Opp Sai Baba Temple, Beside Assisi School, O City, Kashibugga, Warangal-506002'
         : `🏡 *Delivery Address:*\n${order.shippingAddress.fullName}\n${order.shippingAddress.addressLine}, ${order.shippingAddress.city} - ${order.shippingAddress.pincode}\n📞 ${order.shippingAddress.phone}`;
 
-    const message = `🌿 *GRAMINUM ORGANIC FOODS — ORDER PAYMENT RECEIPT* 🌿
+    const message = `🌿 *GRAMINUM HERBAL & NATURAL STORE — ORDER PAYMENT RECEIPT* 🌿
 --------------------------------------------------
 *Order ID:* #${order.orderNumber}
 *Date:* ${new Date(order.createdAt).toLocaleDateString('en-IN', {
@@ -135,17 +135,17 @@ ${itemsSummary}
 *Subtotal:* ₹${order.subtotal}
 *Delivery Fee:* ₹${order.deliveryFee}
 *Total Amount Paid:* ₹${order.grandTotal}
-*Payment Method:* UPI QR Scanner (${settings.upiId})
+*Payment Method:* Direct UPI / Phone Payment (9396723139)
 ${order.paymentUtr ? `*UTR / Ref No:* ${order.paymentUtr}` : ''}
 
 ${addressText}
 --------------------------------------------------
 *Payment Confirmation Request:*
-Namaskaram Graminum Team! I have completed the UPI scanner payment for ₹${order.grandTotal}. I am sharing my payment screenshot above. Please verify my receipt, confirm my order, and dispatch my fresh organic groceries.
+Namaskaram Graminum Team! I have sent payment of ₹${order.grandTotal} directly to master phone number 9396723139. I am sharing my payment screenshot above. Please verify my receipt, confirm my order, and dispatch my products.
 
 Thank you! 🙏`;
 
-    return `https://wa.me/${cleanPhone}?text=${encodeURIComponent(message)}`;
+    return `https://wa.me/91${cleanPhone.replace(/^91/, '')}?text=${encodeURIComponent(message)}`;
   };
 
   return (

@@ -18,7 +18,7 @@ import {
   Phone,
   Calendar,
 } from 'lucide-react';
-import { useAuth, SUPER_ADMIN_EMAIL } from '../../context/AuthContext';
+import { useAuth, PRIMARY_ADMIN_EMAIL } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 import { User } from '../../types';
 
@@ -50,8 +50,8 @@ export const AdminUsersPage: React.FC = () => {
   });
 
   const handleOpenRoleModal = (user: User, newRole: 'customer' | 'admin') => {
-    if (user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase() && newRole === 'customer') {
-      showToast(`Primary Super Admin (${SUPER_ADMIN_EMAIL}) cannot be demoted.`, 'error');
+    if (user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase() && newRole === 'customer') {
+      showToast(`Primary Admin (${PRIMARY_ADMIN_EMAIL}) cannot be demoted.`, 'error');
       return;
     }
     setSelectedTargetUser(user);
@@ -122,9 +122,9 @@ export const AdminUsersPage: React.FC = () => {
         <div className="flex items-center gap-3">
           <Crown className="w-5 h-5 text-amber-600 shrink-0" />
           <div>
-            <span className="font-extrabold block">Primary Super Administrator:</span>
+            <span className="font-extrabold block">Primary Administrator:</span>
             <span className="font-mono bg-white/70 px-2 py-0.5 rounded-md border border-amber-300 font-bold">
-              {SUPER_ADMIN_EMAIL}
+              {PRIMARY_ADMIN_EMAIL}
             </span>
           </div>
         </div>
@@ -200,7 +200,7 @@ export const AdminUsersPage: React.FC = () => {
               {filteredUsers.length > 0 ? (
                 filteredUsers.map((user) => {
                   const isSuperAdmin =
-                    user.email.toLowerCase() === SUPER_ADMIN_EMAIL.toLowerCase();
+                    user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase();
 
                   return (
                     <tr

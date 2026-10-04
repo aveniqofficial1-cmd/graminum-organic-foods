@@ -11,7 +11,7 @@ import {
   KeyRound,
   CheckCircle2,
 } from 'lucide-react';
-import { useAuth, SUPER_ADMIN_EMAIL } from '../../context/AuthContext';
+import { useAuth, PRIMARY_ADMIN_EMAIL } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 
 export const AdminLoginPage: React.FC = () => {
@@ -19,8 +19,8 @@ export const AdminLoginPage: React.FC = () => {
   const { showToast } = useToast();
   const navigate = useNavigate();
 
-  const [email, setEmail] = useState(SUPER_ADMIN_EMAIL);
-  const [password, setPassword] = useState('admin123');
+  const [email, setEmail] = useState(PRIMARY_ADMIN_EMAIL);
+  const [password, setPassword] = useState('9396723139');
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
@@ -80,7 +80,7 @@ export const AdminLoginPage: React.FC = () => {
             Administrator Sign In
           </h1>
           <p className="text-xs text-[#667267]">
-            Restricted to Primary Super Admin (<strong>{SUPER_ADMIN_EMAIL}</strong>) and authorized administrators.
+            Restricted to Primary Admin (<strong>{PRIMARY_ADMIN_EMAIL}</strong>) and authorized administrators.
           </p>
         </div>
 
@@ -131,7 +131,7 @@ export const AdminLoginPage: React.FC = () => {
                 required
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="aveniq.official1@gmail.com"
+                placeholder="maheshkolipaka96@gmail.com"
                 className="w-full bg-[#FBF8EF] text-xs sm:text-sm pl-10 pr-4 py-3 rounded-2xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A] transition-colors"
               />
               <Mail className="w-4 h-4 text-gray-400 absolute left-3.5 top-1/2 -translate-y-1/2" />

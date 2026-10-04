@@ -97,9 +97,9 @@ export const Footer: React.FC = () => {
             </div>
 
             <p className="text-xs sm:text-sm text-emerald-100/80 leading-relaxed max-w-sm">
-              Connecting nature-conscious families directly with ethical Indian organic farmers.
-              Committed to unadulterated native grains, Ayurvedic herbal wellness, cold-pressed oils,
-              and wholesome multigrain nutrition for generations to come.
+              Authentic Herbal & Natural Store located in Kashibugga, Warangal.
+              Committed to unadulterated native formulations, Ayurvedic herbal wellness, cold-pressed traditional oils,
+              pooja essentials, and wholesome multigrain nutrition.
             </p>
 
             <div className="pt-2 flex flex-wrap items-center gap-3">
@@ -191,7 +191,7 @@ export const Footer: React.FC = () => {
             <ul className="space-y-2.5 text-xs text-emerald-100/80">
               <li>
                 <Link to="/about" className="hover:text-[#8CCB55] transition-colors">
-                  Our Farmer Story
+                  About Graminum Store
                 </Link>
               </li>
               <li>
@@ -201,7 +201,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link to="/contact" className="hover:text-[#8CCB55] transition-colors">
-                  Contact & Store Visit
+                  Contact & Warangal Store Visit
                 </Link>
               </li>
               <li>
@@ -279,8 +279,8 @@ export const Footer: React.FC = () => {
 
           <div className="flex items-center gap-2 flex-wrap justify-center text-[10px] sm:text-[11px] text-emerald-200/80">
             <span className="bg-emerald-900/60 px-2.5 py-1 rounded-md border border-emerald-800 font-bold text-white flex items-center gap-1">
-              <QrCode className="w-3 h-3 text-[#8CCB55]" />
-              <span>UPI Scanner Only</span>
+              <Phone className="w-3 h-3 text-[#8CCB55]" />
+              <span>Direct Phone UPI: 9396723139</span>
             </span>
             <span className="bg-emerald-900/60 px-2.5 py-1 rounded-md border border-emerald-800">
               GPay / PhonePe / Paytm / BHIM
