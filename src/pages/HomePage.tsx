@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   ArrowRight,
@@ -22,6 +22,61 @@ export const HomePage: React.FC = () => {
   const { products } = useProducts();
   const featuredProducts = products.filter((p) => p.isFeatured).slice(0, 8);
   const bestsellers = products.filter((p) => p.isBestseller).slice(0, 4);
+
+  // Authentic Graminum Hero Products for interactive packaging showcase
+  const heroProducts = [
+    {
+      id: 'grm-prod-nf-02',
+      name: 'Multigrain Diet Mix (14 Grains)',
+      teluguName: '14 ధాన్యాల మిశ్రమం',
+      badge: '14 Native Grains',
+      price: 99,
+      size: '500 g',
+      image: '/assets/products/multigrain-diet-mix.jpeg',
+      slug: 'multigrain-diet-mix',
+      category: 'Natural Foods',
+      highlight: 'Sprouted Native Millets & Pulses',
+    },
+    {
+      id: 'grm-prod-pc-02',
+      name: 'Kesavardhini Hair Oil',
+      teluguName: 'కేశవర్ధిని హెయిర్ ఆయిల్',
+      badge: 'Bhringraj & Brahmi',
+      price: 80,
+      size: '100 ml',
+      image: '/assets/products/kesavardhini-oil.jpeg',
+      slug: 'kesavardhini-hair-oil',
+      category: 'Personal Care',
+      highlight: 'Herbal Scalp & Hair Growth Oil',
+    },
+    {
+      id: 'grm-prod-nf-01',
+      name: 'Pure Natural Raw Honey',
+      teluguName: 'స్వచ్ఛమైన అడవి తేనె',
+      badge: '100% Wild Raw',
+      price: 250,
+      size: '500 g',
+      image: '/assets/products/honey.jpeg',
+      slug: 'pure-natural-honey',
+      category: 'Natural Foods',
+      highlight: 'Unfiltered Multi-Floral Forest Honey',
+    },
+    {
+      id: 'grm-prod-pc-01',
+      name: 'Reetha Herbal Shampoo',
+      teluguName: 'కుంకుడుకాయల షాంపూ',
+      badge: 'Chemical-Free',
+      price: 80,
+      size: '450 ml',
+      image: '/assets/products/reetha-shampoo.jpeg',
+      slug: 'reetha-shampoo',
+      category: 'Personal Care',
+      highlight: 'Soapnut & Shikakai Scalp Wash',
+    },
+  ];
+
+  const [activeHeroIdx, setActiveHeroIdx] = useState(0);
+  const activeProduct = heroProducts[activeHeroIdx];
 
   const categories = [
     {
@@ -157,37 +212,85 @@ export const HomePage: React.FC = () => {
                 <div className="absolute inset-0 bg-gradient-to-tr from-[#8CCB55]/30 to-[#4D963C]/20 rounded-[40px] transform rotate-3 scale-105 filter blur-xl"></div>
 
                 {/* Hero Showcase Card */}
-                <div className="relative bg-white rounded-3xl p-4 sm:p-5 border border-[#E1E9DC] shadow-2xl overflow-hidden">
-                  <div className="relative rounded-2xl overflow-hidden aspect-4/3 bg-[#EFF7E9]">
+                <div className="relative bg-white rounded-3xl p-4 sm:p-5 border border-[#E1E9DC] shadow-2xl overflow-hidden space-y-3.5">
+                  <div className="relative rounded-2xl overflow-hidden aspect-4/3 bg-[#EFF7E9] border border-[#E1E9DC] group">
                     <img
-                      src="https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=1000&q=80"
-                      alt="Organic Sprouted Multigrain & Traditional Grains"
-                      className="w-full h-full object-cover object-center transform hover:scale-105 transition-transform duration-700"
+                      src={activeProduct.image}
+                      alt={activeProduct.name}
+                      className="w-full h-full object-cover object-center transform group-hover:scale-105 transition-transform duration-500"
                     />
-                    <div className="absolute bottom-3 left-3 bg-[#075B2A]/90 backdrop-blur-md text-white px-3 py-1.5 rounded-xl text-xs font-bold flex items-center gap-2">
+
+                    {/* Top Store Badge */}
+                    <div className="absolute top-3 left-3 bg-[#075B2A]/95 backdrop-blur-md text-white px-3 py-1 rounded-full text-[11px] font-bold shadow-md flex items-center gap-1.5 border border-white/20">
                       <Sparkles className="w-3.5 h-3.5 text-[#8CCB55]" />
-                      <span>Pure Telangana Harvest</span>
+                      <span>Warangal Store Authentic</span>
+                    </div>
+
+                    {/* Bottom Info Overlay */}
+                    <div className="absolute bottom-3 left-3 right-3 bg-black/65 backdrop-blur-md text-white p-3 rounded-xl text-xs flex items-center justify-between border border-white/10 shadow-lg">
+                      <div className="min-w-0 pr-2">
+                        <span className="text-[10px] text-[#8CCB55] font-telugu font-bold block truncate">
+                          {activeProduct.teluguName}
+                        </span>
+                        <p className="font-extrabold text-white text-xs truncate">
+                          {activeProduct.name}
+                        </p>
+                        <p className="text-[10px] text-gray-300 font-medium truncate">
+                          {activeProduct.highlight}
+                        </p>
+                      </div>
+                      <div className="text-right shrink-0 bg-white/10 px-2.5 py-1 rounded-lg border border-white/20">
+                        <span className="text-sm font-black text-[#8CCB55]">₹{activeProduct.price}</span>
+                        <span className="block text-[9px] text-gray-300">{activeProduct.size}</span>
+                      </div>
                     </div>
                   </div>
 
-                  {/* Highlight Floating Pill */}
-                  <div className="mt-4 flex items-center justify-between gap-3 p-3 bg-[#EFF7E9] rounded-xl border border-[#8CCB55]/40">
-                    <div className="flex items-center gap-2.5">
-                      <div className="w-9 h-9 rounded-full bg-[#075B2A] text-white flex items-center justify-center font-bold text-sm">
-                        🌾
+                  {/* Interactive Product Switcher Thumbnails */}
+                  <div className="grid grid-cols-4 gap-2">
+                    {heroProducts.map((prod, idx) => (
+                      <button
+                        key={prod.id}
+                        type="button"
+                        onClick={() => setActiveHeroIdx(idx)}
+                        className={`p-1.5 rounded-xl border-2 transition-all text-left flex flex-col items-center gap-1 cursor-pointer ${
+                          activeHeroIdx === idx
+                            ? 'border-[#075B2A] bg-[#EFF7E9] ring-2 ring-[#8CCB55]/50 shadow-xs'
+                            : 'border-[#E1E9DC] bg-[#FBF8EF] hover:border-[#8CCB55] opacity-75 hover:opacity-100'
+                        }`}
+                      >
+                        <img
+                          src={prod.image}
+                          alt={prod.name}
+                          className="w-11 h-11 object-cover rounded-lg border bg-white"
+                        />
+                        <span className="text-[9px] font-bold text-[#18251B] truncate w-full text-center">
+                          {prod.name.split(' ')[0]}
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+
+                  {/* Highlight Floating Action Pill */}
+                  <div className="flex items-center justify-between gap-3 p-3 bg-[#EFF7E9] rounded-2xl border border-[#8CCB55]/50">
+                    <div className="flex items-center gap-2.5 min-w-0">
+                      <div className="w-8 h-8 rounded-full bg-[#075B2A] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                        🌿
                       </div>
-                      <div>
-                        <p className="text-xs font-bold text-[#18251B]">
-                          Graminum Sprouted Cere Mix
+                      <div className="min-w-0">
+                        <p className="text-xs font-black text-[#18251B] truncate">
+                          {activeProduct.name}
                         </p>
-                        <p className="text-[11px] text-[#4D963C]">18 Traditional Native Grains</p>
+                        <p className="text-[10px] text-[#4D963C] font-semibold truncate">
+                          {activeProduct.badge} • ₹{activeProduct.price}
+                        </p>
                       </div>
                     </div>
                     <Link
-                      to="/product/graminum-sprouted-multigrain-cere-mix"
-                      className="text-xs font-extrabold text-[#075B2A] hover:underline"
+                      to={`/product/${activeProduct.slug}`}
+                      className="text-xs font-bold text-[#075B2A] hover:text-[#06451F] bg-white border border-[#8CCB55] px-3.5 py-1.5 rounded-xl hover:bg-[#8CCB55]/20 shadow-2xs shrink-0 transition-colors"
                     >
-                      View →
+                      View Product →
                     </Link>
                   </div>
                 </div>
