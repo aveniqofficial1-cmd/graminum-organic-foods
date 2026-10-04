@@ -145,14 +145,14 @@ export const AdminDashboardPage: React.FC = () => {
               <TrendingUp className="w-3.5 h-3.5" /> +12 this week
             </span>
           </div>
-          <p className="text-[10px] text-gray-400">{stats.deliveredOrders} delivered successfully</p>
+          <p className="text-[10px] text-gray-400">{stats.pickedUpOrders || stats.deliveredOrders} picked up at store</p>
         </div>
 
         {/* Active Fulfillment Queue */}
         <div className="bg-white p-5 rounded-3xl border border-[#E1E9DC] shadow-xs space-y-3">
           <div className="flex items-center justify-between">
             <span className="text-xs font-bold text-gray-500 uppercase tracking-wider">
-              In-Fulfillment Queue
+              In-Store Fulfillment Queue
             </span>
             <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-700 flex items-center justify-center">
               <Clock className="w-4 h-4 text-amber-700" />
@@ -160,13 +160,13 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
           <div className="flex items-baseline justify-between">
             <span className="text-2xl font-black text-amber-900">
-              {stats.pendingFulfillment + stats.outForDelivery}
+              {stats.pendingFulfillment + (stats.readyForPickup || stats.outForDelivery)}
             </span>
             <span className="text-[11px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full">
-              {stats.outForDelivery} on road
+              {stats.readyForPickup || stats.outForDelivery} ready at counter
             </span>
           </div>
-          <p className="text-[10px] text-gray-400">Orders currently in prep or in-transit</p>
+          <p className="text-[10px] text-gray-400">Orders preparing at Kashibugga store</p>
         </div>
 
         {/* Active Catalog SKUs */}
@@ -357,13 +357,13 @@ export const AdminDashboardPage: React.FC = () => {
                       onChange={(e) =>
                         updateOrderStatus(order.id, e.target.value as OrderStatus)
                       }
-                      className="bg-[#EFF7E9] text-[#075B2A] border border-[#8CCB55] text-[11px] font-bold rounded-lg px-2 py-1 focus:outline-none"
+                      className="bg-[#EFF7E9] text-[#075B2A] border border-[#8CCB55] text-[11px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer"
                     >
                       <option value="Order Placed">Order Placed</option>
                       <option value="Accepted">Accepted</option>
-                      <option value="Preparing">Preparing</option>
-                      <option value="Out for Delivery">Out for Delivery</option>
-                      <option value="Delivered">Delivered</option>
+                      <option value="Preparing at Store">Preparing at Store</option>
+                      <option value="Ready for Pickup">Ready for Pickup</option>
+                      <option value="Picked Up">Picked Up</option>
                       <option value="Cancelled">Cancelled</option>
                     </select>
                   </td>

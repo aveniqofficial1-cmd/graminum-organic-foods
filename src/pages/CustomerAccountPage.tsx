@@ -503,7 +503,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
 
               <div>
                 <label className="block text-xs font-bold text-[#18251B] mb-1">
-                  Phone Number (for SMS & WhatsApp delivery updates)
+                  Phone Number (for WhatsApp pickup alerts & receipts)
                 </label>
                 <div className="relative">
                   <input
@@ -962,7 +962,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                       Your Order History
                     </h2>
                     <p className="text-xs text-[#667267]">
-                      Track delivery stages, receipts, and order breakdowns.
+                      Track store pickup stages, receipts, and order breakdowns.
                     </p>
                   </div>
 

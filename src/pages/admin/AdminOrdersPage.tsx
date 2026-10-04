@@ -40,9 +40,9 @@ export const AdminOrdersPage: React.FC = () => {
     'All',
     'Order Placed',
     'Accepted',
-    'Preparing',
-    'Out for Delivery',
-    'Delivered',
+    'Preparing at Store',
+    'Ready for Pickup',
+    'Picked Up',
     'Cancelled',
   ];
 
@@ -92,11 +92,13 @@ export const AdminOrdersPage: React.FC = () => {
       case 'Order Placed':
         return 'Accepted';
       case 'Accepted':
-        return 'Preparing';
+        return 'Preparing at Store';
+      case 'Preparing at Store':
       case 'Preparing':
-        return 'Out for Delivery';
+        return 'Ready for Pickup';
+      case 'Ready for Pickup':
       case 'Out for Delivery':
-        return 'Delivered';
+        return 'Picked Up';
       default:
         return null;
     }
@@ -261,7 +263,7 @@ export const AdminOrdersPage: React.FC = () => {
                           handleStatusChange(order.id, e.target.value as OrderStatus)
                         }
                         className={`text-[11px] font-bold rounded-lg px-2.5 py-1 focus:outline-none border cursor-pointer ${
-                          order.orderStatus === 'Delivered'
+                          order.orderStatus === 'Picked Up' || order.orderStatus === 'Delivered'
                             ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                             : order.orderStatus === 'Cancelled'
                             ? 'bg-red-50 text-red-800 border-red-300'
@@ -270,9 +272,9 @@ export const AdminOrdersPage: React.FC = () => {
                       >
                         <option value="Order Placed">Order Placed</option>
                         <option value="Accepted">Accepted</option>
-                        <option value="Preparing">Preparing</option>
-                        <option value="Out for Delivery">Out for Delivery</option>
-                        <option value="Delivered">Delivered</option>
+                        <option value="Preparing at Store">Preparing at Store</option>
+                        <option value="Ready for Pickup">Ready for Pickup</option>
+                        <option value="Picked Up">Picked Up</option>
                         <option value="Cancelled">Cancelled</option>
                       </select>
                     </td>
@@ -512,7 +514,7 @@ export const AdminOrdersPage: React.FC = () => {
 
               <div className="p-4 bg-[#FBF8EF] rounded-2xl border border-[#E1E9DC] space-y-2 text-xs">
                 <h4 className="font-bold text-[#075B2A] uppercase tracking-wider">
-                  Delivery Destination
+                  Fulfillment & Store Location
                 </h4>
                 <p className="font-bold text-[#18251B]">
                   {selectedOrder.shippingAddress.fullName}
@@ -523,7 +525,7 @@ export const AdminOrdersPage: React.FC = () => {
                   {selectedOrder.shippingAddress.pincode}
                 </p>
                 <p className="text-[11px] font-bold text-[#4D963C] pt-1">
-                  Delivery Method: {selectedOrder.deliveryMethod}
+                  Fulfillment: {selectedOrder.deliveryMethod} (Kashibugga Warangal Counter)
                 </p>
               </div>
             </div>
@@ -536,7 +538,7 @@ export const AdminOrdersPage: React.FC = () => {
               <div className="flex gap-2">
                 <input
                   type="text"
-                  placeholder="e.g. Dispatched via Express Hyderabad Hub, AWB #981249"
+                  placeholder="e.g. Packed at Kashibugga store counter, customer notified"
                   value={adminNoteInput}
                   onChange={(e) => setAdminNoteInput(e.target.value)}
                   className="flex-1 bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"

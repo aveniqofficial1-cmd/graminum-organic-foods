@@ -6,7 +6,7 @@ import {
   Minus,
   ArrowRight,
   ShoppingBag,
-  Truck,
+  Store,
   ShieldCheck,
   Tag,
   ArrowLeft,
@@ -101,14 +101,14 @@ export const CartPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Free Delivery Storewide Banner */}
+        {/* Store Pickup Warangal Banner */}
         <div className="bg-[#EFF7E9] border border-[#8CCB55] p-3.5 sm:p-4 rounded-2xl shadow-xs flex items-center justify-between gap-3 text-xs sm:text-sm font-bold text-[#075B2A]">
           <div className="flex items-center gap-2.5">
-            <Truck className="w-5 h-5 text-[#4D963C] shrink-0" />
-            <span>🎉 100% Free Delivery on all Graminum Organic Orders! Direct from Native Indian Farmers.</span>
+            <Store className="w-5 h-5 text-[#4D963C] shrink-0" />
+            <span>📍 Direct Store Pickup from Graminum Kashibugga Warangal Store! Collect with your Order ID.</span>
           </div>
           <span className="bg-[#8CCB55] text-[#06451F] text-[10px] font-black px-2.5 py-1 rounded-full shrink-0">
-            ZERO DELIVERY CHARGE
+            FREE STORE PICKUP
           </span>
         </div>
 
@@ -272,13 +272,9 @@ export const CartPage: React.FC = () => {
                 </div>
 
                 <div className="flex items-center justify-between text-[#667267]">
-                  <span>Standard Delivery</span>
+                  <span>Store Pickup (Warangal)</span>
                   <span className="font-bold">
-                    {deliveryFee === 0 ? (
-                      <span className="text-[#4D963C] font-extrabold uppercase">FREE</span>
-                    ) : (
-                      `₹${deliveryFee}`
-                    )}
+                    <span className="text-[#4D963C] font-extrabold uppercase">FREE</span>
                   </span>
                 </div>
 

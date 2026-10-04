@@ -8,6 +8,7 @@ import {
   Upload,
   CheckCircle2,
   Lock,
+  Clock,
   ArrowRight,
   ArrowLeft,
   Info,
@@ -41,22 +42,19 @@ export const CheckoutPage: React.FC = () => {
 
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
 
-  // Checkout Step: 1 = Details & Address, 2 = Payment & Place Order
+  // Checkout Step: 1 = Customer Details & Store Pickup, 2 = Payment & Place Order
   const [checkoutStep, setCheckoutStep] = useState<1 | 2>(1);
 
-  // Delivery Method: Home Delivery vs Store Pickup
-  const [deliveryMethod, setDeliveryMethod] = useState<DeliveryMethod>('Home Delivery');
+  // Delivery Method: 100% Direct Store Pickup
+  const deliveryMethod: DeliveryMethod = 'Store Pickup';
 
-  // Customer & Shipping Form Data
+  // Customer Contact Form Data
   const defaultAddress = currentUser?.addresses?.find((a) => a.isDefault) || currentUser?.addresses?.[0];
 
   const [fullName, setFullName] = useState(defaultAddress?.fullName || currentUser?.name || '');
   const [email, setEmail] = useState(defaultAddress?.email || currentUser?.email || '');
   const [phone, setPhone] = useState(defaultAddress?.phone || currentUser?.phone || '');
-  const [addressLine, setAddressLine] = useState(defaultAddress?.addressLine || '');
-  const [city, setCity] = useState(defaultAddress?.city || 'Hyderabad');
-  const [state, setState] = useState(defaultAddress?.state || 'Telangana');
-  const [pincode, setPincode] = useState(defaultAddress?.pincode || '500033');
+  const [pickupNote, setPickupNote] = useState('');
 
   useEffect(() => {
     if (currentUser) {
@@ -65,10 +63,6 @@ export const CheckoutPage: React.FC = () => {
         setFullName(addr.fullName || currentUser.name || '');
         setEmail(addr.email || currentUser.email || '');
         setPhone(addr.phone || currentUser.phone || '');
-        setAddressLine(addr.addressLine || '');
-        setCity(addr.city || 'Hyderabad');
-        setState(addr.state || 'Telangana');
-        setPincode(addr.pincode || '500033');
       } else {
         setFullName(currentUser.name || '');
         setEmail(currentUser.email || '');
@@ -101,22 +95,8 @@ export const CheckoutPage: React.FC = () => {
     setTimeout(() => setCopiedNumber(false), 2500);
   };
 
-  const effectiveTotal = deliveryMethod === 'Store Pickup' ? subtotal : grandTotal;
+  const effectiveTotal = subtotal; // Store pickup is 100% free delivery
   const qrCodeUrl = getEffectiveQrUrl(effectiveTotal);
-
-  const indianStates = [
-    'Telangana',
-    'Andhra Pradesh',
-    'Karnataka',
-    'Tamil Nadu',
-    'Maharashtra',
-    'Kerala',
-    'Delhi',
-    'Gujarat',
-    'Rajasthan',
-    'Uttar Pradesh',
-    'West Bengal',
-  ];
 
   const handleReceiptUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -140,16 +120,6 @@ export const CheckoutPage: React.FC = () => {
       showToast('Please fill all required personal contact fields.', 'error');
       return;
     }
-    if (deliveryMethod === 'Home Delivery') {
-      if (!addressLine.trim() || !city.trim() || !pincode.trim()) {
-        showToast('Please complete the delivery address.', 'error');
-        return;
-      }
-      if (!/^\d{6}$/.test(pincode.trim())) {
-        showToast('Please enter a valid 6-digit Indian PIN code.', 'error');
-        return;
-      }
-    }
     setCheckoutStep(2);
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -171,14 +141,12 @@ export const CheckoutPage: React.FC = () => {
       email: email.trim(),
       phone: phone.trim(),
       addressLine:
-        deliveryMethod === 'Store Pickup'
-          ? 'Graminum Flagship Store, Road No 36, Jubilee Hills'
-          : addressLine.trim(),
-      city: deliveryMethod === 'Store Pickup' ? 'Hyderabad' : city.trim(),
-      state: deliveryMethod === 'Store Pickup' ? 'Telangana' : state,
-      pincode: deliveryMethod === 'Store Pickup' ? '500033' : pincode.trim(),
+        'Graminum Store Pickup: 11-18-356/3/A, Opp Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+      city: 'Warangal',
+      state: 'Telangana',
+      pincode: '506002',
       isDefault: true,
-      type: deliveryMethod === 'Store Pickup' ? 'Work' : 'Home',
+      type: 'Work',
     };
 
     const newOrder = createOrder({
@@ -187,10 +155,10 @@ export const CheckoutPage: React.FC = () => {
       customerPhone: phone.trim(),
       items: [...items],
       subtotal,
-      deliveryFee: deliveryMethod === 'Store Pickup' ? 0 : deliveryFee,
+      deliveryFee: 0,
       discount: 0,
       grandTotal: effectiveTotal,
-      deliveryMethod,
+      deliveryMethod: 'Store Pickup',
       shippingAddress,
       paymentMethod: 'UPI / QR Code',
       paymentScreenshot: receiptImage || undefined,
@@ -336,7 +304,7 @@ export const CheckoutPage: React.FC = () => {
                   checkoutStep >= 1 ? 'text-[#075B2A]' : 'text-gray-400'
                 }`}
               >
-                Delivery
+                Store Pickup
               </span>
             </div>
 
@@ -384,71 +352,56 @@ export const CheckoutPage: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start">
           {/* ================= LEFT: STEP FORMS ================= */}
           <div className="lg:col-span-8 space-y-6">
-            {/* STEP 1: CONTACT & DELIVERY ADDRESS */}
+            {/* STEP 1: DIRECT STORE PICKUP & CUSTOMER DETAILS */}
             {checkoutStep === 1 && (
               <form
                 onSubmit={handleContinueToPayment}
                 className="bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-8 shadow-sm space-y-6"
               >
-                {/* 1. Delivery Mode Selection */}
-                <div>
-                  <h2 className="text-xs sm:text-sm font-bold text-[#075B2A] uppercase tracking-wider mb-3">
-                    1. Choose Delivery Method
-                  </h2>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setDeliveryMethod('Home Delivery')}
-                      className={`p-4 rounded-2xl border text-left transition-all flex items-start gap-3 cursor-pointer ${
-                        deliveryMethod === 'Home Delivery'
-                          ? 'border-[#075B2A] bg-[#EFF7E9] shadow-xs'
-                          : 'border-[#E1E9DC] hover:border-[#8CCB55] bg-[#FBF8EF]/50'
-                      }`}
-                    >
-                      <Truck
-                        className={`w-5 h-5 mt-0.5 ${
-                          deliveryMethod === 'Home Delivery' ? 'text-[#075B2A]' : 'text-gray-400'
-                        }`}
-                      />
-                      <div>
-                        <p className="text-xs sm:text-sm font-bold text-[#18251B]">
-                          Doorstep Home Delivery
-                        </p>
-                        <p className="text-[11px] text-[#667267] mt-0.5">
-                          Delivered in eco-friendly packaging within 24–48 hours across Telangana & AP.
-                        </p>
-                        <span className="inline-block text-[10px] text-[#075B2A] font-bold mt-1">
-                          {deliveryFee === 0 ? 'FREE DELIVERY' : `₹${deliveryFee} Shipping`}
-                        </span>
-                      </div>
-                    </button>
+                {/* 1. Direct Store Pickup Location Banner */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h2 className="text-xs sm:text-sm font-bold text-[#075B2A] uppercase tracking-wider flex items-center gap-2">
+                      <Store className="w-4 h-4 text-[#075B2A]" />
+                      <span>1. Direct Store Pickup Fulfillment</span>
+                    </h2>
+                    <span className="text-[10px] text-emerald-800 font-extrabold bg-emerald-100 border border-emerald-300 px-2.5 py-0.5 rounded-full">
+                      100% Free Store Pickup
+                    </span>
+                  </div>
 
-                    <button
-                      type="button"
-                      onClick={() => setDeliveryMethod('Store Pickup')}
-                      className={`p-4 rounded-2xl border text-left transition-all flex items-start gap-3 cursor-pointer ${
-                        deliveryMethod === 'Store Pickup'
-                          ? 'border-[#075B2A] bg-[#EFF7E9] shadow-xs'
-                          : 'border-[#E1E9DC] hover:border-[#8CCB55] bg-[#FBF8EF]/50'
-                      }`}
-                    >
-                      <Store
-                        className={`w-5 h-5 mt-0.5 ${
-                          deliveryMethod === 'Store Pickup' ? 'text-[#075B2A]' : 'text-gray-400'
-                        }`}
-                      />
-                      <div>
-                        <p className="text-xs sm:text-sm font-bold text-[#18251B]">
-                          Direct Store Pickup
-                        </p>
-                        <p className="text-[11px] text-[#667267] mt-0.5">
-                          Collect directly from Graminum Flagship Store (Jubilee Hills, Hyd).
-                        </p>
-                        <span className="inline-block text-[10px] text-emerald-800 font-extrabold bg-emerald-100 px-2 py-0.5 rounded-full mt-1">
-                          Zero Delivery Charge
-                        </span>
+                  <div className="p-4 sm:p-5 rounded-2xl bg-[#EFF7E9] border-2 border-[#8CCB55] space-y-3">
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-[#075B2A] text-white flex items-center justify-center shrink-0 shadow-xs">
+                        <MapPin className="w-5 h-5 text-white" />
                       </div>
-                    </button>
+                      <div className="space-y-1 text-xs">
+                        <div className="flex items-center gap-2">
+                          <span className="font-black text-[#075B2A] text-sm">
+                            Graminum Herbal & Organic Store
+                          </span>
+                          <span className="text-[10px] bg-[#075B2A] text-white px-2 py-0.5 rounded font-bold">
+                            Warangal
+                          </span>
+                        </div>
+                        <p className="font-bold text-[#18251B]">
+                          11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City
+                        </p>
+                        <p className="text-gray-600">
+                          Kashibugga, Warangal, Telangana - 506002
+                        </p>
+                        <p className="text-[#075B2A] font-bold pt-1">
+                          📞 Store Counter & Help: 9396723139
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="pt-2.5 border-t border-[#8CCB55]/50 flex items-center gap-2 text-[11px] text-gray-700">
+                      <Clock className="w-4 h-4 text-[#075B2A] shrink-0" />
+                      <span>
+                        Pickup Hours: <strong>9:00 AM – 9:00 PM (Mon – Sun)</strong>. Order is prepared fresh at our store counter.
+                      </span>
+                    </div>
                   </div>
                 </div>
 
@@ -475,7 +428,7 @@ export const CheckoutPage: React.FC = () => {
 
                     <div>
                       <label className="block text-xs font-bold text-[#18251B] mb-1">
-                        Mobile Number (for WhatsApp Receipt & Dispatch) *
+                        Mobile Number (for WhatsApp Receipt & Pickup Alerts) *
                       </label>
                       <input
                         type="tel"
@@ -501,80 +454,20 @@ export const CheckoutPage: React.FC = () => {
                       className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
                     />
                   </div>
-                </div>
 
-                {/* 3. Shipping Address (If Home Delivery) */}
-                {deliveryMethod === 'Home Delivery' && (
-                  <div className="pt-4 border-t border-[#E1E9DC] space-y-4">
-                    <h2 className="text-xs sm:text-sm font-bold text-[#075B2A] uppercase tracking-wider">
-                      3. Shipping Destination
-                    </h2>
-
-                    <div className="space-y-3">
-                      <div>
-                        <label className="block text-xs font-bold text-[#18251B] mb-1">
-                          House / Flat No, Apartment, Street & Area *
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={addressLine}
-                          onChange={(e) => setAddressLine(e.target.value)}
-                          placeholder="e.g. Flat 402, Sri Sai Residency, Jubilee Hills Road No 36"
-                          className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
-                        />
-                      </div>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
-                        <div>
-                          <label className="block text-xs font-bold text-[#18251B] mb-1">
-                            City / Town *
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            value={city}
-                            onChange={(e) => setCity(e.target.value)}
-                            placeholder="Hyderabad"
-                            className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
-                          />
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-bold text-[#18251B] mb-1">
-                            State *
-                          </label>
-                          <select
-                            value={state}
-                            onChange={(e) => setState(e.target.value)}
-                            className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
-                          >
-                            {indianStates.map((st) => (
-                              <option key={st} value={st}>
-                                {st}
-                              </option>
-                            ))}
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-bold text-[#18251B] mb-1">
-                            PIN Code *
-                          </label>
-                          <input
-                            type="text"
-                            required
-                            maxLength={6}
-                            value={pincode}
-                            onChange={(e) => setPincode(e.target.value)}
-                            placeholder="500033"
-                            className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
-                          />
-                        </div>
-                      </div>
-                    </div>
+                  <div>
+                    <label className="block text-xs font-bold text-[#18251B] mb-1">
+                      Pickup Note / Special Requests (Optional)
+                    </label>
+                    <input
+                      type="text"
+                      value={pickupNote}
+                      onChange={(e) => setPickupNote(e.target.value)}
+                      placeholder="e.g. Will collect around 5 PM today"
+                      className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
+                    />
                   </div>
-                )}
+                </div>
 
                 {/* Continue to Payment Button */}
                 <div className="pt-4 border-t border-[#E1E9DC] flex flex-col sm:flex-row items-center justify-between gap-3">

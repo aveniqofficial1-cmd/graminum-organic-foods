@@ -30,7 +30,9 @@ interface OrderContextType {
     totalRevenue: number;
     totalOrders: number;
     pendingFulfillment: number;
+    readyForPickup: number;
     outForDelivery: number;
+    pickedUpOrders: number;
     deliveredOrders: number;
     pendingPaymentVerification: number;
   };
@@ -41,7 +43,9 @@ interface OrderContextType {
     pendingOrders: number;
     acceptedOrders: number;
     preparingOrders: number;
+    readyForPickupOrders: number;
     outForDeliveryOrders: number;
+    pickedUpOrders: number;
     deliveredOrders: number;
     cancelledOrders: number;
     totalCustomers: number;
@@ -53,9 +57,9 @@ interface OrderContextType {
 
 const OrderContext = createContext<OrderContextType | undefined>(undefined);
 
-const ORDERS_STORAGE_KEY = 'graminum_orders_v1';
+const ORDERS_STORAGE_KEY = 'graminum_orders_v2';
 
-// Initial realistic demo orders
+// Initial realistic demo orders - Direct Store Pickup at Kashibugga, Warangal
 const INITIAL_ORDERS: Order[] = [
   {
     id: 'ord-101',
@@ -90,57 +94,57 @@ const INITIAL_ORDERS: Order[] = [
     deliveryFee: 0,
     discount: 50,
     grandTotal: 1348,
-    deliveryMethod: 'Home Delivery',
+    deliveryMethod: 'Store Pickup',
     shippingAddress: {
       id: 'addr-101',
       fullName: 'Sravani Varma',
       email: 'sravani.varma@example.com',
       phone: '+91 98490 12345',
-      addressLine: 'Flat 402, Srinivasa Nilayam, Street No. 4, Madhapur',
-      city: 'Hyderabad',
+      addressLine: 'Graminum Store Pickup: 11-18-356/3/A, Opp Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+      city: 'Warangal',
       state: 'Telangana',
-      pincode: '500081',
+      pincode: '506002',
       isDefault: true,
       type: 'Home',
     },
     paymentMethod: 'UPI / QR Code',
     paymentStatus: 'Verified',
     paymentUtr: 'UPI-89241-77821034',
-    orderStatus: 'Preparing',
+    orderStatus: 'Preparing at Store',
     timeline: [
       {
         status: 'Order Placed',
         timestamp: '2026-03-01 10:15 AM',
-        description: 'Order placed & payment authorized successfully',
+        description: 'Order placed & payment verified via phone',
         completed: true,
       },
       {
         status: 'Accepted',
         timestamp: '2026-03-01 10:30 AM',
-        description: 'Order confirmed by Graminum Fulfillment Center',
+        description: 'Order confirmed by Graminum Kashibugga store team',
         completed: true,
       },
       {
-        status: 'Preparing',
+        status: 'Preparing at Store',
         timestamp: '2026-03-01 11:45 AM',
-        description: 'Freshly milled batch packed in moisture-barrier pouches',
+        description: 'Fresh organic items packed and assembled at Kashibugga store',
         completed: true,
       },
       {
-        status: 'Out for Delivery',
-        timestamp: 'Estimated Today by 05:00 PM',
-        description: 'Assigned to delivery executive (Hyderabad Hub)',
+        status: 'Ready for Pickup',
+        timestamp: 'Estimated Today by 04:00 PM',
+        description: 'Order packed & ready for collection at Kashibugga store counter',
         completed: false,
       },
       {
-        status: 'Delivered',
-        timestamp: 'Pending Delivery',
-        description: 'Delivery confirmation at customer address',
+        status: 'Picked Up',
+        timestamp: 'Pending Collection',
+        description: 'Order handover to customer with Order ID at store counter',
         completed: false,
       },
     ],
-    internalAdminNotes: ['Customer requested extra bubble cushioning for glass oil bottle.'],
-    notes: 'Dispatched via Jubilee Hills Hub',
+    internalAdminNotes: ['Customer will collect at 4:30 PM. Packed in eco-paper bag.'],
+    notes: 'Kashibugga Warangal Counter Pickup',
     createdAt: '2026-03-01T10:15:00Z',
     updatedAt: '2026-03-01T11:45:00Z',
   },
@@ -170,16 +174,16 @@ const INITIAL_ORDERS: Order[] = [
     deliveryFee: 0,
     discount: 0,
     grandTotal: 2310,
-    deliveryMethod: 'Home Delivery',
+    deliveryMethod: 'Store Pickup',
     shippingAddress: {
       id: 'addr-102',
       fullName: 'Kalyan Chakravarthy',
       email: 'kalyan.c@example.com',
       phone: '+91 98850 44332',
-      addressLine: 'Villa 14, Rainbow Meadows, Gachibowli',
-      city: 'Hyderabad',
+      addressLine: 'Graminum Store Pickup: 11-18-356/3/A, Opp Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+      city: 'Warangal',
       state: 'Telangana',
-      pincode: '500032',
+      pincode: '506002',
       isDefault: true,
       type: 'Home',
     },
@@ -192,35 +196,35 @@ const INITIAL_ORDERS: Order[] = [
       {
         status: 'Order Placed',
         timestamp: '2026-03-01 09:30 AM',
-        description: 'Customer selected Bank/UPI transfer and uploaded payment screenshot',
+        description: 'Customer sent payment to 9396723139 and uploaded receipt',
         completed: true,
       },
       {
         status: 'Accepted',
         timestamp: 'Awaiting Admin Verification',
-        description: 'Finance review of uploaded payment receipt in progress',
+        description: 'Store verification of uploaded payment receipt in progress',
         completed: false,
       },
       {
-        status: 'Preparing',
+        status: 'Preparing at Store',
         timestamp: 'Pending Verification',
-        description: 'Item packing starts after payment approval',
+        description: 'Item packaging starts after payment approval',
         completed: false,
       },
       {
-        status: 'Out for Delivery',
+        status: 'Ready for Pickup',
         timestamp: 'Pending',
-        description: 'Delivery dispatch',
+        description: 'Order ready notification for customer collection',
         completed: false,
       },
       {
-        status: 'Delivered',
+        status: 'Picked Up',
         timestamp: 'Pending',
-        description: 'Order fulfillment',
+        description: 'Order handover at Kashibugga store counter',
         completed: false,
       },
     ],
-    internalAdminNotes: ['Screenshot shows Axis Bank transfer of ₹2310. Check statement for UTR AXIS-559021884102.'],
+    internalAdminNotes: ['Screenshot shows transfer of ₹2310 to 9396723139. Check statement for UTR AXIS-559021884102.'],
     notes: 'Verify UTR AXIS-559021884102',
     createdAt: '2026-03-01T09:30:00Z',
     updatedAt: '2026-03-01T09:30:00Z',
@@ -257,17 +261,17 @@ const INITIAL_ORDERS: Order[] = [
       fullName: 'Ananya Reddy',
       email: 'ananya.reddy@example.com',
       phone: '+91 97000 88990',
-      addressLine: 'Graminum Store Pickup - Jubilee Hills Branch',
-      city: 'Hyderabad',
+      addressLine: 'Graminum Store Pickup: 11-18-356/3/A, Opp Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+      city: 'Warangal',
       state: 'Telangana',
-      pincode: '500033',
+      pincode: '506002',
       isDefault: false,
       type: 'Other',
     },
     paymentMethod: 'Credit / Debit Card',
     paymentStatus: 'Verified',
     paymentUtr: 'HDFC-TXN-99881023',
-    orderStatus: 'Out for Delivery',
+    orderStatus: 'Ready for Pickup',
     timeline: [
       {
         status: 'Order Placed',
@@ -282,25 +286,25 @@ const INITIAL_ORDERS: Order[] = [
         completed: true,
       },
       {
-        status: 'Preparing',
+        status: 'Preparing at Store',
         timestamp: '2026-02-28 05:40 PM',
         description: 'Packed and tagged for customer pickup',
         completed: true,
       },
       {
-        status: 'Out for Delivery',
+        status: 'Ready for Pickup',
         timestamp: '2026-03-01 08:00 AM',
-        description: 'Ready for collection at Jubilee Hills Store',
+        description: 'Ready for collection at Kashibugga Warangal Store counter',
         completed: true,
       },
       {
-        status: 'Delivered',
+        status: 'Picked Up',
         timestamp: 'Pending Collection',
-        description: 'Customer pickup confirmation',
+        description: 'Awaiting customer arrival at counter with Order ID #GRM-89190',
         completed: false,
       },
     ],
-    internalAdminNotes: ['Store counter shelf B-2 tagged.'],
+    internalAdminNotes: ['Store counter shelf B-2 tagged for pickup.'],
     createdAt: '2026-02-28T16:10:00Z',
     updatedAt: '2026-03-01T08:00:00Z',
   },
@@ -330,27 +334,27 @@ const INITIAL_ORDERS: Order[] = [
     deliveryFee: 0,
     discount: 50,
     grandTotal: 1034,
-    deliveryMethod: 'Home Delivery',
+    deliveryMethod: 'Store Pickup',
     shippingAddress: {
       id: 'addr-104',
       fullName: 'Venkat Raman',
       email: 'venkat.raman@example.com',
       phone: '+91 94400 11223',
-      addressLine: 'Plot 78, Phase 2, Kavuri Hills',
-      city: 'Hyderabad',
+      addressLine: 'Graminum Store Pickup: 11-18-356/3/A, Opp Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
+      city: 'Warangal',
       state: 'Telangana',
-      pincode: '500081',
+      pincode: '506002',
       isDefault: true,
       type: 'Home',
     },
     paymentMethod: 'Cash on Delivery',
     paymentStatus: 'Verified',
-    orderStatus: 'Delivered',
+    orderStatus: 'Picked Up',
     timeline: [
       {
         status: 'Order Placed',
         timestamp: '2026-02-25 11:00 AM',
-        description: 'Order placed via Cash on Delivery',
+        description: 'Order placed for store collection',
         completed: true,
       },
       {
@@ -360,25 +364,25 @@ const INITIAL_ORDERS: Order[] = [
         completed: true,
       },
       {
-        status: 'Preparing',
+        status: 'Preparing at Store',
         timestamp: '2026-02-25 02:00 PM',
-        description: 'Fresh packaging complete',
+        description: 'Fresh packaging completed at store',
         completed: true,
       },
       {
-        status: 'Out for Delivery',
+        status: 'Ready for Pickup',
         timestamp: '2026-02-26 09:30 AM',
-        description: 'Out for delivery with courier partner',
+        description: 'Order ready at Kashibugga store counter',
         completed: true,
       },
       {
-        status: 'Delivered',
+        status: 'Picked Up',
         timestamp: '2026-02-26 01:15 PM',
-        description: 'Package delivered safely to customer. Cash collected.',
+        description: 'Package handed over to customer at Kashibugga store counter. Cash received.',
         completed: true,
       },
     ],
-    internalAdminNotes: ['Cash ₹1034 received and settled.'],
+    internalAdminNotes: ['Store counter collection completed. Cash ₹1034 settled.'],
     createdAt: '2026-02-25T11:00:00Z',
     updatedAt: '2026-02-26T13:15:00Z',
   },
@@ -457,32 +461,32 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
         status: 'Order Placed',
         timestamp: formattedDate,
         description: isManualPayment
-          ? 'Order registered; payment verification pending'
-          : 'Order placed successfully and confirmed in system',
+          ? 'Order registered; store payment verification pending'
+          : 'Order placed successfully and confirmed in store system',
         completed: true,
       },
       {
         status: 'Accepted',
         timestamp: isManualPayment ? 'Awaiting verification' : 'In queue',
-        description: 'Fulfillment review and item allocation',
+        description: 'Store verification & item allocation',
         completed: false,
       },
       {
-        status: 'Preparing',
+        status: 'Preparing at Store',
         timestamp: 'Estimated within 1-2 hours',
-        description: 'Fresh botanical packaging at Hyderabad center',
+        description: 'Fresh organic packaging & assembling at Kashibugga store',
         completed: false,
       },
       {
-        status: 'Out for Delivery',
-        timestamp: 'Next Day Dispatch',
-        description: 'Handed over to delivery executive',
+        status: 'Ready for Pickup',
+        timestamp: 'Same Day Store Ready',
+        description: 'Order packed & ready for collection at Kashibugga Warangal Store counter',
         completed: false,
       },
       {
-        status: 'Delivered',
-        timestamp: 'Pending',
-        description: 'Safe delivery at your doorstep',
+        status: 'Picked Up',
+        timestamp: 'Pending Collection',
+        description: 'Customer order handover with Order ID at store counter',
         completed: false,
       },
     ];
@@ -495,10 +499,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       customerPhone: orderData.customerPhone,
       items: orderData.items,
       subtotal: orderData.subtotal,
-      deliveryFee: orderData.deliveryFee,
+      deliveryFee: 0,
       discount: orderData.discount,
       grandTotal: orderData.grandTotal,
-      deliveryMethod: orderData.deliveryMethod,
+      deliveryMethod: 'Store Pickup',
       shippingAddress: orderData.shippingAddress,
       paymentMethod: orderData.paymentMethod,
       paymentStatus: initialPaymentStatus,
@@ -509,7 +513,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       internalAdminNotes: isManualPayment
         ? ['Manual payment receipt submitted at checkout. Awaiting verification.']
         : undefined,
-      notes: '',
+      notes: 'Direct Store Pickup - Kashibugga Warangal',
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),
     };
@@ -544,9 +548,9 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           const statusOrderSequence: OrderStatus[] = [
             'Order Placed',
             'Accepted',
-            'Preparing',
-            'Out for Delivery',
-            'Delivered',
+            'Preparing at Store',
+            'Ready for Pickup',
+            'Picked Up',
           ];
 
           const targetIndex = statusOrderSequence.indexOf(newStatus);
@@ -696,9 +700,17 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const newOrders = orders.filter((o) => o.orderStatus === 'Order Placed').length;
     const pendingOrders = orders.filter((o) => o.orderStatus === 'Order Placed').length;
     const acceptedOrders = orders.filter((o) => o.orderStatus === 'Accepted').length;
-    const preparingOrders = orders.filter((o) => o.orderStatus === 'Preparing').length;
-    const outForDeliveryOrders = orders.filter((o) => o.orderStatus === 'Out for Delivery').length;
-    const deliveredOrders = orders.filter((o) => o.orderStatus === 'Delivered').length;
+    const preparingOrders = orders.filter(
+      (o) => o.orderStatus === 'Preparing at Store' || o.orderStatus === 'Preparing'
+    ).length;
+    const readyForPickupOrders = orders.filter(
+      (o) => o.orderStatus === 'Ready for Pickup' || o.orderStatus === 'Out for Delivery'
+    ).length;
+    const outForDeliveryOrders = readyForPickupOrders;
+    const pickedUpOrders = orders.filter(
+      (o) => o.orderStatus === 'Picked Up' || o.orderStatus === 'Delivered'
+    ).length;
+    const deliveredOrders = pickedUpOrders;
     const cancelledOrders = orders.filter((o) => o.orderStatus === 'Cancelled').length;
 
     const uniqueCustomers = new Set(orders.map((o) => o.customerEmail.toLowerCase())).size;
@@ -724,7 +736,9 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       pendingOrders,
       acceptedOrders,
       preparingOrders,
+      readyForPickupOrders,
       outForDeliveryOrders,
+      pickedUpOrders,
       deliveredOrders,
       cancelledOrders,
       totalCustomers: uniqueCustomers || 4,
@@ -739,9 +753,25 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       .filter((o) => o.paymentStatus === 'Verified' && o.orderStatus !== 'Cancelled')
       .reduce((sum, o) => sum + o.grandTotal, 0),
     totalOrders: orders.length,
-    pendingFulfillment: orders.filter((o) => o.orderStatus === 'Order Placed' || o.orderStatus === 'Accepted' || o.orderStatus === 'Preparing').length,
-    outForDelivery: orders.filter((o) => o.orderStatus === 'Out for Delivery').length,
-    deliveredOrders: orders.filter((o) => o.orderStatus === 'Delivered').length,
+    pendingFulfillment: orders.filter(
+      (o) =>
+        o.orderStatus === 'Order Placed' ||
+        o.orderStatus === 'Accepted' ||
+        o.orderStatus === 'Preparing at Store' ||
+        o.orderStatus === 'Preparing'
+    ).length,
+    readyForPickup: orders.filter(
+      (o) => o.orderStatus === 'Ready for Pickup' || o.orderStatus === 'Out for Delivery'
+    ).length,
+    outForDelivery: orders.filter(
+      (o) => o.orderStatus === 'Ready for Pickup' || o.orderStatus === 'Out for Delivery'
+    ).length,
+    pickedUpOrders: orders.filter(
+      (o) => o.orderStatus === 'Picked Up' || o.orderStatus === 'Delivered'
+    ).length,
+    deliveredOrders: orders.filter(
+      (o) => o.orderStatus === 'Picked Up' || o.orderStatus === 'Delivered'
+    ).length,
     pendingPaymentVerification: orders.filter((o) => o.paymentStatus === 'Pending').length,
   };
 

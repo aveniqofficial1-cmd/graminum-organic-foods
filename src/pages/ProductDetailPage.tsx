@@ -7,7 +7,7 @@ import {
   Share2,
   CheckCircle2,
   ShieldCheck,
-  Truck,
+  Store,
   RotateCcw,
   Sparkles,
   Plus,
@@ -367,11 +367,11 @@ export const ProductDetailPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Safe Delivery Guarantees */}
+              {/* Safe Store Pickup & Guarantees */}
               <div className="grid grid-cols-3 gap-2 pt-3 text-[11px] text-[#667267] font-semibold text-center border-t border-gray-100">
                 <div className="p-2 bg-[#FBF8EF] rounded-xl flex flex-col items-center gap-1">
-                  <Truck className="w-4 h-4 text-[#4D963C]" />
-                  <span>100% Free Delivery</span>
+                  <Store className="w-4 h-4 text-[#4D963C]" />
+                  <span>Store Pickup (Warangal)</span>
                 </div>
                 <div className="p-2 bg-[#FBF8EF] rounded-xl flex flex-col items-center gap-1">
                   <ShieldCheck className="w-4 h-4 text-[#4D963C]" />

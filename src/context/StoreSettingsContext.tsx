@@ -133,7 +133,7 @@ ${itemsSummary}
 
 💰 *PAYMENT SUMMARY:*
 *Subtotal:* ₹${order.subtotal}
-*Delivery Fee:* ₹${order.deliveryFee}
+*Delivery Fee:* ₹0 (Free Store Pickup)
 *Total Amount Paid:* ₹${order.grandTotal}
 *Payment Method:* Direct UPI / Phone Payment (9396723139)
 ${order.paymentUtr ? `*UTR / Ref No:* ${order.paymentUtr}` : ''}
@@ -141,7 +141,7 @@ ${order.paymentUtr ? `*UTR / Ref No:* ${order.paymentUtr}` : ''}
 ${addressText}
 --------------------------------------------------
 *Payment Confirmation Request:*
-Namaskaram Graminum Team! I have sent payment of ₹${order.grandTotal} directly to master phone number 9396723139. I am sharing my payment screenshot above. Please verify my receipt, confirm my order, and dispatch my products.
+Namaskaram Graminum Team! I have sent payment of ₹${order.grandTotal} directly to master phone number 9396723139. I am sharing my payment screenshot above. Please verify my receipt, confirm my order, and prepare my package for store pickup at Kashibugga Warangal store.
 
 Thank you! 🙏`;
 

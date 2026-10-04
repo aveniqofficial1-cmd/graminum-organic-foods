@@ -306,19 +306,26 @@ export const OrderConfirmationPage: React.FC = () => {
             </div>
           </div>
 
-          {/* Shipping Address & Customer Contact (4 Cols) */}
+          {/* Store Pickup Location & Customer Contact (4 Cols) */}
           <div className="md:col-span-4 bg-white rounded-3xl border border-[#E1E9DC] p-6 shadow-sm space-y-4 flex flex-col justify-between">
             <div className="space-y-3">
-              <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider pb-2 border-b border-[#E1E9DC]">
-                Delivery Destination
+              <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider pb-2 border-b border-[#E1E9DC] flex items-center gap-1.5">
+                <Store className="w-4 h-4 text-[#075B2A]" />
+                <span>Store Pickup Details</span>
               </h3>
-              <div className="text-xs text-[#18251B] space-y-1">
+
+              <div className="p-3 bg-[#EFF7E9] rounded-2xl border border-[#8CCB55] space-y-1 text-xs">
+                <p className="font-black text-[#075B2A]">Graminum Store (Warangal)</p>
+                <p className="text-gray-700">11-18-356/3/A, Opp Sai Baba Temple,</p>
+                <p className="text-gray-700">Beside Assisi School, O City,</p>
+                <p className="text-gray-700">Kashibugga, Warangal - 506002</p>
+                <p className="text-[#075B2A] font-bold pt-1">📞 Counter: 9396723139</p>
+              </div>
+
+              <div className="text-xs text-[#18251B] space-y-1 pt-1">
+                <p className="font-bold text-gray-500 uppercase text-[10px]">Customer Details:</p>
                 <p className="font-bold">{order.shippingAddress.fullName}</p>
-                <p className="text-gray-600">{order.shippingAddress.addressLine}</p>
-                <p className="text-gray-600">
-                  {order.shippingAddress.city}, {order.shippingAddress.state} — {order.shippingAddress.pincode}
-                </p>
-                <p className="text-gray-600 pt-1">📞 {order.shippingAddress.phone}</p>
+                <p className="text-gray-600">📞 {order.shippingAddress.phone}</p>
                 <p className="text-gray-600">✉️ {order.shippingAddress.email}</p>
               </div>
             </div>

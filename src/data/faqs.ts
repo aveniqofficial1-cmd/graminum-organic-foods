@@ -34,26 +34,26 @@ export const FAQ_DATA: FAQItem[] = [
   {
     id: 'faq-6',
     category: 'Delivery',
-    question: 'What is your delivery coverage area and delivery timeframe?',
-    answer: 'We deliver nationwide across India. For Telangana and Andhra Pradesh (Hyderabad, Warangal, Vijayawada, Visakhapatnam), orders are delivered within 24–48 hours. For rest of India, standard delivery takes 3–5 business days.'
+    question: 'How does store pickup work at Graminum?',
+    answer: 'All orders on Graminum operate via Direct Store Pickup from our flagship store in Warangal. When you place an order, our store team prepares and packs your fresh organic products. Once ready, you will receive a notification to collect your package from our store counter by showing your Order ID.'
   },
   {
     id: 'faq-7',
     category: 'Delivery',
-    question: 'How are delivery charges calculated?',
-    answer: 'Delivery is 100% FREE on all Graminum orders across our entire organic catalog! There are zero shipping or packaging fees added to your subtotal.'
+    question: 'Where is the Graminum pickup store located?',
+    answer: 'Our store is located at: 11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga, Warangal - 506002. Store timings: 9:00 AM – 9:00 PM (Monday to Sunday). Counter Phone: 9396723139.'
   },
   {
     id: 'faq-8',
     category: 'Delivery',
-    question: 'Can I collect my order directly from the store (Store Pickup)?',
-    answer: 'Yes! You can select "Store Pickup" at checkout and collect your freshly packed order directly from Graminum Herbal & Natural Store, 11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga, Warangal-506002.'
+    question: 'Are there any delivery or packaging fees?',
+    answer: 'No! Store pickup is 100% FREE on all Graminum orders across our entire organic catalog. There are zero extra charges added to your purchase.'
   },
   {
     id: 'faq-9',
     category: 'Delivery',
-    question: 'How can I track my live order status?',
-    answer: 'Once your order is placed, you receive a unique Order ID (e.g. #GRM-89241). You can visit our "Track Order" page at any time or check your Customer Account dashboard to view real-time stage updates (Order Placed → Accepted → Preparing → Out for Delivery → Delivered).'
+    question: 'How can I track my store pickup order status?',
+    answer: 'Once your order is placed, you receive a unique Order ID (e.g. #GRM-89241). You can visit our "Track Order" page at any time to view real-time store stages: Order Placed → Accepted → Preparing at Store → Ready for Pickup → Picked Up.'
   },
   {
     id: 'faq-10',

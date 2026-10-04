@@ -66,10 +66,10 @@ export const Footer: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-2.5 sm:gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
-            <span className="text-xl sm:text-2xl">🚚</span>
+            <span className="text-xl sm:text-2xl">🏪</span>
             <div>
-              <h4 className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">Express Dispatch</h4>
-              <p className="text-[10px] sm:text-[11px] text-emerald-200">24-48 hr shipping</p>
+              <h4 className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">Store Pickup</h4>
+              <p className="text-[10px] sm:text-[11px] text-emerald-200">Kashibugga Warangal</p>
             </div>
           </div>
         </div>

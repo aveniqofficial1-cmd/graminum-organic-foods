@@ -84,6 +84,9 @@ export interface Address {
 export type OrderStatus =
   | 'Order Placed'
   | 'Accepted'
+  | 'Preparing at Store'
+  | 'Ready for Pickup'
+  | 'Picked Up'
   | 'Preparing'
   | 'Out for Delivery'
   | 'Delivered'
@@ -98,7 +101,7 @@ export type PaymentMethod =
 
 export type PaymentStatus = 'Pending' | 'Verified' | 'Failed' | 'Refunded';
 
-export type DeliveryMethod = 'Home Delivery' | 'Store Pickup';
+export type DeliveryMethod = 'Store Pickup' | 'Home Delivery';
 
 export interface OrderTimelineEvent {
   status: OrderStatus;

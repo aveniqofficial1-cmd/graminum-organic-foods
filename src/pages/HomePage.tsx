@@ -486,7 +486,7 @@ export const HomePage: React.FC = () => {
             Experience the Authentic Taste of Traditional Indian Farming
           </h2>
           <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto">
-            Order online today and get pure unpolished grains, A2 ghee, and herbal products delivered to your doorstep.
+            Order online today for fresh direct store pickup from our Graminum Warangal store counter.
           </p>
           <div className="pt-2">
             <Link
