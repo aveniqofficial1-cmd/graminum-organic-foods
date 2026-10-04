@@ -26,7 +26,7 @@ import { Product } from '../../types';
 export const Header: React.FC = () => {
   const { itemCount, subtotal } = useCart();
   const { wishlistCount } = useWishlist();
-  const { currentUser, isAuthenticated, isAdminAuthenticated, logoutCustomer } = useAuth();
+  const { currentUser, isAuthenticated, isAdminAuthenticated, isAdmin, isManager, isStaff, logoutCustomer } = useAuth();
   const { products } = useProducts();
 
   const [searchQuery, setSearchQuery] = useState('');
@@ -327,8 +327,8 @@ export const Header: React.FC = () => {
                           <span>Track Live Order</span>
                         </Link>
 
-                        {/* Admin Portal is ONLY shown if user has admin role */}
-                        {isUserAdmin && (
+                        {/* Management Portal is shown if user has admin or manager role */}
+                        {isStaff && (
                           <>
                             <div className="border-t border-gray-100 my-1"></div>
                             <Link
@@ -337,7 +337,7 @@ export const Header: React.FC = () => {
                               className="flex items-center gap-2.5 px-4 py-2 text-xs font-bold text-emerald-900 bg-emerald-50/70 hover:bg-emerald-100 transition-colors"
                             >
                               <Crown className="w-4 h-4 text-amber-500" />
-                              <span>Admin Console</span>
+                              <span>{isAdmin ? 'Admin Console' : 'Manager Console'}</span>
                             </Link>
                           </>
                         )}
@@ -432,13 +432,17 @@ export const Header: React.FC = () => {
           {/* Drawer Content */}
           <div className="relative w-4/5 max-w-sm bg-white h-full shadow-2xl flex flex-col justify-between p-5 sm:p-6 z-10 overflow-y-auto">
             <div>
-              {/* Drawer Header with Logo */}
+              {/* Drawer Header with Logo (Navigates to Home / across all roles) */}
               <div className="flex items-center justify-between pb-4 border-b border-[#E1E9DC]">
-                <div className="flex items-center gap-2">
+                <Link
+                  to="/"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 group"
+                >
                   <img
                     src="/assets/graminum-logo.png"
                     alt="Graminum Logo"
-                    className="h-9 w-auto"
+                    className="h-9 w-auto transition-transform group-hover:scale-105"
                   />
                   <div>
                     <span className="text-base font-extrabold text-[#075B2A] font-serif-title block">
@@ -448,7 +452,7 @@ export const Header: React.FC = () => {
                       గ్రామీణం ఆర్గానిక్స్
                     </span>
                   </div>
-                </div>
+                </Link>
                 <button
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="p-1.5 text-gray-500 hover:text-gray-800 rounded-lg cursor-pointer"
@@ -577,15 +581,15 @@ export const Header: React.FC = () => {
                 <span>{isAuthenticated ? 'My Account' : 'Sign In / Register'}</span>
               </Link>
 
-              {/* Admin Portal is ONLY displayed if the user has admin role */}
-              {isUserAdmin && (
+              {/* Management Console is displayed if the user has admin or manager role */}
+              {isStaff && (
                 <Link
                   to="/admin"
                   onClick={() => setIsMobileMenuOpen(false)}
                   className="flex items-center justify-center gap-2 w-full py-2 bg-emerald-100 text-emerald-900 font-extrabold rounded-xl text-xs border border-emerald-300"
                 >
                   <Crown className="w-4 h-4 text-amber-600" />
-                  <span>Admin Management Console</span>
+                  <span>{isAdmin ? 'Admin Console' : 'Manager Console'}</span>
                 </Link>
               )}
             </div>

@@ -21,9 +21,7 @@ export const Footer: React.FC = () => {
   const [isSubscribed, setIsSubscribed] = useState(false);
   const { showToast } = useToast();
   const { settings } = useStoreSettings();
-  const { currentUser, isAuthenticated } = useAuth();
-
-  const isUserAdmin = currentUser?.role === 'admin';
+  const { currentUser, isAuthenticated, isAdmin, isManager, isStaff } = useAuth();
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -80,11 +78,11 @@ export const Footer: React.FC = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 lg:gap-10 pb-12 border-b border-emerald-800/60">
           {/* Column 1: Brand & Story (Spans 2 cols on lg) */}
           <div className="lg:col-span-2 space-y-4">
-            <div className="flex items-center gap-3">
+            <Link to="/" className="flex items-center gap-3 hover:opacity-95 transition-opacity group" title="Return to Home">
               <img
                 src="/assets/graminum-logo.png"
                 alt="Graminum Logo"
-                className="h-12 w-auto bg-white/95 p-1 rounded-xl shadow-md"
+                className="h-12 w-auto bg-white/95 p-1 rounded-xl shadow-md transition-transform group-hover:scale-105"
               />
               <div>
                 <span className="text-2xl font-black text-white font-serif-title tracking-tight block">
@@ -94,7 +92,7 @@ export const Footer: React.FC = () => {
                   గ్రామీణం ఆర్గానిక్ ఫుడ్స్
                 </span>
               </div>
-            </div>
+            </Link>
 
             <p className="text-xs sm:text-sm text-emerald-100/80 leading-relaxed max-w-sm">
               Authentic Herbal & Natural Store located in Kashibugga, Warangal.
@@ -214,15 +212,15 @@ export const Footer: React.FC = () => {
                   View Cart
                 </Link>
               </li>
-              {/* Admin Portal is ONLY shown if user is an admin */}
-              {isUserAdmin && (
+              {/* Management Portal is shown if user has admin or manager role */}
+              {isStaff && (
                 <li>
                   <Link
                     to="/admin"
                     className="text-amber-300 hover:text-white font-bold flex items-center gap-1"
                   >
                     <Crown className="w-3.5 h-3.5" />
-                    <span>Admin Console</span>
+                    <span>{isAdmin ? 'Admin Console' : 'Manager Console'}</span>
                   </Link>
                 </li>
               )}

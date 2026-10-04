@@ -698,7 +698,11 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                   Namaskaram, {currentUser?.name}
                 </h1>
                 <span className="bg-[#EFF7E9] text-[#075B2A] text-[10px] font-extrabold px-2.5 py-0.5 rounded-full border border-[#8CCB55]">
-                  {currentUser?.role === 'admin' ? '👑 Admin' : 'Verified Member'}
+                  {currentUser?.role === 'admin'
+                    ? '👑 Admin'
+                    : currentUser?.role === 'manager'
+                    ? '🛡️ Store Manager'
+                    : 'Verified Member'}
                 </span>
               </div>
               <p className="text-xs text-[#667267] mt-0.5">
@@ -707,13 +711,25 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
             </div>
           </div>
 
-          <button
-            onClick={logoutCustomer}
-            className="inline-flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold px-4 py-2 rounded-xl transition-colors self-start sm:self-auto cursor-pointer"
-          >
-            <LogOut className="w-4 h-4" />
-            <span>Sign Out</span>
-          </button>
+          <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+            {(currentUser?.role === 'admin' || currentUser?.role === 'manager') && (
+              <Link
+                to="/admin"
+                className="inline-flex items-center gap-1.5 bg-[#EFF7E9] hover:bg-[#075B2A] text-[#075B2A] hover:text-white border border-[#8CCB55] text-xs font-bold px-3.5 py-2 rounded-xl transition-all"
+              >
+                <ShieldCheck className="w-4 h-4 text-[#4D963C]" />
+                <span>{currentUser.role === 'admin' ? 'Admin Console' : 'Manager Console'}</span>
+              </Link>
+            )}
+
+            <button
+              onClick={logoutCustomer}
+              className="inline-flex items-center gap-1.5 bg-red-50 hover:bg-red-100 text-red-700 text-xs font-bold px-4 py-2 rounded-xl transition-colors cursor-pointer"
+            >
+              <LogOut className="w-4 h-4" />
+              <span>Sign Out</span>
+            </button>
+          </div>
         </div>
 
         {/* 2-Column Dashboard Grid: Navigation Tabs & Tab Content */}

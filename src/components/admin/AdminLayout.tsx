@@ -30,7 +30,7 @@ interface AdminLayoutProps {
 }
 
 export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageTitle }) => {
-  const { logoutAdmin, adminUser, registeredUsers } = useAuth();
+  const { logoutAdmin, adminUser, registeredUsers, isAdmin, isManager } = useAuth();
   const { getDashboardStats } = useOrders();
   const { settings } = useStoreSettings();
   const [sidebarOpen, setSidebarOpen] = useState(false);
@@ -81,27 +81,27 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageTitle })
         }`}
       >
         <div>
-          {/* Sidebar Header with Logo */}
+          {/* Sidebar Header with Logo (Navigates to Home / across all roles) */}
           <div className="p-5 border-b border-[#E1E9DC] flex items-center justify-between">
-            <Link to="/admin" className="flex items-center gap-2.5">
+            <Link to="/" className="flex items-center gap-2.5 group" title="Return to Home">
               <img
                 src="/assets/graminum-logo.png"
-                alt="Graminum Admin"
-                className="h-9 w-auto"
+                alt="Graminum"
+                className="h-9 w-auto transition-transform group-hover:scale-105"
               />
               <div>
                 <span className="text-base font-extrabold text-[#075B2A] font-serif-title block leading-tight">
                   GRAMINUM
                 </span>
                 <span className="text-[10px] font-bold text-emerald-700 uppercase tracking-wider block">
-                  Management Console
+                  {isAdmin ? 'Admin Console' : 'Manager Console'}
                 </span>
               </div>
             </Link>
 
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden p-1.5 text-gray-500 hover:text-gray-800 rounded-lg"
+              className="lg:hidden p-1.5 text-gray-500 hover:text-gray-800 rounded-lg cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -155,32 +155,37 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageTitle })
               )}
             </NavLink>
 
-            <NavLink to="/admin/users" className={navItemClass}>
-              <div className="flex items-center gap-3">
-                <Users className="w-4 h-4" />
-                <span>User Roles (RBAC)</span>
-              </div>
-              <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
-                {registeredUsers.length}
-              </span>
-            </NavLink>
-
-            {/* Password-Protected Scanner & WhatsApp Settings Tab */}
-            <div className="pt-3">
-              <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">
-                Configurations
-              </div>
-              <button
-                onClick={() => setIsSettingsModalOpen(true)}
-                className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-[#075B2A] bg-[#EFF7E9] hover:bg-[#8CCB55] hover:text-[#06451F] border border-[#8CCB55] mt-1 cursor-pointer"
-              >
-                <div className="flex items-center gap-2.5">
-                  <QrCode className="w-4 h-4" />
-                  <span>Scanner & WhatsApp</span>
+            {/* RBAC User Roles is STRICTLY RESTRICTED to Admin (hidden for Manager) */}
+            {isAdmin && (
+              <NavLink to="/admin/users" className={navItemClass}>
+                <div className="flex items-center gap-3">
+                  <Users className="w-4 h-4" />
+                  <span>User Roles (RBAC)</span>
                 </div>
-                <Lock className="w-3.5 h-3.5 text-gray-400" />
-              </button>
-            </div>
+                <span className="text-[10px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-full font-bold">
+                  {registeredUsers.length}
+                </span>
+              </NavLink>
+            )}
+
+            {/* Password-Protected Scanner & WhatsApp Settings is STRICTLY RESTRICTED to Admin */}
+            {isAdmin && (
+              <div className="pt-3">
+                <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-gray-400">
+                  Configurations
+                </div>
+                <button
+                  onClick={() => setIsSettingsModalOpen(true)}
+                  className="w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-semibold transition-all text-[#075B2A] bg-[#EFF7E9] hover:bg-[#8CCB55] hover:text-[#06451F] border border-[#8CCB55] mt-1 cursor-pointer"
+                >
+                  <div className="flex items-center gap-2.5">
+                    <QrCode className="w-4 h-4" />
+                    <span>Scanner & WhatsApp</span>
+                  </div>
+                  <Lock className="w-3.5 h-3.5 text-gray-400" />
+                </button>
+              </div>
+            )}
           </nav>
         </div>
 
@@ -205,19 +210,26 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageTitle })
                 {adminUser?.name[0]?.toUpperCase() || 'A'}
               </div>
               <div className="min-w-0">
-                <p className="text-xs font-bold text-gray-900 truncate">
-                  {adminUser?.name || 'Administrator'}
-                </p>
-                <p className="text-[10px] text-gray-500 truncate">
-                  {adminUser?.email || 'aveniq.official1@gmail.com'}
-                </p>
+                <div className="flex items-center gap-1.5">
+                  <p className="text-xs font-bold text-gray-900 truncate">
+                    {adminUser?.name || (isAdmin ? 'Administrator' : 'Store Manager')}
+                  </p>
+                </div>
+                <div className="flex items-center gap-1">
+                  <span className={`text-[9px] font-extrabold uppercase px-1.5 py-0.2 rounded ${isAdmin ? 'bg-amber-100 text-amber-800' : 'bg-blue-100 text-blue-800'}`}>
+                    {isAdmin ? 'Admin' : 'Manager'}
+                  </span>
+                  <p className="text-[10px] text-gray-500 truncate">
+                    {adminUser?.email || ''}
+                  </p>
+                </div>
               </div>
             </div>
 
             <button
               onClick={handleLogout}
               className="p-1.5 text-gray-400 hover:text-red-600 rounded-lg transition-colors cursor-pointer"
-              title="Logout from Admin"
+              title="Logout from Management Console"
             >
               <LogOut className="w-4 h-4" />
             </button>
@@ -240,7 +252,7 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageTitle })
 
             <div>
               <div className="flex items-center gap-1.5 text-xs text-gray-400">
-                <span>Admin</span>
+                <span>{isAdmin ? 'Admin' : 'Manager'}</span>
                 <ChevronRight className="w-3 h-3" />
                 <span className="text-gray-600 font-medium">{currentTitle}</span>
               </div>
@@ -251,16 +263,18 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageTitle })
           </div>
 
           <div className="flex items-center gap-3">
-            {/* Quick Settings Action Button in Topbar */}
-            <button
-              onClick={() => setIsSettingsModalOpen(true)}
-              className="hidden sm:flex items-center gap-1.5 bg-[#EFF7E9] hover:bg-[#8CCB55] text-[#075B2A] border border-[#8CCB55] px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer"
-              title="Change WhatsApp Number or UPI Scanner (Password Protected)"
-            >
-              <QrCode className="w-3.5 h-3.5" />
-              <span>QR & WhatsApp Settings</span>
-              <Lock className="w-3 h-3 text-gray-500 ml-0.5" />
-            </button>
+            {/* Quick Settings Action Button in Topbar (Admin Only) */}
+            {isAdmin && (
+              <button
+                onClick={() => setIsSettingsModalOpen(true)}
+                className="hidden sm:flex items-center gap-1.5 bg-[#EFF7E9] hover:bg-[#8CCB55] text-[#075B2A] border border-[#8CCB55] px-3 py-1.5 rounded-xl text-xs font-bold transition-colors cursor-pointer"
+                title="Change WhatsApp Number or UPI Scanner (Password Protected)"
+              >
+                <QrCode className="w-3.5 h-3.5" />
+                <span>QR & WhatsApp Settings</span>
+                <Lock className="w-3 h-3 text-gray-500 ml-0.5" />
+              </button>
+            )}
 
             {/* Quick Pending Payment Alert Pill */}
             {stats.paymentVerificationPending > 0 && (
@@ -287,10 +301,12 @@ export const AdminLayout: React.FC<AdminLayoutProps> = ({ children, pageTitle })
       </div>
 
       {/* Password-Protected Payment Scanner & WhatsApp Settings Modal */}
-      <AdminPaymentSettingsModal
-        isOpen={isSettingsModalOpen}
-        onClose={() => setIsSettingsModalOpen(false)}
-      />
+      {isAdmin && (
+        <AdminPaymentSettingsModal
+          isOpen={isSettingsModalOpen}
+          onClose={() => setIsSettingsModalOpen(false)}
+        />
+      )}
     </div>
   );
 };

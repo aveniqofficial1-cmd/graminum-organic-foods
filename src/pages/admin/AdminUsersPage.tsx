@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Navigate } from 'react-router-dom';
 import {
   Users,
   ShieldCheck,
@@ -17,24 +18,42 @@ import {
   Mail,
   Phone,
   Calendar,
+  Shield,
 } from 'lucide-react';
 import { useAuth, PRIMARY_ADMIN_EMAIL } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
-import { User } from '../../types';
+import { User, UserRole } from '../../types';
 
 export const AdminUsersPage: React.FC = () => {
-  const { registeredUsers, changeUserRole, currentUser } = useAuth();
+  const { registeredUsers, changeUserRole, currentUser, isAdmin, isManager } = useAuth();
   const { showToast } = useToast();
 
   const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'customer'>('all');
+  const [roleFilter, setRoleFilter] = useState<'all' | 'admin' | 'manager' | 'customer'>('all');
 
   // Password-lock modal state
   const [isRoleModalOpen, setIsRoleModalOpen] = useState(false);
   const [selectedTargetUser, setSelectedTargetUser] = useState<User | null>(null);
-  const [targetRoleToAssign, setTargetRoleToAssign] = useState<'customer' | 'admin'>('admin');
+  const [targetRoleToAssign, setTargetRoleToAssign] = useState<UserRole>('manager');
   const [securityPasswordInput, setSecurityPasswordInput] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // If user is not an admin (e.g. manager), block access
+  if (isManager && !isAdmin) {
+    return (
+      <div className="bg-white rounded-3xl border border-red-200 p-8 text-center space-y-4 max-w-xl mx-auto my-12 shadow-sm">
+        <div className="w-14 h-14 rounded-2xl bg-red-100 text-red-700 flex items-center justify-center mx-auto">
+          <ShieldAlert className="w-8 h-8" />
+        </div>
+        <h2 className="text-xl font-bold text-red-900 font-serif-title">
+          Access Restricted: Administrator Only
+        </h2>
+        <p className="text-xs text-gray-600 leading-relaxed">
+          Store Managers do not have permission to view or manage User Roles & Permissions. Please contact the Primary Administrator ({PRIMARY_ADMIN_EMAIL}) if you require administrative access.
+        </p>
+      </div>
+    );
+  }
 
   // Filter users
   const filteredUsers = registeredUsers.filter((user) => {
@@ -49,8 +68,8 @@ export const AdminUsersPage: React.FC = () => {
     return matchesSearch && matchesRole;
   });
 
-  const handleOpenRoleModal = (user: User, newRole: 'customer' | 'admin') => {
-    if (user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase() && newRole === 'customer') {
+  const handleOpenRoleModal = (user: User, newRole: UserRole) => {
+    if (user.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase() && newRole !== 'admin') {
       showToast(`Primary Admin (${PRIMARY_ADMIN_EMAIL}) cannot be demoted.`, 'error');
       return;
     }
@@ -85,6 +104,7 @@ export const AdminUsersPage: React.FC = () => {
   };
 
   const adminCount = registeredUsers.filter((u) => u.role === 'admin').length;
+  const managerCount = registeredUsers.filter((u) => u.role === 'manager').length;
   const customerCount = registeredUsers.filter((u) => u.role === 'customer').length;
 
   return (
@@ -97,22 +117,26 @@ export const AdminUsersPage: React.FC = () => {
             <span>Role-Based Access Control (RBAC)</span>
           </div>
           <h1 className="text-xl sm:text-2xl font-black text-[#075B2A] font-serif-title">
-            User Accounts & Admin Delegation
+            User Accounts & Role Delegation
           </h1>
           <p className="text-xs text-[#667267] mt-0.5">
-            Promote team members to administrators or revoke privileges. All role updates require the Admin Security Password.
+            Assign Admin, Manager, or Customer roles. All role modifications require the Admin Security Password.
           </p>
         </div>
 
         {/* Quick Stats Badges */}
-        <div className="flex items-center gap-3">
-          <div className="bg-[#EFF7E9] px-4 py-2.5 rounded-2xl border border-[#8CCB55] text-center">
-            <span className="block text-[10px] text-gray-500 font-bold uppercase">Admins</span>
-            <span className="text-lg font-black text-[#075B2A]">{adminCount}</span>
+        <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <div className="bg-[#EFF7E9] px-3.5 py-2 rounded-2xl border border-[#8CCB55] text-center">
+            <span className="block text-[9px] text-gray-500 font-bold uppercase">Admins</span>
+            <span className="text-base sm:text-lg font-black text-[#075B2A]">{adminCount}</span>
           </div>
-          <div className="bg-[#FBF8EF] px-4 py-2.5 rounded-2xl border border-[#E1E9DC] text-center">
-            <span className="block text-[10px] text-gray-500 font-bold uppercase">Customers</span>
-            <span className="text-lg font-black text-[#18251B]">{customerCount}</span>
+          <div className="bg-blue-50 px-3.5 py-2 rounded-2xl border border-blue-200 text-center">
+            <span className="block text-[9px] text-blue-600 font-bold uppercase">Managers</span>
+            <span className="text-base sm:text-lg font-black text-blue-800">{managerCount}</span>
+          </div>
+          <div className="bg-[#FBF8EF] px-3.5 py-2 rounded-2xl border border-[#E1E9DC] text-center">
+            <span className="block text-[9px] text-gray-500 font-bold uppercase">Customers</span>
+            <span className="text-base sm:text-lg font-black text-[#18251B]">{customerCount}</span>
           </div>
         </div>
       </div>
@@ -130,12 +154,12 @@ export const AdminUsersPage: React.FC = () => {
         </div>
         <div className="flex items-center gap-1.5 text-[11px] font-bold text-amber-800 bg-amber-100/80 px-3 py-1.5 rounded-xl border border-amber-300">
           <Lock className="w-3.5 h-3.5" />
-          <span>Role changes are cryptographically locked</span>
+          <span>Role changes are password protected</span>
         </div>
       </div>
 
       {/* Search & Role Filter Toolbar */}
-      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-[#E1E9DC] shadow-xs flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+      <div className="bg-white p-4 sm:p-5 rounded-3xl border border-[#E1E9DC] shadow-xs flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
         {/* Search Input */}
         <div className="relative flex-1">
           <input
@@ -149,20 +173,20 @@ export const AdminUsersPage: React.FC = () => {
         </div>
 
         {/* Filter Pills */}
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 sm:gap-2 flex-wrap">
           <button
             onClick={() => setRoleFilter('all')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               roleFilter === 'all'
                 ? 'bg-[#075B2A] text-white shadow-xs'
                 : 'bg-[#FBF8EF] text-gray-600 hover:bg-[#EFF7E9]'
             }`}
           >
-            All Users ({registeredUsers.length})
+            All ({registeredUsers.length})
           </button>
           <button
             onClick={() => setRoleFilter('admin')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               roleFilter === 'admin'
                 ? 'bg-[#075B2A] text-white shadow-xs'
                 : 'bg-[#FBF8EF] text-gray-600 hover:bg-[#EFF7E9]'
@@ -171,8 +195,18 @@ export const AdminUsersPage: React.FC = () => {
             Admins ({adminCount})
           </button>
           <button
+            onClick={() => setRoleFilter('manager')}
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+              roleFilter === 'manager'
+                ? 'bg-[#075B2A] text-white shadow-xs'
+                : 'bg-[#FBF8EF] text-gray-600 hover:bg-[#EFF7E9]'
+            }`}
+          >
+            Managers ({managerCount})
+          </button>
+          <button
             onClick={() => setRoleFilter('customer')}
-            className={`px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`px-3 sm:px-4 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer ${
               roleFilter === 'customer'
                 ? 'bg-[#075B2A] text-white shadow-xs'
                 : 'bg-[#FBF8EF] text-gray-600 hover:bg-[#EFF7E9]'
@@ -279,6 +313,11 @@ export const AdminUsersPage: React.FC = () => {
                             <Crown className="w-3.5 h-3.5 text-amber-500" />
                             <span>Administrator</span>
                           </span>
+                        ) : user.role === 'manager' ? (
+                          <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-700 font-extrabold px-3 py-1 rounded-full border border-blue-300 text-xs">
+                            <Shield className="w-3.5 h-3.5 text-blue-600" />
+                            <span>Store Manager</span>
+                          </span>
                         ) : (
                           <span className="inline-flex items-center gap-1 bg-gray-100 text-gray-600 font-bold px-3 py-1 rounded-full border border-gray-200 text-xs">
                             <span>Customer</span>
@@ -292,24 +331,41 @@ export const AdminUsersPage: React.FC = () => {
                           <span className="text-[11px] text-gray-400 font-medium italic">
                             Protected Super Admin
                           </span>
-                        ) : user.role === 'customer' ? (
-                          <button
-                            type="button"
-                            onClick={() => handleOpenRoleModal(user, 'admin')}
-                            className="inline-flex items-center gap-1.5 bg-[#EFF7E9] hover:bg-[#075B2A] text-[#075B2A] hover:text-white border border-[#8CCB55] px-3.5 py-1.5 rounded-xl font-bold transition-all shadow-2xs active:scale-95 cursor-pointer text-xs"
-                          >
-                            <Lock className="w-3.5 h-3.5" />
-                            <span>Promote to Admin</span>
-                          </button>
                         ) : (
-                          <button
-                            type="button"
-                            onClick={() => handleOpenRoleModal(user, 'customer')}
-                            className="inline-flex items-center gap-1.5 bg-red-50 hover:bg-red-600 text-red-700 hover:text-white border border-red-200 px-3.5 py-1.5 rounded-xl font-bold transition-all shadow-2xs active:scale-95 cursor-pointer text-xs"
-                          >
-                            <Lock className="w-3.5 h-3.5" />
-                            <span>Demote to Customer</span>
-                          </button>
+                          <div className="inline-flex items-center gap-1.5 justify-end">
+                            {user.role !== 'admin' && (
+                              <button
+                                type="button"
+                                onClick={() => handleOpenRoleModal(user, 'admin')}
+                                className="inline-flex items-center gap-1 bg-[#EFF7E9] hover:bg-[#075B2A] text-[#075B2A] hover:text-white border border-[#8CCB55] px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer text-[11px]"
+                                title="Promote to Admin (Full Access)"
+                              >
+                                <Crown className="w-3 h-3 text-amber-500" />
+                                <span>Admin</span>
+                              </button>
+                            )}
+                            {user.role !== 'manager' && (
+                              <button
+                                type="button"
+                                onClick={() => handleOpenRoleModal(user, 'manager')}
+                                className="inline-flex items-center gap-1 bg-blue-50 hover:bg-blue-600 text-blue-700 hover:text-white border border-blue-200 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer text-[11px]"
+                                title="Assign Manager (Catalog, Orders, Payments; No RBAC/Scanner)"
+                              >
+                                <Shield className="w-3 h-3" />
+                                <span>Manager</span>
+                              </button>
+                            )}
+                            {user.role !== 'customer' && (
+                              <button
+                                type="button"
+                                onClick={() => handleOpenRoleModal(user, 'customer')}
+                                className="inline-flex items-center gap-1 bg-red-50 hover:bg-red-600 text-red-700 hover:text-white border border-red-200 px-2.5 py-1 rounded-lg font-bold transition-all cursor-pointer text-[11px]"
+                                title="Demote to Regular Customer"
+                              >
+                                <span>Customer</span>
+                              </button>
+                            )}
+                          </div>
                         )}
                       </td>
                     </tr>
@@ -367,11 +423,17 @@ export const AdminUsersPage: React.FC = () => {
                 <span className="font-bold text-[#18251B]">{selectedTargetUser.email}</span>
               </div>
               <div className="flex justify-between items-center pt-1 border-t border-[#E1E9DC]">
+                <span className="text-gray-500 font-medium">Current Role:</span>
+                <span className="font-bold uppercase text-gray-700">{selectedTargetUser.role}</span>
+              </div>
+              <div className="flex justify-between items-center pt-1">
                 <span className="text-gray-500 font-medium">New Role Assignment:</span>
                 <span
                   className={`font-black px-2.5 py-0.5 rounded-lg text-xs ${
                     targetRoleToAssign === 'admin'
                       ? 'bg-[#EFF7E9] text-[#075B2A] border border-[#8CCB55]'
+                      : targetRoleToAssign === 'manager'
+                      ? 'bg-blue-50 text-blue-700 border border-blue-200'
                       : 'bg-red-50 text-red-700 border border-red-200'
                   }`}
                 >
@@ -380,9 +442,24 @@ export const AdminUsersPage: React.FC = () => {
               </div>
             </div>
 
-            <p className="text-xs text-[#667267] leading-relaxed">
-              Administrative role promotion grants full inventory, order approval, and payment scanner control. Enter the Admin Security Password to authenticate this change.
-            </p>
+            <div className="text-xs text-[#667267] space-y-1.5 bg-gray-50 p-3 rounded-xl border border-gray-200">
+              <p className="font-bold text-[#18251B]">Role Permissions Summary:</p>
+              {targetRoleToAssign === 'admin' && (
+                <p className="text-emerald-800">
+                  • <strong>Admin:</strong> Full access to Dashboard, Catalog, Orders, Payments, RBAC User Roles, and Scanner & WhatsApp configuration.
+                </p>
+              )}
+              {targetRoleToAssign === 'manager' && (
+                <p className="text-blue-800">
+                  • <strong>Manager:</strong> Access to Dashboard, Products Catalog, Orders Workflow, and Payment Verification. Restricted from User Roles & Scanner/WhatsApp settings.
+                </p>
+              )}
+              {targetRoleToAssign === 'customer' && (
+                <p className="text-gray-600">
+                  • <strong>Customer:</strong> Standard storefront shopping, order tracking, and address book only.
+                </p>
+              )}
+            </div>
 
             <form onSubmit={handleConfirmRoleChange} className="space-y-4">
               <div>
@@ -417,6 +494,8 @@ export const AdminUsersPage: React.FC = () => {
                   className={`px-5 py-2.5 rounded-xl text-xs font-bold text-white shadow-md transition-all active:scale-95 flex items-center gap-2 cursor-pointer ${
                     targetRoleToAssign === 'admin'
                       ? 'bg-[#075B2A] hover:bg-[#06451F]'
+                      : targetRoleToAssign === 'manager'
+                      ? 'bg-blue-600 hover:bg-blue-700'
                       : 'bg-red-600 hover:bg-red-700'
                   }`}
                 >

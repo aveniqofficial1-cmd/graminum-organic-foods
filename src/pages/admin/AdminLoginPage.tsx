@@ -77,10 +77,10 @@ export const AdminLoginPage: React.FC = () => {
             <span>Store Operations Console</span>
           </div>
           <h1 className="text-2xl font-black text-[#075B2A] font-serif-title">
-            Administrator Sign In
+            Staff Management Sign In
           </h1>
           <p className="text-xs text-[#667267]">
-            Restricted to Primary Admin (<strong>{PRIMARY_ADMIN_EMAIL}</strong>) and authorized administrators.
+            Restricted to Primary Admin (<strong>{PRIMARY_ADMIN_EMAIL}</strong>) and authorized store managers.
           </p>
         </div>
 

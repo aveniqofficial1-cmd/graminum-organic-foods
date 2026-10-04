@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { User, Address, NotificationItem, Review } from '../types';
+import { User, UserRole, Address, NotificationItem, Review } from '../types';
 import { useToast } from './ToastContext';
 import { auth, googleProvider, signInWithPopup, fbSignOut } from '../firebase/config';
 
@@ -15,6 +15,9 @@ interface AuthContextType {
   currentUser: User | null;
   isAuthenticated: boolean;
   isAdminAuthenticated: boolean;
+  isAdmin: boolean;
+  isManager: boolean;
+  isStaff: boolean;
   adminUser: User | null;
   registeredUsers: User[];
   notifications: NotificationItem[];
@@ -25,7 +28,7 @@ interface AuthContextType {
   logoutCustomer: () => Promise<void>;
   loginAdmin: (email: string, pass: string) => boolean;
   logoutAdmin: () => void;
-  changeUserRole: (userId: string, newRole: 'customer' | 'admin', securityPassword: string) => boolean;
+  changeUserRole: (userId: string, newRole: UserRole, securityPassword: string) => boolean;
   updateProfile: (updatedData: Partial<User>) => void;
   addAddress: (address: Omit<Address, 'id'>) => void;
   updateAddress: (address: Address) => void;
@@ -116,6 +119,17 @@ const INITIAL_USERS: User[] = [
     addresses: DEFAULT_ADDRESSES,
     createdAt: new Date().toISOString(),
   },
+  {
+    id: 'usr-manager-kashibugga-004',
+    name: 'Kashibugga Store Manager',
+    email: 'manager@graminum.com',
+    phone: '9396723139',
+    password: 'password123',
+    role: 'manager',
+    authProvider: 'password',
+    addresses: DEFAULT_ADDRESSES,
+    createdAt: new Date().toISOString(),
+  },
 ];
 
 const INITIAL_NOTIFICATIONS: NotificationItem[] = [
@@ -201,7 +215,11 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   });
 
   const [adminUser, setAdminUser] = useState<User | null>(() => {
-    if (currentUser && currentUser.role === 'admin') {
+    try {
+      const saved = localStorage.getItem('graminum_admin_user_v4');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'manager')) {
       return currentUser;
     }
     const foundAdmin = registeredUsers.find((u) => u.role === 'admin');
@@ -225,7 +243,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     try {
       if (currentUser) {
         localStorage.setItem(USER_SESSION_KEY, JSON.stringify(currentUser));
-        if (currentUser.role === 'admin') {
+        if (currentUser.role === 'admin' || currentUser.role === 'manager') {
           setIsAdminAuthenticated(true);
           setAdminUser(currentUser);
         }
@@ -241,10 +259,24 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
   useEffect(() => {
     try {
       localStorage.setItem(ADMIN_STORAGE_KEY, isAdminAuthenticated ? 'true' : 'false');
+      if (adminUser) {
+        localStorage.setItem('graminum_admin_user_v4', JSON.stringify(adminUser));
+      } else {
+        localStorage.removeItem('graminum_admin_user_v4');
+      }
     } catch (e) {
       console.error('Failed to save admin session', e);
     }
-  }, [isAdminAuthenticated]);
+  }, [isAdminAuthenticated, adminUser]);
+
+  // Role getters
+  const isAdmin =
+    (isAdminAuthenticated && adminUser?.role === 'admin') ||
+    (!isAdminAuthenticated && currentUser?.role === 'admin');
+  const isManager =
+    (isAdminAuthenticated && adminUser?.role === 'manager') ||
+    (!isAdminAuthenticated && currentUser?.role === 'manager');
+  const isStaff = isAdmin || isManager;
 
   // ================= GOOGLE AUTHENTICATION VIA FIREBASE =================
   const loginWithGoogle = async (): Promise<boolean> => {
@@ -459,28 +491,33 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     showToast('Signed out successfully', 'info');
   };
 
-  // ================= ADMIN AUTHENTICATION =================
+  // ================= ADMIN & MANAGER AUTHENTICATION =================
   const loginAdmin = (email: string, pass: string): boolean => {
     const cleanEmail = email.toLowerCase().trim();
 
-    const matchingAdmin = registeredUsers.find(
-      (u) => u.email.toLowerCase() === cleanEmail && u.role === 'admin'
+    const matchingStaff = registeredUsers.find(
+      (u) => u.email.toLowerCase() === cleanEmail && (u.role === 'admin' || u.role === 'manager')
     );
 
-    if (matchingAdmin) {
+    if (matchingStaff) {
       if (
-        matchingAdmin.password &&
-        matchingAdmin.password !== pass &&
+        matchingStaff.password &&
+        matchingStaff.password !== pass &&
         pass !== '9396723139' &&
         pass !== 'admin123' &&
         pass !== 'graminum2026'
       ) {
-        showToast('Incorrect admin password.', 'error');
+        showToast('Incorrect password.', 'error');
         return false;
       }
       setIsAdminAuthenticated(true);
-      setAdminUser(matchingAdmin);
-      showToast(`Welcome Admin ${matchingAdmin.name}!`, 'success');
+      setAdminUser(matchingStaff);
+      showToast(
+        matchingStaff.role === 'admin'
+          ? `Welcome Admin ${matchingStaff.name}!`
+          : `Welcome Store Manager ${matchingStaff.name}!`,
+        'success'
+      );
       return true;
     }
 
@@ -498,7 +535,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
 
     showToast(
-      `Access Denied: Only designated Admin accounts (e.g. ${PRIMARY_ADMIN_EMAIL}) can access the Admin portal.`,
+      `Access Denied: Only designated Admin (e.g. ${PRIMARY_ADMIN_EMAIL}) or Manager accounts can access the Management portal.`,
       'error'
     );
     return false;
@@ -506,13 +543,17 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
   const logoutAdmin = () => {
     setIsAdminAuthenticated(false);
-    showToast('Admin session terminated', 'info');
+    setAdminUser(null);
+    try {
+      localStorage.removeItem('graminum_admin_user_v4');
+    } catch {}
+    showToast('Management session terminated', 'info');
   };
 
   // ================= ROLE CHANGE / DELEGATION (PASSWORD-LOCKED) =================
   const changeUserRole = (
     userId: string,
-    newRole: 'customer' | 'admin',
+    newRole: UserRole,
     securityPassword: string
   ): boolean => {
     // Validate security password
@@ -544,9 +585,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
 
     if (
       targetUser.email.toLowerCase() === PRIMARY_ADMIN_EMAIL.toLowerCase() &&
-      newRole === 'customer'
+      newRole !== 'admin'
     ) {
-      showToast(`Primary Admin (${PRIMARY_ADMIN_EMAIL}) role cannot be revoked.`, 'error');
+      showToast(`Primary Admin (${PRIMARY_ADMIN_EMAIL}) role cannot be modified.`, 'error');
       return false;
     }
 
@@ -560,6 +601,18 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
       setCurrentUser({ ...currentUser, role: newRole });
       if (newRole === 'customer') {
         setIsAdminAuthenticated(false);
+        setAdminUser(null);
+      } else {
+        setAdminUser({ ...currentUser, role: newRole });
+      }
+    }
+
+    if (adminUser?.id === userId) {
+      if (newRole === 'customer') {
+        setIsAdminAuthenticated(false);
+        setAdminUser(null);
+      } else {
+        setAdminUser({ ...adminUser, role: newRole });
       }
     }
 
@@ -675,6 +728,9 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         currentUser,
         isAuthenticated: !!currentUser,
         isAdminAuthenticated,
+        isAdmin,
+        isManager,
+        isStaff,
         adminUser,
         registeredUsers,
         notifications,

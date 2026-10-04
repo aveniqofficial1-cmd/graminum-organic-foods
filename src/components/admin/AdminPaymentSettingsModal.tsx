@@ -17,6 +17,7 @@ import {
   FileCheck,
 } from 'lucide-react';
 import { useStoreSettings } from '../../context/StoreSettingsContext';
+import { useAuth } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 
 interface AdminPaymentSettingsModalProps {
@@ -28,6 +29,7 @@ export const AdminPaymentSettingsModal: React.FC<AdminPaymentSettingsModalProps>
   isOpen,
   onClose,
 }) => {
+  const { isAdmin } = useAuth();
   const {
     settings,
     updateStoreSettings,
@@ -59,7 +61,7 @@ export const AdminPaymentSettingsModal: React.FC<AdminPaymentSettingsModalProps>
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
 
-  if (!isOpen) return null;
+  if (!isOpen || !isAdmin) return null;
 
   const handleUnlock = (e: React.FormEvent) => {
     e.preventDefault();

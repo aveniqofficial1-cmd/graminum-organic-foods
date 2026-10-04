@@ -56,13 +56,25 @@ const CustomerLayout: React.FC = () => {
   );
 };
 
-// Protected Admin Route Guard
+// Protected Admin & Manager Staff Route Guard
 const ProtectedAdminRoute: React.FC = () => {
   const { isAdminAuthenticated } = useAuth();
   if (!isAdminAuthenticated) {
     return <Navigate to="/admin/login" replace />;
   }
   return <AdminLayout />;
+};
+
+// Protected Admin Only (RBAC User Delegation) Route Guard
+const ProtectedAdminOnlyRoute: React.FC = () => {
+  const { isAdminAuthenticated, isAdmin } = useAuth();
+  if (!isAdminAuthenticated) {
+    return <Navigate to="/admin/login" replace />;
+  }
+  if (!isAdmin) {
+    return <Navigate to="/admin" replace />;
+  }
+  return <AdminUsersPage />;
 };
 
 export const App: React.FC = () => {
@@ -107,7 +119,7 @@ export const App: React.FC = () => {
                         <Route path="products" element={<AdminProductsPage />} />
                         <Route path="orders" element={<AdminOrdersPage />} />
                         <Route path="payments" element={<AdminPaymentVerificationPage />} />
-                        <Route path="users" element={<AdminUsersPage />} />
+                        <Route path="users" element={<ProtectedAdminOnlyRoute />} />
                       </Route>
 
                       {/* Fallback redirect */}

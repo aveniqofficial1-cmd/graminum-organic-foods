@@ -140,13 +140,15 @@ export interface FAQItem {
   category: 'Ordering' | 'Payment' | 'Delivery' | 'Products' | 'Returns & Support';
 }
 
+export type UserRole = 'customer' | 'manager' | 'admin';
+
 export interface User {
   id: string;
   name: string;
   email: string;
   phone: string;
   password?: string;
-  role: 'customer' | 'admin';
+  role: UserRole;
   photoURL?: string;
   authProvider?: 'google' | 'password' | 'demo';
   addresses: Address[];
