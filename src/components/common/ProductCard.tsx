@@ -22,9 +22,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
   // Selected pack price
   const packOption = product.packSizeOptions?.find((opt) => opt.size === selectedPack);
   const currentPrice = packOption ? packOption.price : product.price;
-  const originalPrice = product.originalPrice
-    ? Math.round(currentPrice * (1 + (product.discountPercent || 15) / 100))
-    : undefined;
 
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -63,12 +60,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
               100% Organic
             </span>
           )}
-          {product.discountPercent && product.discountPercent > 0 && (
-            <span className="bg-[#D92D20] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm w-max">
-              {product.discountPercent}% OFF
-            </span>
-          )}
-          {product.isBestseller && !product.discountPercent && (
+          {product.isBestseller && (
             <span className="bg-[#E9A23B] text-white text-[10px] font-bold px-2 py-0.5 rounded-full shadow-sm w-max">
               Bestseller
             </span>
@@ -175,11 +167,6 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
                 <span className="text-lg sm:text-xl font-extrabold text-[#075B2A]">
                   ₹{currentPrice}
                 </span>
-                {originalPrice && (
-                  <span className="text-xs text-gray-400 line-through">
-                    ₹{originalPrice}
-                  </span>
-                )}
               </div>
             </div>
 

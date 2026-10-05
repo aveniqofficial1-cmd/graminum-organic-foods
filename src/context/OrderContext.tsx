@@ -139,8 +139,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       hour12: true,
     });
 
+    const isHomeDelivery = orderData.deliveryMethod === 'Home Delivery';
     const isManualPayment =
       orderData.paymentMethod === 'Manual Transfer (Screenshot)' ||
+      orderData.paymentMethod === 'UPI / QR Code' ||
       orderData.paymentMethod === ('Manual Bank / UPI Transfer' as any);
 
     const initialPaymentStatus: PaymentStatus =
@@ -152,40 +154,84 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const initialOrderStatus: OrderStatus = 'Order Placed';
 
-    const timeline: Order['timeline'] = [
-      {
-        status: 'Order Placed',
-        timestamp: formattedDate,
-        description: isManualPayment
-          ? 'Order registered; store payment verification pending'
-          : 'Order placed successfully and confirmed in store system',
-        completed: true,
-      },
-      {
-        status: 'Accepted',
-        timestamp: isManualPayment ? 'Awaiting verification' : 'In queue',
-        description: 'Store verification & item allocation',
-        completed: false,
-      },
-      {
-        status: 'Preparing at Store',
-        timestamp: 'Estimated within 1-2 hours',
-        description: 'Fresh organic packaging & assembling at Kashibugga store',
-        completed: false,
-      },
-      {
-        status: 'Ready for Pickup',
-        timestamp: 'Same Day Store Ready',
-        description: 'Order packed & ready for collection at Kashibugga Warangal Store counter',
-        completed: false,
-      },
-      {
-        status: 'Picked Up',
-        timestamp: 'Pending Collection',
-        description: 'Customer order handover with Order ID at store counter',
-        completed: false,
-      },
-    ];
+    const timeline: Order['timeline'] = isHomeDelivery
+      ? [
+          {
+            status: 'Order Placed',
+            timestamp: formattedDate,
+            description:
+              orderData.paymentMethod === 'Cash on Delivery'
+                ? 'Order registered with Cash on Delivery (Pay upon delivery)'
+                : 'Order registered; store payment verification pending',
+            completed: true,
+          },
+          {
+            status: 'Accepted',
+            timestamp:
+              orderData.paymentMethod === 'Cash on Delivery'
+                ? 'In Queue'
+                : isManualPayment
+                ? 'Awaiting verification'
+                : 'Confirmed',
+            description: 'Order confirmed and allocated for packing',
+            completed: false,
+          },
+          {
+            status: 'Preparing',
+            timestamp: 'Estimated within 2-4 hours',
+            description: 'Fresh organic packaging and quality inspection',
+            completed: false,
+          },
+          {
+            status: 'Out for Delivery',
+            timestamp: 'Next Day Dispatch',
+            description: 'Dispatched with delivery partner to doorstep',
+            completed: false,
+          },
+          {
+            status: 'Delivered',
+            timestamp: 'Pending Delivery',
+            description: 'Order delivered to doorstep',
+            completed: false,
+          },
+        ]
+      : [
+          {
+            status: 'Order Placed',
+            timestamp: formattedDate,
+            description:
+              orderData.paymentMethod === 'Cash on Delivery'
+                ? 'Order registered; pay at store counter'
+                : isManualPayment
+                ? 'Order registered; store payment verification pending'
+                : 'Order placed successfully and confirmed in store system',
+            completed: true,
+          },
+          {
+            status: 'Accepted',
+            timestamp: isManualPayment ? 'Awaiting verification' : 'In queue',
+            description: 'Store verification & item allocation',
+            completed: false,
+          },
+          {
+            status: 'Preparing at Store',
+            timestamp: 'Estimated within 1-2 hours',
+            description: 'Fresh organic packaging & assembling at Kashibugga store',
+            completed: false,
+          },
+          {
+            status: 'Ready for Pickup',
+            timestamp: 'Same Day Store Ready',
+            description: 'Order packed & ready for collection at Kashibugga Warangal Store counter',
+            completed: false,
+          },
+          {
+            status: 'Picked Up',
+            timestamp: 'Pending Collection',
+            description: 'Customer order handover with Order ID at store counter',
+            completed: false,
+          },
+        ];
 
     const newOrder: Order = {
       id,
@@ -195,10 +241,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       customerPhone: orderData.customerPhone,
       items: orderData.items,
       subtotal: orderData.subtotal,
-      deliveryFee: 0,
-      discount: orderData.discount,
+      deliveryFee: orderData.deliveryFee || 0,
+      discount: orderData.discount || 0,
       grandTotal: orderData.grandTotal,
-      deliveryMethod: 'Store Pickup',
+      deliveryMethod: orderData.deliveryMethod,
       shippingAddress: orderData.shippingAddress,
       paymentMethod: orderData.paymentMethod,
       paymentStatus: initialPaymentStatus,
@@ -209,7 +255,9 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       internalAdminNotes: isManualPayment
         ? ['Manual payment receipt submitted at checkout. Awaiting verification.']
         : undefined,
-      notes: 'Direct Store Pickup - Kashibugga Warangal',
+      notes: isHomeDelivery
+        ? `Online Home Delivery - ${orderData.shippingAddress.city}, ${orderData.shippingAddress.pincode}`
+        : 'Direct Store Pickup - Kashibugga Warangal',
       createdAt: now.toISOString(),
       updatedAt: now.toISOString(),
     };
@@ -241,13 +289,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             hour12: true,
           });
 
-          const statusOrderSequence: OrderStatus[] = [
-            'Order Placed',
-            'Accepted',
-            'Preparing at Store',
-            'Ready for Pickup',
-            'Picked Up',
-          ];
+          const statusOrderSequence: OrderStatus[] =
+            order.deliveryMethod === 'Home Delivery'
+              ? ['Order Placed', 'Accepted', 'Preparing', 'Out for Delivery', 'Delivered']
+              : ['Order Placed', 'Accepted', 'Preparing at Store', 'Ready for Pickup', 'Picked Up'];
 
           const targetIndex = statusOrderSequence.indexOf(newStatus);
 

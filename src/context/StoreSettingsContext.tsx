@@ -110,12 +110,22 @@ export const StoreSettingsProvider: React.FC<{ children: ReactNode }> = ({ child
       )
       .join('\n');
 
-    const addressText =
-      order.deliveryMethod === 'Store Pickup'
-        ? '🏬 *Store Pickup:* Graminum Herbal Store, 11-18-356/3/A, Opp Sai Baba Temple, Beside Assisi School, O City, Kashibugga, Warangal-506002'
-        : `🏡 *Delivery Address:*\n${order.shippingAddress.fullName}\n${order.shippingAddress.addressLine}, ${order.shippingAddress.city} - ${order.shippingAddress.pincode}\n📞 ${order.shippingAddress.phone}`;
+    const isHomeDelivery = order.deliveryMethod === 'Home Delivery';
+    const isCOD = order.paymentMethod === 'Cash on Delivery';
 
-    const message = `🌿 *GRAMINUM HERBAL & NATURAL STORE — ORDER PAYMENT RECEIPT* 🌿
+    const fulfillmentText = isHomeDelivery
+      ? `🚚 *Fulfillment:* Online Home Delivery\n🏡 *Delivery Address:*\n${order.shippingAddress.fullName}\n${order.shippingAddress.addressLine}, ${order.shippingAddress.city} - ${order.shippingAddress.pincode}\n📞 ${order.shippingAddress.phone}`
+      : `🏬 *Fulfillment:* Direct Store Pickup\n📍 *Store Location:* Graminum Herbal Store, 11-18-356/3/A, Opp Sai Baba Temple, Beside Assisi School, O City, Kashibugga, Warangal-506002\n📞 Store Help: 9396723139`;
+
+    const paymentText = isCOD
+      ? `*Payment Mode:* Cash on Delivery (Cash to be collected upon doorstep delivery)\n*Amount Due on Delivery:* ₹${order.grandTotal}`
+      : `*Payment Mode:* Online Mobile Payment (Direct to 9396723139)\n*Total Amount Paid:* ₹${order.grandTotal}${order.paymentUtr ? `\n*UTR / Ref No:* ${order.paymentUtr}` : ''}`;
+
+    const requestText = isCOD
+      ? `Namaskaram Graminum Team! I have placed an online home delivery order with Cash on Delivery. Please confirm my order and dispatch fresh organic harvest to my doorstep address.`
+      : `Namaskaram Graminum Team! I have placed an order and sent payment of ₹${order.grandTotal} directly to master phone number 9396723139. I am sharing my payment screenshot above. Please verify my receipt and confirm my order.`;
+
+    const message = `🌿 *GRAMINUM ORGANIC & NATURAL STORE — ORDER SUMMARY* 🌿
 --------------------------------------------------
 *Order ID:* #${order.orderNumber}
 *Date:* ${new Date(order.createdAt).toLocaleDateString('en-IN', {
@@ -126,22 +136,21 @@ export const StoreSettingsProvider: React.FC<{ children: ReactNode }> = ({ child
       minute: '2-digit',
     })}
 *Customer Name:* ${order.customerName}
-*Contact:* ${order.customerPhone}
+*Contact Phone:* ${order.customerPhone}
 
 📦 *ORDERED ITEMS:*
 ${itemsSummary}
 
-💰 *PAYMENT SUMMARY:*
+💰 *BILLING SUMMARY:*
 *Subtotal:* ₹${order.subtotal}
-*Delivery Fee:* ₹0 (Free Store Pickup)
-*Total Amount Paid:* ₹${order.grandTotal}
-*Payment Method:* Direct UPI / Phone Payment (9396723139)
-${order.paymentUtr ? `*UTR / Ref No:* ${order.paymentUtr}` : ''}
+*Delivery Fee:* ₹${order.deliveryFee || 0}
+${order.discount ? `*Discount:* -₹${order.discount}\n` : ''}*Grand Total:* ₹${order.grandTotal}
+${paymentText}
 
-${addressText}
+${fulfillmentText}
 --------------------------------------------------
-*Payment Confirmation Request:*
-Namaskaram Graminum Team! I have sent payment of ₹${order.grandTotal} directly to master phone number 9396723139. I am sharing my payment screenshot above. Please verify my receipt, confirm my order, and prepare my package for store pickup at Kashibugga Warangal store.
+*Order Confirmation Request:*
+${requestText}
 
 Thank you! 🙏`;
 

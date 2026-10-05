@@ -40,8 +40,11 @@ export const AdminOrdersPage: React.FC = () => {
     'All',
     'Order Placed',
     'Accepted',
+    'Preparing',
     'Preparing at Store',
+    'Out for Delivery',
     'Ready for Pickup',
+    'Delivered',
     'Picked Up',
     'Cancelled',
   ];
@@ -52,7 +55,9 @@ export const AdminOrdersPage: React.FC = () => {
       o.orderNumber.toLowerCase().includes(searchQuery.toLowerCase()) ||
       o.customerName.toLowerCase().includes(searchQuery.toLowerCase()) ||
       o.customerPhone.includes(searchQuery) ||
-      o.shippingAddress.city.toLowerCase().includes(searchQuery.toLowerCase());
+      o.shippingAddress.city.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      o.deliveryMethod.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      o.paymentMethod.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesTab && matchesSearch;
   });
 
@@ -87,20 +92,36 @@ export const AdminOrdersPage: React.FC = () => {
     }
   };
 
-  const getNextStage = (current: OrderStatus): OrderStatus | null => {
-    switch (current) {
-      case 'Order Placed':
-        return 'Accepted';
-      case 'Accepted':
-        return 'Preparing at Store';
-      case 'Preparing at Store':
-      case 'Preparing':
-        return 'Ready for Pickup';
-      case 'Ready for Pickup':
-      case 'Out for Delivery':
-        return 'Picked Up';
-      default:
-        return null;
+  const getNextStage = (order: Order): OrderStatus | null => {
+    const isHome = order.deliveryMethod === 'Home Delivery';
+    if (isHome) {
+      switch (order.orderStatus) {
+        case 'Order Placed':
+          return 'Accepted';
+        case 'Accepted':
+          return 'Preparing';
+        case 'Preparing':
+          return 'Out for Delivery';
+        case 'Out for Delivery':
+          return 'Delivered';
+        default:
+          return null;
+      }
+    } else {
+      switch (order.orderStatus) {
+        case 'Order Placed':
+          return 'Accepted';
+        case 'Accepted':
+          return 'Preparing at Store';
+        case 'Preparing at Store':
+        case 'Preparing':
+          return 'Ready for Pickup';
+        case 'Ready for Pickup':
+        case 'Out for Delivery':
+          return 'Picked Up';
+        default:
+          return null;
+      }
     }
   };
 
@@ -215,11 +236,14 @@ export const AdminOrdersPage: React.FC = () => {
                       </p>
                     </td>
 
-                    {/* Delivery Method */}
+                    {/* Delivery & Payment Method */}
                     <td className="py-3.5 px-3">
-                      <span className="text-gray-700 font-medium">
+                      <p className="text-[#075B2A] font-bold">
                         {order.deliveryMethod}
-                      </span>
+                      </p>
+                      <p className="text-[10px] text-gray-500">
+                        {order.paymentMethod}
+                      </p>
                     </td>
 
                     {/* Items */}
@@ -272,9 +296,12 @@ export const AdminOrdersPage: React.FC = () => {
                       >
                         <option value="Order Placed">Order Placed</option>
                         <option value="Accepted">Accepted</option>
+                        <option value="Preparing">Preparing (Doorstep)</option>
                         <option value="Preparing at Store">Preparing at Store</option>
+                        <option value="Out for Delivery">Out for Delivery</option>
                         <option value="Ready for Pickup">Ready for Pickup</option>
-                        <option value="Picked Up">Picked Up</option>
+                        <option value="Delivered">Delivered (Doorstep)</option>
+                        <option value="Picked Up">Picked Up (Store)</option>
                         <option value="Cancelled">Cancelled</option>
                       </select>
                     </td>
@@ -424,20 +451,20 @@ export const AdminOrdersPage: React.FC = () => {
             </div>
 
             {/* Quick Stage Progression Banner */}
-            {getNextStage(selectedOrder.orderStatus) && (
+            {getNextStage(selectedOrder) && (
               <div className="bg-[#EFF7E9] border border-[#8CCB55] p-4 rounded-2xl flex flex-col sm:flex-row items-center justify-between gap-3">
                 <div className="text-xs">
                   <span className="font-bold text-[#075B2A]">Next Fulfillment Milestone: </span>
                   <span className="text-gray-700">
                     Advance this package to{' '}
-                    <strong>"{getNextStage(selectedOrder.orderStatus)}"</strong>
+                    <strong>"{getNextStage(selectedOrder)}"</strong>
                   </span>
                 </div>
                 <button
                   onClick={() =>
                     handleStatusChange(
                       selectedOrder.id,
-                      getNextStage(selectedOrder.orderStatus)!
+                      getNextStage(selectedOrder)!
                     )
                   }
                   className="bg-[#075B2A] hover:bg-[#06451F] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs shrink-0 flex items-center gap-1.5 cursor-pointer"

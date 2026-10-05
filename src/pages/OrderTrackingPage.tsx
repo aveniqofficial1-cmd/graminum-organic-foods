@@ -18,6 +18,10 @@ import {
   Lock,
   ArrowRight,
   User as UserIcon,
+  Truck,
+  Home,
+  Banknote,
+  Smartphone,
 } from 'lucide-react';
 import { useOrders } from '../context/OrderContext';
 import { useStoreSettings } from '../context/StoreSettingsContext';
@@ -82,20 +86,11 @@ export const OrderTrackingPage: React.FC = () => {
     }
   };
 
-  const statusOrder: OrderStatus[] = [
-    'Order Placed',
-    'Accepted',
-    'Preparing at Store',
-    'Ready for Pickup',
-    'Picked Up',
-  ];
+  const isHomeDelivery = currentOrder?.deliveryMethod === 'Home Delivery';
 
-  const normalizeStatus = (status: OrderStatus): OrderStatus => {
-    if (status === 'Preparing') return 'Preparing at Store';
-    if (status === 'Out for Delivery') return 'Ready for Pickup';
-    if (status === 'Delivered') return 'Picked Up';
-    return status;
-  };
+  const statusOrder: OrderStatus[] = isHomeDelivery
+    ? ['Order Placed', 'Accepted', 'Preparing', 'Out for Delivery', 'Delivered']
+    : ['Order Placed', 'Accepted', 'Preparing at Store', 'Ready for Pickup', 'Picked Up'];
 
   const getStageIcon = (status: OrderStatus) => {
     switch (status) {
@@ -106,8 +101,9 @@ export const OrderTrackingPage: React.FC = () => {
       case 'Preparing at Store':
       case 'Preparing':
         return <Clock className="w-5 h-5" />;
-      case 'Ready for Pickup':
       case 'Out for Delivery':
+        return <Truck className="w-5 h-5" />;
+      case 'Ready for Pickup':
         return <Store className="w-5 h-5" />;
       case 'Picked Up':
       case 'Delivered':
@@ -134,7 +130,7 @@ export const OrderTrackingPage: React.FC = () => {
               Sign In to Track Your Orders
             </h1>
             <p className="text-xs sm:text-sm text-[#667267] leading-relaxed">
-              To protect customer order information, pickup status, and live payment receipts, please sign in or create a Graminum customer account.
+              To protect customer order information, delivery status, and payment receipts, please sign in or create a Graminum customer account.
             </p>
           </div>
 
@@ -193,7 +189,7 @@ export const OrderTrackingPage: React.FC = () => {
     );
   }
 
-  const effectiveStatus = currentOrder ? normalizeStatus(currentOrder.orderStatus) : 'Order Placed';
+  const effectiveStatus = currentOrder ? currentOrder.orderStatus : 'Order Placed';
 
   // ================= AUTHENTICATED STATE: FULL ORDER TRACKER =================
   return (
@@ -206,13 +202,13 @@ export const OrderTrackingPage: React.FC = () => {
         <div className="bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-8 shadow-sm space-y-4">
           <div className="text-center max-w-lg mx-auto space-y-1">
             <span className="text-xs font-extrabold text-[#4D963C] uppercase tracking-wider">
-              Direct Store Pickup Tracking
+              Live Order Fulfillment Tracker
             </span>
             <h1 className="text-xl sm:text-3xl font-black text-[#075B2A] font-serif-title">
               Track Your Organic Order
             </h1>
             <p className="text-xs sm:text-sm text-[#667267]">
-              Monitor store preparation, admin payment verification, and pickup readiness.
+              Monitor packaging, doorstep dispatch, and live payment status.
             </p>
           </div>
 
@@ -294,9 +290,9 @@ export const OrderTrackingPage: React.FC = () => {
                   </div>
                   <span
                     className={`text-xs font-bold px-3 py-1 rounded-full ${
-                      effectiveStatus === 'Picked Up'
+                      effectiveStatus === 'Delivered' || effectiveStatus === 'Picked Up'
                         ? 'bg-emerald-100 text-emerald-800'
-                        : effectiveStatus === 'Ready for Pickup'
+                        : effectiveStatus === 'Out for Delivery' || effectiveStatus === 'Ready for Pickup'
                         ? 'bg-[#8CCB55] text-[#06451F] font-black'
                         : currentOrder.orderStatus === 'Cancelled'
                         ? 'bg-red-100 text-red-800'
@@ -313,10 +309,14 @@ export const OrderTrackingPage: React.FC = () => {
               {/* Payment Verification Status Ribbon */}
               <div className="mt-4 p-3.5 rounded-2xl bg-[#EFF7E9] border border-[#8CCB55] flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs">
                 <div className="flex items-center gap-2.5">
-                  <QrCode className="w-5 h-5 text-[#075B2A] shrink-0" />
+                  {currentOrder.paymentMethod === 'Cash on Delivery' ? (
+                    <Banknote className="w-5 h-5 text-[#075B2A] shrink-0" />
+                  ) : (
+                    <Smartphone className="w-5 h-5 text-[#075B2A] shrink-0" />
+                  )}
                   <div>
                     <span className="font-bold text-[#18251B]">
-                      Payment:{' '}
+                      Payment: {currentOrder.paymentMethod}{' '}
                       <span
                         className={
                           currentOrder.paymentStatus === 'Verified'
@@ -324,9 +324,11 @@ export const OrderTrackingPage: React.FC = () => {
                             : 'text-amber-700 font-bold'
                         }
                       >
-                        {currentOrder.paymentStatus === 'Verified'
-                          ? '✓ Verified & Approved by Store Admin'
-                          : '⏳ Awaiting Store Verification'}
+                        {currentOrder.paymentMethod === 'Cash on Delivery'
+                          ? '• Pay upon doorstep delivery'
+                          : currentOrder.paymentStatus === 'Verified'
+                          ? '• ✓ Verified & Approved by Store Admin'
+                          : '• ⏳ Awaiting Store Verification'}
                       </span>
                     </span>
                     {currentOrder.paymentUtr && (
@@ -344,14 +346,17 @@ export const OrderTrackingPage: React.FC = () => {
                   className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 bg-[#25D366] hover:bg-[#20ba59] text-white text-[11px] font-bold px-3.5 py-2 rounded-xl shadow-xs transition-all active:scale-95"
                 >
                   <MessageCircle className="w-3.5 h-3.5" />
-                  <span>Resend Receipt on WhatsApp</span>
+                  <span>Resend Details on WhatsApp</span>
                 </a>
               </div>
 
-              {/* 5-STAGE STORE PICKUP STATUS TIMELINE */}
+              {/* 5-STAGE STATUS TIMELINE */}
               <div className="pt-6 sm:pt-8 pb-4">
-                <h3 className="text-xs font-bold text-[#18251B] uppercase tracking-wider mb-6">
-                  Store Pickup Fulfillment Progress
+                <h3 className="text-xs font-bold text-[#18251B] uppercase tracking-wider mb-6 flex items-center gap-2">
+                  {isHomeDelivery ? <Truck className="w-4 h-4 text-[#075B2A]" /> : <Store className="w-4 h-4 text-[#075B2A]" />}
+                  <span>
+                    {isHomeDelivery ? 'Online Home Delivery Progress' : 'Store Pickup Fulfillment Progress'}
+                  </span>
                 </h3>
 
                 <div className="relative">
@@ -361,11 +366,12 @@ export const OrderTrackingPage: React.FC = () => {
 
                     {statusOrder.map((stageName, idx) => {
                       const timelineEvent = currentOrder.timeline.find(
-                        (t) => normalizeStatus(t.status) === stageName || t.status === stageName
+                        (t) => t.status === stageName
                       );
                       const isCompleted = timelineEvent?.completed || false;
                       const isCurrentActive =
                         effectiveStatus === stageName &&
+                        effectiveStatus !== 'Delivered' &&
                         effectiveStatus !== 'Picked Up' &&
                         currentOrder.orderStatus !== 'Cancelled';
 
@@ -401,11 +407,12 @@ export const OrderTrackingPage: React.FC = () => {
                   <div className="sm:hidden space-y-6 relative pl-6 border-l-2 border-[#E1E9DC] ml-3">
                     {statusOrder.map((stageName, idx) => {
                       const timelineEvent = currentOrder.timeline.find(
-                        (t) => normalizeStatus(t.status) === stageName || t.status === stageName
+                        (t) => t.status === stageName
                       );
                       const isCompleted = timelineEvent?.completed || false;
                       const isCurrentActive =
                         effectiveStatus === stageName &&
+                        effectiveStatus !== 'Delivered' &&
                         effectiveStatus !== 'Picked Up';
 
                       return (
@@ -442,7 +449,7 @@ export const OrderTrackingPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Bottom 2 Columns: Purchased Items & Store Pickup Location */}
+            {/* Bottom 2 Columns: Purchased Items & Delivery / Store Location */}
             <div className="grid grid-cols-1 md:grid-cols-12 gap-6">
               {/* Items List (7 Cols) */}
               <div className="md:col-span-7 bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-6 shadow-sm space-y-4">
@@ -479,36 +486,63 @@ export const OrderTrackingPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Direct Store Pickup Location (5 Cols) */}
+              {/* Delivery Address or Store Pickup Location (5 Cols) */}
               <div className="md:col-span-5 bg-white rounded-3xl border border-[#E1E9DC] p-5 sm:p-6 shadow-sm space-y-4 flex flex-col justify-between">
                 <div className="space-y-3">
                   <div className="flex items-center gap-2 pb-2 border-b border-[#E1E9DC]">
-                    <Store className="w-4 h-4 text-[#075B2A]" />
-                    <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider">
-                      Store Pickup Location
-                    </h3>
+                    {isHomeDelivery ? (
+                      <>
+                        <Home className="w-4 h-4 text-[#075B2A]" />
+                        <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider">
+                          Doorstep Delivery Address
+                        </h3>
+                      </>
+                    ) : (
+                      <>
+                        <Store className="w-4 h-4 text-[#075B2A]" />
+                        <h3 className="text-sm font-bold text-[#075B2A] uppercase tracking-wider">
+                          Store Pickup Location
+                        </h3>
+                      </>
+                    )}
                   </div>
 
-                  <div className="p-3.5 bg-[#EFF7E9] rounded-2xl border border-[#8CCB55] space-y-2">
-                    <p className="font-black text-[#075B2A] text-xs">
-                      Graminum Herbal & Organic Store
-                    </p>
-                    <div className="text-xs text-[#18251B] space-y-1">
-                      <p className="font-semibold">11-18-356/3/A</p>
-                      <p className="text-gray-600">Opposite Sai Baba Temple,</p>
-                      <p className="text-gray-600">Beside Assisi School, O City,</p>
-                      <p className="text-gray-600">Kashibugga, Warangal - 506002</p>
-                      <p className="text-[#075B2A] font-bold pt-1">📞 Counter: 9396723139</p>
+                  {isHomeDelivery ? (
+                    <div className="p-3.5 bg-[#EFF7E9] rounded-2xl border border-[#8CCB55] space-y-1.5 text-xs">
+                      <p className="font-black text-[#075B2A]">{currentOrder.shippingAddress.fullName}</p>
+                      <p className="text-gray-700 leading-relaxed">
+                        {currentOrder.shippingAddress.addressLine}
+                      </p>
+                      <p className="text-gray-700">
+                        {currentOrder.shippingAddress.city}, {currentOrder.shippingAddress.state} - {currentOrder.shippingAddress.pincode}
+                      </p>
+                      <p className="text-[#075B2A] font-bold pt-1">
+                        📞 Contact: {currentOrder.shippingAddress.phone}
+                      </p>
                     </div>
-                  </div>
+                  ) : (
+                    <div className="p-3.5 bg-[#EFF7E9] rounded-2xl border border-[#8CCB55] space-y-2">
+                      <p className="font-black text-[#075B2A] text-xs">
+                        Graminum Herbal & Organic Store
+                      </p>
+                      <div className="text-xs text-[#18251B] space-y-1">
+                        <p className="font-semibold">11-18-356/3/A</p>
+                        <p className="text-gray-600">Opposite Sai Baba Temple,</p>
+                        <p className="text-gray-600">Beside Assisi School, O City,</p>
+                        <p className="text-gray-600">Kashibugga, Warangal - 506002</p>
+                        <p className="text-[#075B2A] font-bold pt-1">📞 Counter: 9396723139</p>
+                      </div>
+                    </div>
+                  )}
 
                   <div className="bg-[#FBF8EF] p-3 rounded-xl border border-[#E1E9DC] text-xs text-[#667267] space-y-1">
-                    <p className="font-bold text-[#18251B]">📌 Pickup Instructions:</p>
-                    <p className="text-[11px]">
-                      Please present your Order ID (<strong>#{currentOrder.orderNumber}</strong>) at the store counter upon arrival.
+                    <p className="font-bold text-[#18251B]">
+                      {isHomeDelivery ? '🚚 Delivery Info:' : '📌 Pickup Instructions:'}
                     </p>
-                    <p className="text-[11px] text-[#075B2A] font-semibold">
-                      Store Hours: Mon – Sun, 9:00 AM – 9:00 PM
+                    <p className="text-[11px]">
+                      {isHomeDelivery
+                        ? 'Package will be delivered to your doorstep. Keep cash ready if opted for Cash on Delivery.'
+                        : `Please present your Order ID (#${currentOrder.orderNumber}) at the store counter upon arrival.`}
                     </p>
                   </div>
                 </div>

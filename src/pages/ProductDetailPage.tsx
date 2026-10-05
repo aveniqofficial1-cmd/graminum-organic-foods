@@ -79,9 +79,6 @@ export const ProductDetailPage: React.FC = () => {
   const packOption = product.packSizeOptions?.find((opt) => opt.size === selectedPack);
   const currentPrice = packOption ? packOption.price : product.price;
   const currentStock = packOption ? packOption.stock : product.stock;
-  const originalPrice = product.originalPrice
-    ? Math.round(currentPrice * (1 + (product.discountPercent || 15) / 100))
-    : undefined;
 
   const handleAddToCart = () => {
     addToCart(product, selectedPack, quantity);
@@ -167,11 +164,6 @@ export const ProductDetailPage: React.FC = () => {
                   <span className="bg-[#EFF7E9] text-[#075B2A] text-xs font-bold px-3 py-1 rounded-full border border-[#8CCB55] shadow-sm flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#4D963C]"></span>
                     100% Organic & Native
-                  </span>
-                )}
-                {product.discountPercent && (
-                  <span className="bg-[#D92D20] text-white text-xs font-bold px-3 py-1 rounded-full shadow-sm w-max">
-                    {product.discountPercent}% OFF
                   </span>
                 )}
               </div>
@@ -265,11 +257,6 @@ export const ProductDetailPage: React.FC = () => {
                 <span className="text-3xl sm:text-4xl font-black text-[#075B2A]">
                   ₹{currentPrice}
                 </span>
-                {originalPrice && (
-                  <span className="text-base sm:text-lg text-gray-400 line-through font-semibold">
-                    ₹{originalPrice}
-                  </span>
-                )}
                 <span className="text-xs text-[#4D963C] font-bold bg-emerald-50 px-2 py-0.5 rounded-md">
                   Inclusive of all taxes
                 </span>

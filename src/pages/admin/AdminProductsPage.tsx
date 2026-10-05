@@ -576,7 +576,7 @@ export const AdminProductsPage: React.FC = () => {
               <tr className="border-b border-[#E1E9DC] bg-[#EFF7E9]/40 text-[#075B2A] font-extrabold uppercase text-[10px]">
                 <th className="py-3.5 px-4">Product Details</th>
                 <th className="py-3.5 px-3">Category</th>
-                <th className="py-3.5 px-3">Price / MRP</th>
+                <th className="py-3.5 px-3">Price</th>
                 <th className="py-3.5 px-3">Pack Sizes</th>
                 <th className="py-3.5 px-3">Stock Units</th>
                 <th className="py-3.5 px-3">Badges</th>
@@ -613,11 +613,6 @@ export const AdminProductsPage: React.FC = () => {
                     {/* Price */}
                     <td className="py-3.5 px-3">
                       <span className="font-extrabold text-[#075B2A] text-sm">₹{prod.price}</span>
-                      {prod.originalPrice && (
-                        <span className="text-[10px] text-gray-400 line-through ml-1.5">
-                          ₹{prod.originalPrice}
-                        </span>
-                      )}
                     </td>
 
                     {/* Pack Variants */}
@@ -755,8 +750,8 @@ export const AdminProductsPage: React.FC = () => {
                 </div>
               </div>
 
-              {/* Category, Base Price & MRP */}
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              {/* Category & Base Price */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-xs font-bold text-[#18251B] mb-1">Category *</label>
                   <select
@@ -774,25 +769,13 @@ export const AdminProductsPage: React.FC = () => {
 
                 <div>
                   <label className="block text-xs font-bold text-[#18251B] mb-1">
-                    Selling Price (₹) *
+                    Price (₹) *
                   </label>
                   <input
                     type="number"
                     required
                     value={formPrice}
                     onChange={(e) => setFormPrice(e.target.value)}
-                    className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-[#18251B] mb-1">
-                    Original MRP (₹)
-                  </label>
-                  <input
-                    type="number"
-                    value={formOriginalPrice}
-                    onChange={(e) => setFormOriginalPrice(e.target.value)}
                     className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
                   />
                 </div>
