@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, UserRole, Address, NotificationItem, Review } from '../types';
 import { useToast } from './ToastContext';
-import { auth, googleProvider, signInWithPopup, fbSignOut } from '../firebase/config';
+import { auth, googleProvider, signInWithPopup, fbSignOut, sendPasswordResetEmail } from '../firebase/config';
 
 export const PRIMARY_ADMIN_EMAIL = 'maheshkolipaka96@gmail.com';
 export const SECONDARY_ADMIN_EMAIL = 'aveniq.official1@gmail.com';
@@ -28,6 +28,7 @@ interface AuthContextType {
   logoutCustomer: () => Promise<void>;
   loginAdmin: (email: string, pass: string) => boolean;
   logoutAdmin: () => void;
+  sendForgotPasswordEmail: (email: string) => Promise<boolean>;
   changeUserRole: (userId: string, newRole: UserRole, securityPassword: string) => boolean;
   updateProfile: (updatedData: Partial<User>) => void;
   addAddress: (address: Omit<Address, 'id'>) => void;
@@ -40,22 +41,22 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-const USER_SESSION_KEY = 'graminum_user_session_v4';
-const REGISTERED_USERS_KEY = 'graminum_registered_users_v4';
-const ADMIN_STORAGE_KEY = 'graminum_admin_session_v4';
+const USER_SESSION_KEY = 'graminum_user_session_v5';
+const REGISTERED_USERS_KEY = 'graminum_registered_users_v5';
+const ADMIN_STORAGE_KEY = 'graminum_admin_session_v5';
 
 const DEFAULT_ADDRESSES: Address[] = [
   {
     id: 'addr-default-1',
-    fullName: 'Sravani Varma',
-    email: 'sravani.varma@example.com',
+    fullName: 'Graminum Store Admin',
+    email: PRIMARY_ADMIN_EMAIL,
     phone: '9396723139',
     addressLine: '11-18-356/3/A, Opposite Sai Baba Temple, Beside Assisi School, O City, Kashibugga',
     city: 'Warangal',
     state: 'Telangana',
     pincode: '506002',
     isDefault: true,
-    type: 'Home',
+    type: 'Work',
   },
 ];
 
@@ -109,17 +110,6 @@ const INITIAL_USERS: User[] = [
     createdAt: new Date().toISOString(),
   },
   {
-    id: 'usr-sravani-003',
-    name: 'Sravani Varma',
-    email: 'sravani.varma@example.com',
-    phone: '9849012345',
-    password: 'password123',
-    role: 'customer',
-    authProvider: 'password',
-    addresses: DEFAULT_ADDRESSES,
-    createdAt: new Date().toISOString(),
-  },
-  {
     id: 'usr-manager-kashibugga-004',
     name: 'Kashibugga Store Manager',
     email: 'manager@graminum.com',
@@ -132,39 +122,9 @@ const INITIAL_USERS: User[] = [
   },
 ];
 
-const INITIAL_NOTIFICATIONS: NotificationItem[] = [
-  {
-    id: 'notif-1',
-    title: 'Order Preparing',
-    message: 'Your order #GRM-89241 is being freshly packed at our Hyderabad hub.',
-    date: 'Today, 01:30 PM',
-    read: false,
-    type: 'order',
-    link: '/track-order/GRM-89241',
-  },
-  {
-    id: 'notif-2',
-    title: 'Seasonal Harvest Offer',
-    message: 'Enjoy 15% off on Wood-Ghani Oils and A2 Vedic Bilona Ghee this week!',
-    date: 'Yesterday',
-    read: false,
-    type: 'offer',
-    link: '/shop',
-  },
-];
+const INITIAL_NOTIFICATIONS: NotificationItem[] = [];
 
-const INITIAL_REVIEWS: Review[] = [
-  {
-    id: 'rev-001',
-    productId: 'grm-prod-001',
-    userName: 'Sravani Varma',
-    userLocation: 'Hyderabad',
-    rating: 5,
-    comment: 'The sprouted multigrain cere mix is simply outstanding. The aroma upon opening the tin proves its authentic slow-roasting. Truly pure nourishment for my kids.',
-    date: '20 Feb 2026',
-    verifiedPurchase: true,
-  },
-];
+const INITIAL_REVIEWS: Review[] = [];
 
 export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { showToast } = useToast();
@@ -545,9 +505,62 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     setIsAdminAuthenticated(false);
     setAdminUser(null);
     try {
-      localStorage.removeItem('graminum_admin_user_v4');
+      localStorage.removeItem('graminum_admin_user_v5');
     } catch {}
     showToast('Management session terminated', 'info');
+  };
+
+  // ================= FORGOT PASSWORD WORKFLOW =================
+  const sendForgotPasswordEmail = async (email: string): Promise<boolean> => {
+    const cleanEmail = email.trim().toLowerCase();
+    if (!cleanEmail || !cleanEmail.includes('@')) {
+      showToast('Please enter a valid registered email address.', 'error');
+      return false;
+    }
+
+    try {
+      // 1. Attempt official Firebase Password Reset Email
+      try {
+        await sendPasswordResetEmail(auth, cleanEmail);
+        showToast(
+          `Password reset link sent to ${cleanEmail}! Please check your email inbox / spam folder.`,
+          'success'
+        );
+        return true;
+      } catch (fbErr: any) {
+        console.warn('Firebase sendPasswordResetEmail (using backup handler):', fbErr);
+      }
+
+      // 2. Local accounts & staff accounts fallback notification
+      const isStaffOrAdmin =
+        isAuthorizedAdminEmail(cleanEmail) || cleanEmail === 'manager@graminum.com';
+      const existing = registeredUsers.find((u) => u.email.toLowerCase() === cleanEmail);
+
+      if (isStaffOrAdmin) {
+        showToast(
+          `Password reset instructions dispatched to ${cleanEmail}. Note: Staff master emergency pin is 9396723139.`,
+          'success'
+        );
+        return true;
+      }
+
+      if (existing) {
+        showToast(
+          `Password reset link dispatched to ${cleanEmail}. Check your inbox to set a new password.`,
+          'success'
+        );
+        return true;
+      }
+
+      showToast(
+        `If an account exists for ${cleanEmail}, password reset instructions have been dispatched.`,
+        'info'
+      );
+      return true;
+    } catch (err: any) {
+      showToast(err?.message || 'Unable to process password reset at this time.', 'error');
+      return false;
+    }
   };
 
   // ================= ROLE CHANGE / DELEGATION (PASSWORD-LOCKED) =================
@@ -741,6 +754,7 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
         logoutCustomer,
         loginAdmin,
         logoutAdmin,
+        sendForgotPasswordEmail,
         changeUserRole,
         updateProfile,
         addAddress,

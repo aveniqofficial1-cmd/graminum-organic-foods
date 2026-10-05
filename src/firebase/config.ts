@@ -1,5 +1,5 @@
 import { initializeApp, getApps, getApp } from 'firebase/app';
-import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut } from 'firebase/auth';
+import { getAuth, GoogleAuthProvider, signInWithPopup, signOut as fbSignOut, sendPasswordResetEmail } from 'firebase/auth';
 
 // Firebase configuration for Graminum Organic Foods
 const firebaseConfig = {
@@ -17,4 +17,4 @@ const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({ prompt: 'select_account' });
 
-export { app, auth, googleProvider, signInWithPopup, fbSignOut };
+export { app, auth, googleProvider, signInWithPopup, fbSignOut, sendPasswordResetEmail };

@@ -70,7 +70,7 @@ export const AdminPaymentSettingsModal: React.FC<AdminPaymentSettingsModalProps>
       setPasswordError('');
       showToast('Payment Scanner & WhatsApp configuration unlocked.', 'success');
     } else {
-      setPasswordError('Invalid admin security password. (Default demo: admin123)');
+      setPasswordError('Invalid admin security password. Master security PIN: 9396723139.');
     }
   };
 

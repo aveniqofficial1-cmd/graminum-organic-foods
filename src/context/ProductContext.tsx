@@ -17,7 +17,7 @@ interface ProductContextType {
 
 const ProductContext = createContext<ProductContextType | undefined>(undefined);
 
-const PRODUCTS_STORAGE_KEY = 'graminum_catalog_products_v3';
+const PRODUCTS_STORAGE_KEY = 'graminum_catalog_products_v4';
 
 export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
   const { showToast } = useToast();
@@ -27,24 +27,62 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
       const saved = localStorage.getItem(PRODUCTS_STORAGE_KEY);
       if (saved) {
         const parsed = JSON.parse(saved);
-        if (Array.isArray(parsed) && parsed.length > 0) {
+        if (Array.isArray(parsed)) {
           return parsed;
+        }
+      }
+      // Migrate from v3 if exists
+      const legacyV3 = localStorage.getItem('graminum_catalog_products_v3');
+      if (legacyV3) {
+        const parsedV3 = JSON.parse(legacyV3);
+        if (Array.isArray(parsedV3) && parsedV3.length > 0) {
+          localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(parsedV3));
+          return parsedV3;
         }
       }
     } catch (e) {
       console.error('Error loading products from localStorage', e);
     }
+    // Default initial authentic catalog
+    try {
+      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(INITIAL_PRODUCTS));
+    } catch {
+      // ignore
+    }
     return INITIAL_PRODUCTS;
   });
 
+  // Helper to persist immediately to localStorage
+  const saveToStorage = (updatedProducts: Product[]) => {
+    try {
+      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(updatedProducts));
+    } catch (e) {
+      console.error('Error persisting products to localStorage', e);
+    }
+  };
+
   // Save to localStorage whenever product catalog changes
   useEffect(() => {
-    try {
-      localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(products));
-    } catch (e) {
-      console.error('Error saving products to localStorage', e);
-    }
+    saveToStorage(products);
   }, [products]);
+
+  // Sync products across multiple browser tabs / windows in real time
+  useEffect(() => {
+    const handleStorage = (e: StorageEvent) => {
+      if (e.key === PRODUCTS_STORAGE_KEY && e.newValue) {
+        try {
+          const parsed = JSON.parse(e.newValue);
+          if (Array.isArray(parsed)) {
+            setProducts(parsed);
+          }
+        } catch {
+          // ignore
+        }
+      }
+    };
+    window.addEventListener('storage', handleStorage);
+    return () => window.removeEventListener('storage', handleStorage);
+  }, []);
 
   const categories: ProductCategory[] = [
     'Personal Care',
@@ -76,13 +114,17 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
           .replace(/(^-|-$)/g, ''),
     };
 
-    setProducts((prev) => [newProduct, ...prev]);
+    setProducts((prev) => {
+      const updated = [newProduct, ...prev];
+      saveToStorage(updated);
+      return updated;
+    });
     showToast(`Added "${newProduct.name}" to catalog successfully!`, 'success');
   };
 
   const updateProduct = (productId: string, updatedData: Partial<Product>) => {
-    setProducts((prev) =>
-      prev.map((p) => {
+    setProducts((prev) => {
+      const updated = prev.map((p) => {
         if (p.id === productId) {
           return {
             ...p,
@@ -98,30 +140,41 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
           };
         }
         return p;
-      })
-    );
+      });
+      saveToStorage(updated);
+      return updated;
+    });
     showToast('Product updated successfully!', 'success');
   };
 
   const deleteProduct = (productId: string) => {
     const target = products.find((p) => p.id === productId);
-    setProducts((prev) => prev.filter((p) => p.id !== productId));
+    setProducts((prev) => {
+      const updated = prev.filter((p) => p.id !== productId);
+      saveToStorage(updated);
+      return updated;
+    });
     showToast(`Deleted "${target?.name || 'Product'}" from catalog.`, 'info');
   };
 
   const bulkUploadProducts = (newProducts: Product[], replaceAll: boolean = false) => {
     if (replaceAll) {
       setProducts(newProducts);
+      saveToStorage(newProducts);
       showToast(`Replaced entire catalog with ${newProducts.length} products!`, 'success');
     } else {
-      setProducts((prev) => [...newProducts, ...prev]);
+      setProducts((prev) => {
+        const updated = [...newProducts, ...prev];
+        saveToStorage(updated);
+        return updated;
+      });
       showToast(`Successfully imported ${newProducts.length} new products!`, 'success');
     }
   };
 
   const resetToDefaultCatalog = () => {
     setProducts(INITIAL_PRODUCTS);
-    localStorage.setItem(PRODUCTS_STORAGE_KEY, JSON.stringify(INITIAL_PRODUCTS));
+    saveToStorage(INITIAL_PRODUCTS);
     showToast('Catalog restored to default Graminum organic products!', 'success');
   };
 

@@ -59,6 +59,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
     notifications,
     markNotificationRead,
     userReviews,
+    sendForgotPasswordEmail,
   } = useAuth();
 
   const { orders } = useOrders();
@@ -272,15 +273,24 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
     setIsAddressModalOpen(false);
   };
 
-  const handleForgotPasswordSubmit = (e: React.FormEvent) => {
+  const [isForgotSubmitting, setIsForgotSubmitting] = useState(false);
+
+  const handleForgotPasswordSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!forgotEmail || !forgotEmail.includes('@')) {
       showToast('Please enter your registered email.', 'error');
       return;
     }
-    showToast(`Password reset link sent to ${forgotEmail}! Check your inbox.`, 'success');
-    setIsForgotPasswordOpen(false);
-    setForgotEmail('');
+    setIsForgotSubmitting(true);
+    try {
+      const success = await sendForgotPasswordEmail(forgotEmail);
+      if (success) {
+        setIsForgotPasswordOpen(false);
+        setForgotEmail('');
+      }
+    } finally {
+      setIsForgotSubmitting(false);
+    }
   };
 
   // ================= UNAUTHENTICATED: LOGIN & SIGNUP PORTAL =================
@@ -654,9 +664,10 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                   </button>
                   <button
                     type="submit"
-                    className="flex-1 bg-[#075B2A] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xs cursor-pointer"
+                    disabled={isForgotSubmitting}
+                    className="flex-1 bg-[#075B2A] hover:bg-[#06451F] text-white px-4 py-2 rounded-xl text-xs font-bold shadow-xs cursor-pointer disabled:opacity-60"
                   >
-                    Send Link
+                    {isForgotSubmitting ? 'Sending...' : 'Send Link'}
                   </button>
                 </div>
               </form>

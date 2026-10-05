@@ -10,12 +10,13 @@ import {
   Sparkles,
   KeyRound,
   CheckCircle2,
+  X,
 } from 'lucide-react';
 import { useAuth, PRIMARY_ADMIN_EMAIL } from '../../context/AuthContext';
 import { useToast } from '../../context/ToastContext';
 
 export const AdminLoginPage: React.FC = () => {
-  const { loginAdmin, loginWithGoogle, isAdminAuthenticated } = useAuth();
+  const { loginAdmin, loginWithGoogle, isAdminAuthenticated, sendForgotPasswordEmail } = useAuth();
   const { showToast } = useToast();
   const navigate = useNavigate();
 
@@ -24,6 +25,11 @@ export const AdminLoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
+  // Forgot password modal state
+  const [isForgotModalOpen, setIsForgotModalOpen] = useState(false);
+  const [forgotEmail, setForgotEmail] = useState('');
+  const [isForgotSubmitting, setIsForgotSubmitting] = useState(false);
 
   // If already logged in as admin, redirect to admin console
   React.useEffect(() => {
@@ -54,6 +60,25 @@ export const AdminLoginPage: React.FC = () => {
       }
     } finally {
       setIsGoogleLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!forgotEmail || !forgotEmail.includes('@')) {
+      showToast('Please enter a valid administrator email address.', 'error');
+      return;
+    }
+
+    setIsForgotSubmitting(true);
+    try {
+      const success = await sendForgotPasswordEmail(forgotEmail);
+      if (success) {
+        setIsForgotModalOpen(false);
+        setForgotEmail('');
+      }
+    } finally {
+      setIsForgotSubmitting(false);
     }
   };
 
@@ -139,9 +164,21 @@ export const AdminLoginPage: React.FC = () => {
           </div>
 
           <div>
-            <label className="block text-xs font-bold text-[#18251B] mb-1.5">
-              Admin Password
-            </label>
+            <div className="flex items-center justify-between mb-1.5">
+              <label className="block text-xs font-bold text-[#18251B]">
+                Admin Password
+              </label>
+              <button
+                type="button"
+                onClick={() => {
+                  setForgotEmail(email);
+                  setIsForgotModalOpen(true);
+                }}
+                className="text-[11px] text-[#075B2A] font-bold hover:underline cursor-pointer"
+              >
+                Forgot Password?
+              </button>
+            </div>
             <div className="relative">
               <input
                 type={showPassword ? 'text' : 'password'}
@@ -200,6 +237,73 @@ export const AdminLoginPage: React.FC = () => {
           </Link>
         </div>
       </div>
+
+      {/* FORGOT PASSWORD MODAL */}
+      {isForgotModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            className="fixed inset-0 bg-black/50 backdrop-blur-xs"
+            onClick={() => setIsForgotModalOpen(false)}
+          ></div>
+
+          <div className="relative bg-white rounded-3xl p-6 sm:p-8 max-w-sm w-full z-10 shadow-2xl space-y-4 border border-[#E1E9DC]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#E1E9DC]">
+              <div className="flex items-center gap-2">
+                <KeyRound className="w-5 h-5 text-[#075B2A]" />
+                <h3 className="text-sm sm:text-base font-bold text-[#075B2A] font-serif-title">
+                  Staff Password Reset
+                </h3>
+              </div>
+              <button
+                onClick={() => setIsForgotModalOpen(false)}
+                className="text-gray-400 hover:text-gray-700 cursor-pointer p-1 rounded-lg hover:bg-gray-100"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-gray-600 leading-relaxed">
+              Enter your registered administrator or store manager email address. A secure reset link will be dispatched to your inbox via Firebase Authentication.
+            </p>
+
+            <form onSubmit={handleForgotPassword} className="space-y-4">
+              <div>
+                <label className="block text-xs font-bold text-[#18251B] mb-1">
+                  Registered Staff Email
+                </label>
+                <div className="relative">
+                  <input
+                    type="email"
+                    required
+                    placeholder="maheshkolipaka96@gmail.com"
+                    value={forgotEmail}
+                    onChange={(e) => setForgotEmail(e.target.value)}
+                    className="w-full bg-[#FBF8EF] text-xs pl-10 pr-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
+                  />
+                  <Mail className="w-4 h-4 text-gray-400 absolute left-3 top-1/2 -translate-y-1/2" />
+                </div>
+              </div>
+
+              <div className="flex gap-2 pt-2">
+                <button
+                  type="button"
+                  onClick={() => setIsForgotModalOpen(false)}
+                  className="flex-1 px-4 py-2.5 rounded-xl text-xs font-bold text-gray-600 hover:bg-gray-100 border border-gray-200 cursor-pointer"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isForgotSubmitting}
+                  className="flex-1 bg-[#075B2A] hover:bg-[#06451F] text-white px-4 py-2.5 rounded-xl text-xs font-bold shadow-md cursor-pointer disabled:opacity-60 flex items-center justify-center gap-1.5"
+                >
+                  {isForgotSubmitting ? 'Sending...' : 'Send Reset Link'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

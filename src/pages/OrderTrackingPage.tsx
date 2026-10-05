@@ -47,7 +47,9 @@ export const OrderTrackingPage: React.FC = () => {
     ? getOrderById(orderId)
     : userOrders.length > 0
     ? userOrders[0]
-    : getOrderById('GRM-89241');
+    : orders.length > 0
+    ? orders[0]
+    : undefined;
 
   const [currentOrder, setCurrentOrder] = useState(initialOrder);
 

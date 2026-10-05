@@ -30,18 +30,49 @@ export const AdminDashboardPage: React.FC = () => {
   // Low stock products filter (< 15 units)
   const lowStockItems = products.filter((p: Product) => p.stock < 15);
 
-  // Weekly Revenue Mock Visual Bar Data
-  const weeklyData = [
-    { day: 'Mon', revenue: 14200, orders: 12 },
-    { day: 'Tue', revenue: 18900, orders: 15 },
-    { day: 'Wed', revenue: 22400, orders: 19 },
-    { day: 'Thu', revenue: 19800, orders: 16 },
-    { day: 'Fri', revenue: 26500, orders: 22 },
-    { day: 'Sat', revenue: 34100, orders: 28 },
-    { day: 'Sun', revenue: 38900, orders: 32 },
-  ];
+  // Dynamic Weekly Revenue and Orders Data (Last 7 days ending today)
+  const daysOfWeek = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+  const today = new Date();
 
-  const maxRevenue = Math.max(...weeklyData.map((d) => d.revenue));
+  const last7Days = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(today.getDate() - (6 - i));
+    const yyyy = d.getFullYear();
+    const mm = String(d.getMonth() + 1).padStart(2, '0');
+    const dd = String(d.getDate()).padStart(2, '0');
+    return {
+      dateStr: `${yyyy}-${mm}-${dd}`,
+      dayName: daysOfWeek[d.getDay()],
+      fullDateStr: d.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short' }),
+    };
+  });
+
+  const weeklyData = last7Days.map(({ dateStr, dayName }) => {
+    const dayOrders = orders.filter((o) => {
+      const orderDate = (o.createdAt || '').split('T')[0];
+      return orderDate === dateStr && o.orderStatus !== 'Cancelled';
+    });
+    const dayRevenue = dayOrders
+      .filter((o) => o.paymentStatus === 'Verified')
+      .reduce((sum, o) => sum + o.grandTotal, 0);
+    return {
+      day: dayName,
+      revenue: dayRevenue,
+      orders: dayOrders.length,
+    };
+  });
+
+  const maxRevenue = Math.max(...weeklyData.map((d) => d.revenue), 1000);
+
+  // Peak day calculation
+  const peakDayObj = [...weeklyData].sort((a, b) => b.revenue - a.revenue)[0];
+  const peakDayText =
+    peakDayObj && peakDayObj.revenue > 0
+      ? `${peakDayObj.day} (₹${peakDayObj.revenue.toLocaleString('en-IN')})`
+      : 'No verified sales yet';
+
+  const averageOrderValue =
+    stats.totalOrders > 0 ? Math.round(stats.totalRevenue / stats.totalOrders) : 0;
 
   return (
     <div className="space-y-8">
@@ -123,7 +154,7 @@ export const AdminDashboardPage: React.FC = () => {
           <div className="flex items-baseline justify-between">
             <span className="text-2xl font-black text-[#075B2A]">₹{stats.totalRevenue.toLocaleString('en-IN')}</span>
             <span className="text-[11px] font-bold text-[#4D963C] flex items-center gap-0.5">
-              <TrendingUp className="w-3.5 h-3.5" /> +18.4%
+              <TrendingUp className="w-3.5 h-3.5" /> Live
             </span>
           </div>
           <p className="text-[10px] text-gray-400">Calculated across all verified orders</p>
@@ -142,7 +173,7 @@ export const AdminDashboardPage: React.FC = () => {
           <div className="flex items-baseline justify-between">
             <span className="text-2xl font-black text-[#075B2A]">{stats.totalOrders}</span>
             <span className="text-[11px] font-bold text-[#4D963C] flex items-center gap-0.5">
-              <TrendingUp className="w-3.5 h-3.5" /> +12 this week
+              <TrendingUp className="w-3.5 h-3.5" /> {stats.totalOrders} total
             </span>
           </div>
           <p className="text-[10px] text-gray-400">{stats.pickedUpOrders || stats.deliveredOrders} picked up at store</p>
@@ -204,7 +235,7 @@ export const AdminDashboardPage: React.FC = () => {
               <h2 className="text-base font-bold text-[#075B2A] font-serif-title">
                 Weekly Revenue & Order Momentum
               </h2>
-              <p className="text-xs text-[#667267]">Mon – Sun dispatch sales across Hyderabad</p>
+              <p className="text-xs text-[#667267]">Last 7 days store pickup sales at Kashibugga, Warangal</p>
             </div>
             <div className="flex items-center gap-2 text-xs font-bold">
               <span className="inline-block w-3 h-3 rounded-md bg-[#075B2A]"></span>
@@ -215,7 +246,7 @@ export const AdminDashboardPage: React.FC = () => {
           {/* Bar Chart Mock Container */}
           <div className="h-56 flex items-end justify-between gap-3 pt-4 px-2">
             {weeklyData.map((d, i) => {
-              const heightPercent = Math.round((d.revenue / maxRevenue) * 100);
+              const heightPercent = maxRevenue > 0 ? Math.round((d.revenue / maxRevenue) * 100) : 0;
               return (
                 <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
                   {/* Tooltip on hover */}
@@ -225,8 +256,8 @@ export const AdminDashboardPage: React.FC = () => {
                   {/* Bar */}
                   <div className="w-full bg-[#EFF7E9] rounded-t-xl h-full flex items-end p-1">
                     <div
-                      className="w-full bg-[#075B2A] group-hover:bg-[#4D963C] transition-all rounded-t-lg"
-                      style={{ height: `${heightPercent}%` }}
+                      className="w-full bg-[#075B2A] group-hover:bg-[#4D963C] transition-all rounded-t-lg min-h-[4px]"
+                      style={{ height: `${Math.max(heightPercent, 4)}%` }}
                     ></div>
                   </div>
                   {/* Day Label */}
@@ -237,8 +268,8 @@ export const AdminDashboardPage: React.FC = () => {
           </div>
 
           <div className="pt-2 border-t border-[#E1E9DC] flex items-center justify-between text-xs text-[#667267]">
-            <span>Average Order Value: <strong>₹{Math.round(stats.totalRevenue / (stats.totalOrders || 1))}</strong></span>
-            <span>Peak Day: <strong>Sunday (₹38,900)</strong></span>
+            <span>Average Order Value: <strong>₹{averageOrderValue.toLocaleString('en-IN')}</strong></span>
+            <span>Peak Day: <strong>{peakDayText}</strong></span>
           </div>
         </div>
 
@@ -325,60 +356,72 @@ export const AdminDashboardPage: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-[#E1E9DC]">
-              {orders.slice(0, 5).map((order) => (
-                <tr key={order.id} className="hover:bg-[#FBF8EF]/60 transition-colors">
-                  <td className="py-3 px-3 font-bold text-[#075B2A]">
-                    #{order.orderNumber}
-                  </td>
-                  <td className="py-3 px-3">
-                    <p className="font-bold text-[#18251B]">{order.customerName}</p>
-                    <p className="text-[10px] text-gray-500">{order.customerPhone}</p>
-                  </td>
-                  <td className="py-3 px-3 text-gray-600 font-medium">
-                    {order.items.length} item(s)
-                  </td>
-                  <td className="py-3 px-3 font-bold text-[#075B2A]">
-                    ₹{order.grandTotal}
-                  </td>
-                  <td className="py-3 px-3">
-                    <span
-                      className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                        order.paymentStatus === 'Verified'
-                          ? 'bg-emerald-100 text-emerald-800'
-                          : 'bg-amber-100 text-amber-800'
-                      }`}
-                    >
-                      {order.paymentMethod} ({order.paymentStatus})
-                    </span>
-                  </td>
-                  <td className="py-3 px-3">
-                    <select
-                      value={order.orderStatus}
-                      onChange={(e) =>
-                        updateOrderStatus(order.id, e.target.value as OrderStatus)
-                      }
-                      className="bg-[#EFF7E9] text-[#075B2A] border border-[#8CCB55] text-[11px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer"
-                    >
-                      <option value="Order Placed">Order Placed</option>
-                      <option value="Accepted">Accepted</option>
-                      <option value="Preparing at Store">Preparing at Store</option>
-                      <option value="Ready for Pickup">Ready for Pickup</option>
-                      <option value="Picked Up">Picked Up</option>
-                      <option value="Cancelled">Cancelled</option>
-                    </select>
-                  </td>
-                  <td className="py-3 px-3 text-right">
-                    <Link
-                      to={`/track-order/${order.orderNumber}`}
-                      target="_blank"
-                      className="inline-flex items-center gap-1 text-[11px] font-bold text-[#075B2A] hover:underline bg-[#EFF7E9] px-2.5 py-1 rounded-lg"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>Track</span>
-                    </Link>
+              {orders.length === 0 ? (
+                <tr>
+                  <td colSpan={7} className="py-10 text-center text-gray-500">
+                    <Package className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                    <p className="font-bold text-gray-700">No Orders Placed Yet</p>
+                    <p className="text-[11px] text-gray-400">
+                      Live orders placed by customers at checkout will appear here instantly.
+                    </p>
                   </td>
                 </tr>
-              ))}
+              ) : (
+                orders.slice(0, 5).map((order) => (
+                  <tr key={order.id} className="hover:bg-[#FBF8EF]/60 transition-colors">
+                    <td className="py-3 px-3 font-bold text-[#075B2A]">
+                      #{order.orderNumber}
+                    </td>
+                    <td className="py-3 px-3">
+                      <p className="font-bold text-[#18251B]">{order.customerName}</p>
+                      <p className="text-[10px] text-gray-500">{order.customerPhone}</p>
+                    </td>
+                    <td className="py-3 px-3 text-gray-600 font-medium">
+                      {order.items.length} item(s)
+                    </td>
+                    <td className="py-3 px-3 font-bold text-[#075B2A]">
+                      ₹{order.grandTotal}
+                    </td>
+                    <td className="py-3 px-3">
+                      <span
+                        className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                          order.paymentStatus === 'Verified'
+                            ? 'bg-emerald-100 text-emerald-800'
+                            : 'bg-amber-100 text-amber-800'
+                        }`}
+                      >
+                        {order.paymentMethod} ({order.paymentStatus})
+                      </span>
+                    </td>
+                    <td className="py-3 px-3">
+                      <select
+                        value={order.orderStatus}
+                        onChange={(e) =>
+                          updateOrderStatus(order.id, e.target.value as OrderStatus)
+                        }
+                        className="bg-[#EFF7E9] text-[#075B2A] border border-[#8CCB55] text-[11px] font-bold rounded-lg px-2 py-1 focus:outline-none cursor-pointer"
+                      >
+                        <option value="Order Placed">Order Placed</option>
+                        <option value="Accepted">Accepted</option>
+                        <option value="Preparing at Store">Preparing at Store</option>
+                        <option value="Ready for Pickup">Ready for Pickup</option>
+                        <option value="Picked Up">Picked Up</option>
+                        <option value="Cancelled">Cancelled</option>
+                      </select>
+                    </td>
+                    <td className="py-3 px-3 text-right">
+                      <Link
+                        to={`/track-order/${order.orderNumber}`}
+                        target="_blank"
+                        className="inline-flex items-center gap-1 text-[11px] font-bold text-[#075B2A] hover:underline bg-[#EFF7E9] px-2.5 py-1 rounded-lg"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Track</span>
+                      </Link>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
