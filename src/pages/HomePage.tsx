@@ -455,8 +455,8 @@ export const HomePage: React.FC = () => {
             <div className="lg:col-span-6 relative">
               <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-2xl aspect-4/3 sm:aspect-16/10">
                 <img
-                  src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=1000&q=80"
-                  alt="Authentic Indian Traditional Farmer at Farm"
+                  src="/assets/combined_image.jpeg"
+                  alt="Graminum Authentic Organic Products Showcase"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#06451F]/80 via-transparent to-transparent"></div>
