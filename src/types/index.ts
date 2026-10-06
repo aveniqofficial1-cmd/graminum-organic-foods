@@ -99,7 +99,7 @@ export type PaymentMethod =
   | 'Cash on Delivery'
   | 'Manual Transfer (Screenshot)';
 
-export type PaymentStatus = 'Pending' | 'Verified' | 'Failed' | 'Refunded';
+export type PaymentStatus = 'Pending' | 'Verified' | 'Failed' | 'Refunded' | 'Cash on Delivery';
 
 export type DeliveryMethod = 'Store Pickup' | 'Home Delivery';
 

@@ -25,13 +25,14 @@ export const AdminPaymentVerificationPage: React.FC = () => {
   const { settings } = useStoreSettings();
   const { showToast } = useToast();
 
-  // Filter manual transfer / UPI orders
+  // Filter manual transfer / UPI orders (Strictly exclude Cash on Delivery)
   const manualOrders = orders.filter(
     (o) =>
-      o.paymentMethod === 'Manual Transfer (Screenshot)' ||
-      o.paymentMethod === 'UPI / QR Code' ||
-      o.paymentScreenshot !== undefined ||
-      o.paymentUtr !== undefined
+      o.paymentMethod !== 'Cash on Delivery' &&
+      (o.paymentMethod === 'Manual Transfer (Screenshot)' ||
+        o.paymentMethod === 'UPI / QR Code' ||
+        o.paymentScreenshot !== undefined ||
+        o.paymentUtr !== undefined)
   );
 
   const [filterMode, setFilterMode] = useState<'All' | 'Pending' | 'Verified' | 'Failed'>('Pending');

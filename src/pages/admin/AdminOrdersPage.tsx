@@ -20,6 +20,7 @@ import {
   AlertCircle,
   QrCode,
   ExternalLink,
+  Banknote,
 } from 'lucide-react';
 import { useOrders } from '../../context/OrderContext';
 import { useStoreSettings } from '../../context/StoreSettingsContext';
@@ -263,19 +264,39 @@ export const AdminOrdersPage: React.FC = () => {
 
                     {/* Payment Status & Receipt */}
                     <td className="py-3.5 px-3">
-                      <span
-                        className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
-                          order.paymentStatus === 'Verified'
-                            ? 'bg-emerald-100 text-emerald-800'
-                            : 'bg-amber-100 text-amber-900 animate-pulse'
-                        }`}
-                      >
-                        {order.paymentStatus === 'Verified' ? '✓ Verified' : '⏳ Review Pending'}
-                      </span>
-                      {order.paymentUtr && (
-                        <p className="text-[9px] text-gray-500 font-mono mt-0.5 truncate max-w-[100px]">
-                          UTR: {order.paymentUtr}
-                        </p>
+                      {order.paymentMethod === 'Cash on Delivery' ? (
+                        <span
+                          className={`inline-block text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
+                            order.paymentStatus === 'Verified'
+                              ? 'bg-emerald-100 text-emerald-800'
+                              : 'bg-blue-100 text-blue-800'
+                          }`}
+                        >
+                          {order.paymentStatus === 'Verified' ? '✓ Cash Collected' : '💵 Cash on Delivery'}
+                        </span>
+                      ) : (
+                        <>
+                          <span
+                            className={`inline-block text-[10px] font-bold px-2 py-0.5 rounded-full ${
+                              order.paymentStatus === 'Verified'
+                                ? 'bg-emerald-100 text-emerald-800'
+                                : order.paymentStatus === 'Failed'
+                                ? 'bg-red-100 text-red-800'
+                                : 'bg-amber-100 text-amber-900 animate-pulse'
+                            }`}
+                          >
+                            {order.paymentStatus === 'Verified'
+                              ? '✓ Verified'
+                              : order.paymentStatus === 'Failed'
+                              ? '✗ Rejected'
+                              : '⏳ Review Pending'}
+                          </span>
+                          {order.paymentUtr && (
+                            <p className="text-[9px] text-gray-500 font-mono mt-0.5 truncate max-w-[100px]">
+                              UTR: {order.paymentUtr}
+                            </p>
+                          )}
+                        </>
                       )}
                     </td>
 
@@ -379,76 +400,153 @@ export const AdminOrdersPage: React.FC = () => {
               </div>
             </div>
 
-            {/* Payment Verification & Screenshot Panel */}
-            <div className="p-4 rounded-2xl bg-[#EFF7E9] border border-[#8CCB55] space-y-3">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <QrCode className="w-5 h-5 text-[#075B2A]" />
-                  <span className="text-xs font-bold text-[#075B2A]">
-                    Payment Verification (UPI QR Scanner)
+            {/* Payment Panel */}
+            {selectedOrder.paymentMethod === 'Cash on Delivery' ? (
+              <div className="p-4 rounded-2xl bg-[#EFF7E9] border border-[#8CCB55] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <Banknote className="w-5 h-5 text-[#075B2A]" />
+                    <span className="text-xs font-bold text-[#075B2A]">
+                      Cash on Delivery (Doorstep Cash Collection)
+                    </span>
+                  </div>
+                  <span
+                    className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-full ${
+                      selectedOrder.paymentStatus === 'Verified'
+                        ? 'bg-emerald-200 text-emerald-900'
+                        : 'bg-blue-200 text-blue-900'
+                    }`}
+                  >
+                    {selectedOrder.paymentStatus === 'Verified' ? '✓ Cash Collected' : '💵 Pay on Delivery'}
                   </span>
                 </div>
-                <span
-                  className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-full ${
-                    selectedOrder.paymentStatus === 'Verified'
-                      ? 'bg-emerald-200 text-emerald-900'
-                      : 'bg-amber-200 text-amber-900'
-                  }`}
-                >
-                  {selectedOrder.paymentStatus === 'Verified' ? '✓ Verified' : '⏳ Review Pending'}
-                </span>
-              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-                <div>
-                  <p className="text-gray-500 text-[11px]">UTR / Ref Number:</p>
-                  <p className="font-mono font-bold text-[#18251B]">
-                    {selectedOrder.paymentUtr || 'Screenshot attached by customer'}
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-500 text-[11px]">Total Paid:</p>
-                  <p className="font-black text-[#075B2A] text-sm">₹{selectedOrder.grandTotal}</p>
-                </div>
-              </div>
-
-              {selectedOrder.paymentScreenshot && (
-                <div className="pt-2">
-                  <p className="text-[11px] font-bold text-gray-700 mb-1.5">Attached Receipt:</p>
-                  <div className="flex items-center gap-3">
-                    <img
-                      src={selectedOrder.paymentScreenshot}
-                      alt="Receipt"
-                      className="w-16 h-16 object-cover rounded-xl border bg-white shadow-xs"
-                    />
-                    <a
-                      href={selectedOrder.paymentScreenshot}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-xs font-bold text-[#075B2A] hover:underline flex items-center gap-1"
-                    >
-                      <ExternalLink className="w-3.5 h-3.5" />
-                      <span>View Full Screenshot</span>
-                    </a>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <p className="text-gray-500 text-[11px]">Payment Mode:</p>
+                    <p className="font-bold text-[#18251B]">Cash on Delivery (Zero Advance)</p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-[11px]">Cash to Collect at Doorstep:</p>
+                    <p className="font-black text-[#075B2A] text-sm">₹{selectedOrder.grandTotal}</p>
                   </div>
                 </div>
-              )}
 
-              {selectedOrder.paymentStatus !== 'Verified' && (
-                <div className="pt-2 border-t border-[#8CCB55]/50 flex items-center justify-between">
-                  <span className="text-[11px] text-gray-600">
-                    Checked bank account / WhatsApp receipt?
-                  </span>
-                  <button
-                    onClick={() => handleApprovePayment(selectedOrder.id)}
-                    className="bg-[#075B2A] hover:bg-[#06451F] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer"
+                <p className="text-[11px] text-[#4D963C] bg-white/70 p-2.5 rounded-xl border border-[#8CCB55]/40 font-medium">
+                  ℹ️ This is a Cash on Delivery order. Customer will pay cash upon receiving the parcel. No advance online payment receipt verification is required.
+                </p>
+
+                {selectedOrder.orderStatus === 'Order Placed' && (
+                  <div className="pt-2 border-t border-[#8CCB55]/50 flex items-center justify-between">
+                    <span className="text-[11px] text-gray-600">
+                      Ready to confirm and pack this COD order?
+                    </span>
+                    <button
+                      onClick={() => {
+                        handleStatusChange(selectedOrder.id, 'Accepted');
+                        showToast('COD Order accepted & queued for packaging!', 'success');
+                      }}
+                      className="bg-[#075B2A] hover:bg-[#06451F] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#8CCB55]" />
+                      <span>Accept Order & Start Packing</span>
+                    </button>
+                  </div>
+                )}
+
+                {selectedOrder.paymentStatus !== 'Verified' &&
+                  (selectedOrder.orderStatus === 'Delivered' || selectedOrder.orderStatus === 'Picked Up') && (
+                    <div className="pt-2 border-t border-[#8CCB55]/50 flex items-center justify-between">
+                      <span className="text-[11px] text-gray-600">
+                        Cash collected from customer?
+                      </span>
+                      <button
+                        onClick={() => handleApprovePayment(selectedOrder.id)}
+                        className="bg-[#075B2A] hover:bg-[#06451F] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <CheckCircle2 className="w-3.5 h-3.5 text-[#8CCB55]" />
+                        <span>Mark ₹{selectedOrder.grandTotal} Cash as Collected</span>
+                      </button>
+                    </div>
+                  )}
+              </div>
+            ) : (
+              <div className="p-4 rounded-2xl bg-[#EFF7E9] border border-[#8CCB55] space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <QrCode className="w-5 h-5 text-[#075B2A]" />
+                    <span className="text-xs font-bold text-[#075B2A]">
+                      Payment Verification (UPI QR Scanner)
+                    </span>
+                  </div>
+                  <span
+                    className={`text-[11px] font-extrabold px-2.5 py-0.5 rounded-full ${
+                      selectedOrder.paymentStatus === 'Verified'
+                        ? 'bg-emerald-200 text-emerald-900'
+                        : selectedOrder.paymentStatus === 'Failed'
+                        ? 'bg-red-200 text-red-900'
+                        : 'bg-amber-200 text-amber-900'
+                    }`}
                   >
-                    <CheckCircle2 className="w-3.5 h-3.5 text-[#8CCB55]" />
-                    <span>Approve Payment & Confirm Order</span>
-                  </button>
+                    {selectedOrder.paymentStatus === 'Verified'
+                      ? '✓ Verified'
+                      : selectedOrder.paymentStatus === 'Failed'
+                      ? '✗ Rejected'
+                      : '⏳ Review Pending'}
+                  </span>
                 </div>
-              )}
-            </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                  <div>
+                    <p className="text-gray-500 text-[11px]">UTR / Ref Number:</p>
+                    <p className="font-mono font-bold text-[#18251B]">
+                      {selectedOrder.paymentUtr || 'Screenshot attached by customer'}
+                    </p>
+                  </div>
+                  <div>
+                    <p className="text-gray-500 text-[11px]">Total Paid:</p>
+                    <p className="font-black text-[#075B2A] text-sm">₹{selectedOrder.grandTotal}</p>
+                  </div>
+                </div>
+
+                {selectedOrder.paymentScreenshot && (
+                  <div className="pt-2">
+                    <p className="text-[11px] font-bold text-gray-700 mb-1.5">Attached Receipt:</p>
+                    <div className="flex items-center gap-3">
+                      <img
+                        src={selectedOrder.paymentScreenshot}
+                        alt="Receipt"
+                        className="w-16 h-16 object-cover rounded-xl border bg-white shadow-xs"
+                      />
+                      <a
+                        href={selectedOrder.paymentScreenshot}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-xs font-bold text-[#075B2A] hover:underline flex items-center gap-1"
+                      >
+                        <ExternalLink className="w-3.5 h-3.5" />
+                        <span>View Full Screenshot</span>
+                      </a>
+                    </div>
+                  </div>
+                )}
+
+                {selectedOrder.paymentStatus !== 'Verified' && (
+                  <div className="pt-2 border-t border-[#8CCB55]/50 flex items-center justify-between">
+                    <span className="text-[11px] text-gray-600">
+                      Checked bank account / WhatsApp receipt?
+                    </span>
+                    <button
+                      onClick={() => handleApprovePayment(selectedOrder.id)}
+                      className="bg-[#075B2A] hover:bg-[#06451F] text-white text-xs font-bold px-4 py-2 rounded-xl shadow-xs flex items-center gap-1.5 cursor-pointer"
+                    >
+                      <CheckCircle2 className="w-3.5 h-3.5 text-[#8CCB55]" />
+                      <span>Approve Payment & Confirm Order</span>
+                    </button>
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* Quick Stage Progression Banner */}
             {getNextStage(selectedOrder) && (

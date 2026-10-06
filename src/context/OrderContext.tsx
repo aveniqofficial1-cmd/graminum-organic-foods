@@ -147,7 +147,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const initialPaymentStatus: PaymentStatus =
       orderData.paymentMethod === 'Cash on Delivery'
-        ? 'Pending'
+        ? 'Cash on Delivery'
         : isManualPayment
         ? 'Pending'
         : 'Verified';
@@ -161,7 +161,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             timestamp: formattedDate,
             description:
               orderData.paymentMethod === 'Cash on Delivery'
-                ? 'Order registered with Cash on Delivery (Pay upon delivery)'
+                ? 'Order registered with Cash on Delivery (Pay ₹' + orderData.grandTotal + ' upon delivery)'
                 : 'Order registered; store payment verification pending',
             completed: true,
           },
@@ -173,7 +173,10 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
                 : isManualPayment
                 ? 'Awaiting verification'
                 : 'Confirmed',
-            description: 'Order confirmed and allocated for packing',
+            description:
+              orderData.paymentMethod === 'Cash on Delivery'
+                ? 'Order confirmed by store and allocated for packing'
+                : 'Order confirmed and allocated for packing',
             completed: false,
           },
           {
@@ -201,7 +204,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             timestamp: formattedDate,
             description:
               orderData.paymentMethod === 'Cash on Delivery'
-                ? 'Order registered; pay at store counter'
+                ? 'Order registered; pay ₹' + orderData.grandTotal + ' at store counter'
                 : isManualPayment
                 ? 'Order registered; store payment verification pending'
                 : 'Order placed successfully and confirmed in store system',
@@ -209,7 +212,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           },
           {
             status: 'Accepted',
-            timestamp: isManualPayment ? 'Awaiting verification' : 'In queue',
+            timestamp: 'In queue',
             description: 'Store verification & item allocation',
             completed: false,
           },
@@ -252,9 +255,12 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
       paymentUtr: orderData.paymentUtr,
       orderStatus: initialOrderStatus,
       timeline,
-      internalAdminNotes: isManualPayment
-        ? ['Manual payment receipt submitted at checkout. Awaiting verification.']
-        : undefined,
+      internalAdminNotes:
+        orderData.paymentMethod === 'Cash on Delivery'
+          ? [`Cash on Delivery order registered. Collect ₹${orderData.grandTotal} in cash upon doorstep delivery.`]
+          : isManualPayment
+          ? ['Manual payment receipt submitted at checkout. Awaiting verification.']
+          : undefined,
       notes: isHomeDelivery
         ? `Online Home Delivery - ${orderData.shippingAddress.city}, ${orderData.shippingAddress.pincode}`
         : 'Direct Store Pickup - Kashibugga Warangal',
@@ -325,9 +331,16 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
             ? [...(order.internalAdminNotes || []), `[${nowStr}] ${adminNote}`]
             : order.internalAdminNotes;
 
+          const isDeliveredOrPickedUp = newStatus === 'Delivered' || newStatus === 'Picked Up';
+          const updatedPaymentStatus: PaymentStatus =
+            isDeliveredOrPickedUp && order.paymentMethod === 'Cash on Delivery'
+              ? 'Verified'
+              : order.paymentStatus;
+
           return {
             ...order,
             orderStatus: newStatus,
+            paymentStatus: updatedPaymentStatus,
             timeline: updatedTimeline,
             internalAdminNotes: notes,
             notes: adminNote || order.notes,
@@ -458,6 +471,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
     const paymentVerificationPending = orders.filter(
       (o) =>
+        o.paymentMethod !== 'Cash on Delivery' &&
         (o.paymentMethod === 'Manual Transfer (Screenshot)' ||
           o.paymentMethod === ('Manual Bank / UPI Transfer' as any) ||
           o.paymentMethod === 'UPI / QR Code') &&
@@ -467,7 +481,13 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     const outOfStockProducts = INITIAL_PRODUCTS.filter((p) => p.stock <= 0).length;
 
     const totalRevenue = orders
-      .filter((o) => o.paymentStatus === 'Verified' && o.orderStatus !== 'Cancelled')
+      .filter(
+        (o) =>
+          (o.paymentStatus === 'Verified' ||
+            (o.paymentMethod === 'Cash on Delivery' &&
+              (o.orderStatus === 'Delivered' || o.orderStatus === 'Picked Up'))) &&
+          o.orderStatus !== 'Cancelled'
+      )
       .reduce((sum, o) => sum + o.grandTotal, 0);
 
     return {
@@ -491,7 +511,13 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
 
   const computedStats = {
     totalRevenue: orders
-      .filter((o) => o.paymentStatus === 'Verified' && o.orderStatus !== 'Cancelled')
+      .filter(
+        (o) =>
+          (o.paymentStatus === 'Verified' ||
+            (o.paymentMethod === 'Cash on Delivery' &&
+              (o.orderStatus === 'Delivered' || o.orderStatus === 'Picked Up'))) &&
+          o.orderStatus !== 'Cancelled'
+      )
       .reduce((sum, o) => sum + o.grandTotal, 0),
     totalOrders: orders.length,
     pendingFulfillment: orders.filter(
@@ -513,7 +539,9 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
     deliveredOrders: orders.filter(
       (o) => o.orderStatus === 'Picked Up' || o.orderStatus === 'Delivered'
     ).length,
-    pendingPaymentVerification: orders.filter((o) => o.paymentStatus === 'Pending').length,
+    pendingPaymentVerification: orders.filter(
+      (o) => o.paymentMethod !== 'Cash on Delivery' && o.paymentStatus === 'Pending'
+    ).length,
   };
 
   return (

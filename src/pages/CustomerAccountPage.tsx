@@ -1048,7 +1048,13 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
 
                         <div className="pt-2 flex items-center justify-between border-t border-gray-100">
                           <span className="text-[11px] text-gray-500">
-                            Payment: <strong>{order.paymentMethod}</strong> ({order.paymentStatus})
+                            Payment: <strong>{order.paymentMethod}</strong> (
+                            {order.paymentMethod === 'Cash on Delivery'
+                              ? order.paymentStatus === 'Verified'
+                                ? 'Cash Paid'
+                                : 'Pay on Delivery'
+                              : order.paymentStatus}
+                            )
                           </span>
                           <Link
                             to={`/track-order/${order.orderNumber}`}

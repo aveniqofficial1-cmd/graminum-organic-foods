@@ -15,6 +15,7 @@ import {
   ExternalLink,
   QrCode,
   Sparkles,
+  Banknote,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { useOrders } from '../context/OrderContext';
@@ -94,7 +95,8 @@ export const OrderConfirmationPage: React.FC = () => {
     );
   }
 
-  const isPendingVerification = order.paymentStatus === 'Pending';
+  const isCOD = order.paymentMethod === 'Cash on Delivery';
+  const isPendingVerification = !isCOD && order.paymentStatus === 'Pending';
   const whatsappUrl = generateWhatsAppOrderUrl(order);
 
   return (
@@ -111,14 +113,17 @@ export const OrderConfirmationPage: React.FC = () => {
           </span>
 
           <h1 className="text-2xl sm:text-4xl font-black text-[#075B2A] font-serif-title mb-2">
-            {isPendingVerification
+            {isCOD
+              ? 'Order Placed & Confirmed!'
+              : isPendingVerification
               ? 'Order Received — Awaiting Admin Payment Approval'
               : 'Order Placed & Confirmed!'}
           </h1>
 
           <p className="text-xs sm:text-sm text-[#667267] max-w-lg mx-auto leading-relaxed">
-            Thank you for choosing pure organic groceries from Graminum. Your order{' '}
-            <strong className="text-[#075B2A]">#{order.orderNumber}</strong> has been registered.
+            {isCOD
+              ? `Thank you for choosing pure organic groceries from Graminum. Your Cash on Delivery order #${order.orderNumber} has been placed. Please pay in cash upon doorstep delivery.`
+              : `Thank you for choosing pure organic groceries from Graminum. Your order #${order.orderNumber} has been registered.`}
           </p>
 
           {/* WhatsApp Direct Action Banner */}
@@ -174,90 +179,126 @@ export const OrderConfirmationPage: React.FC = () => {
               <p className="text-[10px] text-gray-400 font-bold uppercase">Payment Status</p>
               <span
                 className={`inline-block text-[11px] font-bold px-2 py-0.5 rounded-full ${
-                  order.paymentStatus === 'Verified'
+                  isCOD
+                    ? order.paymentStatus === 'Verified'
+                      ? 'bg-emerald-100 text-emerald-800'
+                      : 'bg-blue-100 text-blue-800'
+                    : order.paymentStatus === 'Verified'
                     ? 'bg-emerald-100 text-emerald-800'
                     : 'bg-amber-100 text-amber-800'
                 }`}
               >
-                {order.paymentStatus === 'Verified' ? '✓ Admin Verified' : '⏳ Review Pending'}
+                {isCOD
+                  ? order.paymentStatus === 'Verified'
+                    ? '✓ Cash Collected'
+                    : '💵 Pay on Delivery'
+                  : order.paymentStatus === 'Verified'
+                  ? '✓ Admin Verified'
+                  : '⏳ Review Pending'}
               </span>
             </div>
           </div>
         </div>
 
-        {/* Payment Screenshot & UTR Upload Box */}
-        <div className="bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 space-y-4 shadow-sm">
-          <div className="flex items-start gap-3">
-            <QrCode className="w-6 h-6 text-[#075B2A] shrink-0 mt-0.5" />
-            <div>
-              <h3 className="text-sm sm:text-base font-bold text-[#075B2A] font-serif-title">
-                Payment Verification Screenshot & UTR
-              </h3>
-              <p className="text-xs text-gray-600 leading-relaxed mt-1">
-                Store UPI ID: <strong className="text-[#075B2A] font-mono">{settings.upiId}</strong> ({settings.merchantName}). Upload your payment receipt screenshot or enter the 12-digit UTR reference number if you haven't done so already.
-              </p>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-            <div className="p-4 bg-[#FBF8EF] rounded-2xl border border-[#E1E9DC]">
-              <label className="block text-xs font-bold text-[#18251B] mb-1">
-                Upload Payment Screenshot:
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleReceiptUpload}
-                className="w-full text-xs text-gray-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#075B2A] file:text-white cursor-pointer"
-              />
-            </div>
-
-            <div className="p-4 bg-[#FBF8EF] rounded-2xl border border-[#E1E9DC]">
-              <label className="block text-xs font-bold text-[#18251B] mb-1">
-                Bank UTR / Transaction Reference Number:
-              </label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  placeholder="e.g. 324908129845"
-                  value={utrInput || order.paymentUtr || ''}
-                  onChange={(e) => setUtrInput(e.target.value)}
-                  className="flex-1 bg-white text-xs px-3 py-2 rounded-xl border border-[#E1E9DC]"
-                />
-                <button
-                  onClick={() => {
-                    if (utrInput.trim()) {
-                      uploadPaymentReceipt(order.id, order.paymentScreenshot || '', utrInput.trim());
-                      showToast('UTR reference updated successfully!', 'success');
-                    }
-                  }}
-                  className="bg-[#075B2A] text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-[#06451F] cursor-pointer"
-                >
-                  Save
-                </button>
+        {/* Payment Details Box: Cash on Delivery vs Online UPI Screenshot */}
+        {isCOD ? (
+          <div className="bg-white rounded-3xl border border-[#8CCB55] p-6 sm:p-8 space-y-4 shadow-sm bg-[#EFF7E9]/30">
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-[#EFF7E9] text-[#075B2A] flex items-center justify-center shrink-0 border border-[#8CCB55]">
+                <Banknote className="w-6 h-6 text-[#075B2A]" />
               </div>
-            </div>
-          </div>
-
-          {(order.paymentScreenshot || receiptImage) && (
-            <div className="flex items-center gap-3 p-3 bg-[#EFF7E9] rounded-2xl border border-[#8CCB55]">
-              <img
-                src={order.paymentScreenshot || receiptImage}
-                alt="Receipt Preview"
-                className="w-14 h-14 object-cover rounded-xl border border-[#8CCB55] bg-white shadow-xs"
-              />
-              <div className="flex-1 text-xs">
-                <span className="text-xs text-emerald-800 font-extrabold flex items-center gap-1">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  Receipt Attached to Order #{order.orderNumber}
-                </span>
-                <p className="text-[11px] text-gray-600 mt-0.5">
-                  Our admin will verify this receipt against our bank / WhatsApp ledger and approve your order.
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-[#075B2A] font-serif-title">
+                  Cash on Delivery (Pay upon Doorstep Arrival)
+                </h3>
+                <p className="text-xs text-gray-600 leading-relaxed mt-1">
+                  Zero advance payment required! Please keep <strong className="text-[#075B2A] font-bold text-sm">₹{order.grandTotal}</strong> in cash ready to hand over to the delivery partner when your parcel arrives.
                 </p>
               </div>
             </div>
-          )}
-        </div>
+
+            <div className="p-4 bg-white rounded-2xl border border-[#E1E9DC] flex items-center justify-between text-xs">
+              <div className="flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-[#4D963C]" />
+                <span className="font-bold text-[#18251B]">Doorstep Cash Collection Total:</span>
+              </div>
+              <span className="text-base font-black text-[#075B2A]">₹{order.grandTotal}</span>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-white rounded-3xl border border-[#E1E9DC] p-6 sm:p-8 space-y-4 shadow-sm">
+            <div className="flex items-start gap-3">
+              <QrCode className="w-6 h-6 text-[#075B2A] shrink-0 mt-0.5" />
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-[#075B2A] font-serif-title">
+                  Payment Verification Screenshot & UTR
+                </h3>
+                <p className="text-xs text-gray-600 leading-relaxed mt-1">
+                  Store UPI ID: <strong className="text-[#075B2A] font-mono">{settings.upiId}</strong> ({settings.merchantName}). Upload your payment receipt screenshot or enter the 12-digit UTR reference number if you haven't done so already.
+                </p>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+              <div className="p-4 bg-[#FBF8EF] rounded-2xl border border-[#E1E9DC]">
+                <label className="block text-xs font-bold text-[#18251B] mb-1">
+                  Upload Payment Screenshot:
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleReceiptUpload}
+                  className="w-full text-xs text-gray-700 file:mr-3 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#075B2A] file:text-white cursor-pointer"
+                />
+              </div>
+
+              <div className="p-4 bg-[#FBF8EF] rounded-2xl border border-[#E1E9DC]">
+                <label className="block text-xs font-bold text-[#18251B] mb-1">
+                  Bank UTR / Transaction Reference Number:
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    placeholder="e.g. 324908129845"
+                    value={utrInput || order.paymentUtr || ''}
+                    onChange={(e) => setUtrInput(e.target.value)}
+                    className="flex-1 bg-white text-xs px-3 py-2 rounded-xl border border-[#E1E9DC]"
+                  />
+                  <button
+                    onClick={() => {
+                      if (utrInput.trim()) {
+                        uploadPaymentReceipt(order.id, order.paymentScreenshot || '', utrInput.trim());
+                        showToast('UTR reference updated successfully!', 'success');
+                      }
+                    }}
+                    className="bg-[#075B2A] text-white text-xs font-bold px-4 py-2 rounded-xl hover:bg-[#06451F] cursor-pointer"
+                  >
+                    Save
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            {(order.paymentScreenshot || receiptImage) && (
+              <div className="flex items-center gap-3 p-3 bg-[#EFF7E9] rounded-2xl border border-[#8CCB55]">
+                <img
+                  src={order.paymentScreenshot || receiptImage}
+                  alt="Receipt Preview"
+                  className="w-14 h-14 object-cover rounded-xl border border-[#8CCB55] bg-white shadow-xs"
+                />
+                <div className="flex-1 text-xs">
+                  <span className="text-xs text-emerald-800 font-extrabold flex items-center gap-1">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    Receipt Attached to Order #{order.orderNumber}
+                  </span>
+                  <p className="text-[11px] text-gray-600 mt-0.5">
+                    Our admin will verify this receipt against our bank / WhatsApp ledger and approve your order.
+                  </p>
+                </div>
+              </div>
+            )}
+          </div>
+        )}
 
         {/* Ordered Products Breakdown & Address Details */}
         <div className="grid grid-cols-1 md:grid-cols-12 gap-6">

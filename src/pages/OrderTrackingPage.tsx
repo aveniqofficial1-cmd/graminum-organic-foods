@@ -319,13 +319,19 @@ export const OrderTrackingPage: React.FC = () => {
                       Payment: {currentOrder.paymentMethod}{' '}
                       <span
                         className={
-                          currentOrder.paymentStatus === 'Verified'
+                          currentOrder.paymentMethod === 'Cash on Delivery'
+                            ? currentOrder.paymentStatus === 'Verified'
+                              ? 'text-emerald-700 font-black'
+                              : 'text-[#075B2A] font-bold'
+                            : currentOrder.paymentStatus === 'Verified'
                             ? 'text-emerald-700 font-black'
                             : 'text-amber-700 font-bold'
                         }
                       >
                         {currentOrder.paymentMethod === 'Cash on Delivery'
-                          ? '• Pay upon doorstep delivery'
+                          ? currentOrder.paymentStatus === 'Verified'
+                            ? '• ✓ Cash Collected'
+                            : `• 💵 Pay ₹${currentOrder.grandTotal} upon doorstep delivery`
                           : currentOrder.paymentStatus === 'Verified'
                           ? '• ✓ Verified & Approved by Store Admin'
                           : '• ⏳ Awaiting Store Verification'}

@@ -53,7 +53,12 @@ export const AdminDashboardPage: React.FC = () => {
       return orderDate === dateStr && o.orderStatus !== 'Cancelled';
     });
     const dayRevenue = dayOrders
-      .filter((o) => o.paymentStatus === 'Verified')
+      .filter(
+        (o) =>
+          o.paymentStatus === 'Verified' ||
+          (o.paymentMethod === 'Cash on Delivery' &&
+            (o.orderStatus === 'Delivered' || o.orderStatus === 'Picked Up'))
+      )
       .reduce((sum, o) => sum + o.grandTotal, 0);
     return {
       day: dayName,
