@@ -60,7 +60,7 @@ export const AboutPage: React.FC = () => {
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 <img
                   src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80"
-                  alt="Organic farming soil and sunrise"
+                  alt="Natural farming soil and sunrise"
                   className="rounded-3xl shadow-xl w-full h-[400px] object-cover border-4 border-white"
                 />
 

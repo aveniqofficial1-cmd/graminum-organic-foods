@@ -122,8 +122,8 @@ export const OrderConfirmationPage: React.FC = () => {
 
           <p className="text-xs sm:text-sm text-[#667267] max-w-lg mx-auto leading-relaxed">
             {isCOD
-              ? `Thank you for choosing pure organic groceries from Graminum. Your Cash on Delivery order #${order.orderNumber} has been placed. Please pay in cash upon doorstep delivery.`
-              : `Thank you for choosing pure organic groceries from Graminum. Your order #${order.orderNumber} has been registered.`}
+              ? `Thank you for choosing pure farm produce from Graminum. Your Cash on Delivery order #${order.orderNumber} has been placed. Please pay in cash upon doorstep delivery.`
+              : `Thank you for choosing pure farm produce from Graminum. Your order #${order.orderNumber} has been registered.`}
           </p>
 
           {/* WhatsApp Direct Action Banner */}

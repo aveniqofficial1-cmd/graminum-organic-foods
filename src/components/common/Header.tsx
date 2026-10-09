@@ -235,7 +235,7 @@ export const Header: React.FC = () => {
               {isSearchOpen && searchResults.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-[#E1E9DC] shadow-xl overflow-hidden z-50 p-2">
                   <div className="text-[11px] font-bold text-[#667267] px-3 py-1.5 uppercase tracking-wider">
-                    Matching Organic Products
+                    Matching Farm Products
                   </div>
                   {searchResults.map((product) => (
                     <Link
@@ -409,7 +409,7 @@ export const Header: React.FC = () => {
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
-                placeholder="Search organic products..."
+                placeholder="Search farm products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-[#FBF8EF] text-[#18251B] placeholder-[#667267] text-xs pl-8 pr-4 py-2 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"

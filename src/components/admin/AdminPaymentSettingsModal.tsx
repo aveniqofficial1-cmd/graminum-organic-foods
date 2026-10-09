@@ -146,7 +146,7 @@ export const AdminPaymentSettingsModal: React.FC<AdminPaymentSettingsModalProps>
       ? customQrCodeUrl
       : `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(
           `upi://pay?pa=${encodeURIComponent(upiId || 'graminum@icici')}&pn=${encodeURIComponent(
-            merchantName || 'Graminum Organic'
+            merchantName || 'Graminum Farm Foods'
           )}&cu=INR`
         )}`;
 
@@ -319,7 +319,7 @@ export const AdminPaymentSettingsModal: React.FC<AdminPaymentSettingsModalProps>
                       required
                       value={merchantName}
                       onChange={(e) => setMerchantName(e.target.value)}
-                      placeholder="e.g. Graminum Organic Foods"
+                      placeholder="e.g. Graminum Farm Foods"
                       className="w-full bg-white text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
                     />
                   </div>

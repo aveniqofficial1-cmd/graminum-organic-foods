@@ -152,7 +152,7 @@ export const HomePage: React.FC = () => {
               <div className="inline-flex items-center gap-2 bg-white/90 border border-[#8CCB55] px-3.5 py-1.5 rounded-full shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-[#4D963C] animate-ping"></span>
                 <span className="text-xs font-extrabold text-[#075B2A] uppercase tracking-wider">
-                  100% Certified Organic & Traditional
+                  100% Traditional & Natural Farming
                 </span>
               </div>
 
@@ -421,7 +421,7 @@ export const HomePage: React.FC = () => {
                 Handpicked Farm Fresh
               </span>
               <h2 className="text-2xl sm:text-4xl font-extrabold text-[#075B2A] font-serif-title">
-                Featured Organic Products
+                Featured Farm Products
               </h2>
             </div>
             <Link
@@ -456,7 +456,7 @@ export const HomePage: React.FC = () => {
               <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-2xl aspect-4/3 sm:aspect-16/10">
                 <img
                   src="/assets/combined_image.jpeg"
-                  alt="Graminum Authentic Organic Products Showcase"
+                  alt="Graminum Authentic Farm Products Showcase"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#06451F]/80 via-transparent to-transparent"></div>
@@ -583,7 +583,7 @@ export const HomePage: React.FC = () => {
       <section className="py-14 bg-[#075B2A] text-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <span className="inline-block bg-[#8CCB55] text-[#06451F] text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
-            Switch to Pure Organic Living
+            Switch to Pure Farm Living
           </span>
           <h2 className="text-2xl sm:text-4xl font-black font-serif-title max-w-2xl mx-auto">
             Experience the Authentic Taste of Traditional Indian Farming

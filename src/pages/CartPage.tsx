@@ -41,7 +41,7 @@ export const CartPage: React.FC = () => {
     const clean = couponCode.trim().toUpperCase();
     if (!clean) return;
 
-    if (clean === 'GRAMINUM10' || clean === 'ORGANIC10') {
+    if (clean === 'GRAMINUM10' || clean === 'ORGANIC10' || clean === 'FARM10') {
       const disc = Math.round(subtotal * 0.1);
       setAppliedCoupon(clean);
       setCouponDiscount(disc);
@@ -70,7 +70,7 @@ export const CartPage: React.FC = () => {
             Your Cart is Empty
           </h2>
           <p className="text-xs sm:text-sm text-[#667267] leading-relaxed">
-            Looks like you haven't added any pure organic grains, oils, or traditional mixes yet.
+            Looks like you haven't added any pure farm grains, oils, or traditional mixes yet.
             Explore our harvest catalog and nurture your family's health!
           </p>
           <div className="pt-2">
@@ -79,7 +79,7 @@ export const CartPage: React.FC = () => {
               className="inline-flex items-center gap-2 bg-[#075B2A] hover:bg-[#06451F] text-white text-xs sm:text-sm font-bold px-7 py-3 rounded-2xl shadow-md transition-all active:scale-95"
             >
               <ShoppingBag className="w-4 h-4" />
-              <span>Explore Organic Products</span>
+              <span>Explore Farm Products</span>
             </Link>
           </div>
         </div>

@@ -312,7 +312,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
             </h1>
             <p className="text-xs text-[#667267]">
               {authMode === 'login'
-                ? 'Sign in to access your organic harvest orders & saved addresses.'
+                ? 'Sign in to access your farm harvest orders & saved addresses.'
                 : 'Join our family for 100% natural, authentic farm-fresh groceries.'}
             </p>
           </div>
@@ -589,7 +589,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                   />
                   <span>
                     I agree to Graminum's{' '}
-                    <span className="text-[#075B2A] font-bold">Terms of Organic Purity</span> & Privacy Policy
+                    <span className="text-[#075B2A] font-bold">Terms of Natural Purity</span> & Privacy Policy
                   </span>
                 </label>
               </div>
@@ -956,7 +956,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                         to="/shop"
                         className="inline-block mt-2 text-xs font-bold text-[#075B2A] hover:underline"
                       >
-                        Start shopping pure organic harvests →
+                        Start shopping pure farm harvests →
                       </Link>
                     </div>
                   )}
@@ -1212,7 +1212,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                     Your Verified Reviews
                   </h2>
                   <p className="text-xs text-[#667267]">
-                    Feedback you shared with the Graminum organic community.
+                    Feedback you shared with the Graminum farming community.
                   </p>
                 </div>
 

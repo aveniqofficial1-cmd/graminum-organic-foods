@@ -57,7 +57,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, className = '
           {product.isOrganic && (
             <span className="inline-flex items-center gap-1 bg-[#EFF7E9] text-[#075B2A] text-[11px] font-bold px-2 py-0.5 rounded-full border border-[#8CCB55] shadow-sm">
               <span className="w-1.5 h-1.5 rounded-full bg-[#4D963C]"></span>
-              100% Organic
+              Farm Fresh
             </span>
           )}
           {product.isBestseller && (

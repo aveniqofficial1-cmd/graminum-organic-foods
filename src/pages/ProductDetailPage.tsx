@@ -94,7 +94,7 @@ export const ProductDetailPage: React.FC = () => {
       navigator
         .share({
           title: product.name,
-          text: `Check out ${product.name} on Graminum Organic Foods!`,
+          text: `Check out ${product.name} on Graminum Traditional & Farm Foods!`,
           url: window.location.href,
         })
         .catch(() => {});
@@ -163,7 +163,7 @@ export const ProductDetailPage: React.FC = () => {
                 {product.isOrganic && (
                   <span className="bg-[#EFF7E9] text-[#075B2A] text-xs font-bold px-3 py-1 rounded-full border border-[#8CCB55] shadow-sm flex items-center gap-1.5">
                     <span className="w-2 h-2 rounded-full bg-[#4D963C]"></span>
-                    100% Organic & Native
+                    100% Farm Produce & Native
                   </span>
                 )}
               </div>
@@ -646,7 +646,7 @@ export const ProductDetailPage: React.FC = () => {
                         rows={3}
                         value={reviewComment}
                         onChange={(e) => setReviewComment(e.target.value)}
-                        placeholder="Share your experience with this organic product..."
+                        placeholder="Share your experience with this farm product..."
                         className="w-full bg-white text-xs p-3 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
                       ></textarea>
                     </div>

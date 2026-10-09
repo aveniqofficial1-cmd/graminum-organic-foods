@@ -505,7 +505,7 @@ export const CheckoutPage: React.FC = () => {
                       <div className="space-y-1 text-xs">
                         <div className="flex items-center gap-2">
                           <span className="font-black text-[#075B2A] text-sm">
-                            Graminum Herbal & Organic Store
+                            Graminum Herbal & Farm Store
                           </span>
                           <span className="text-[10px] bg-[#075B2A] text-white px-2 py-0.5 rounded font-bold">
                             Warangal
@@ -755,7 +755,7 @@ export const CheckoutPage: React.FC = () => {
 
                       <p className="text-[11px] text-gray-600 mt-2.5 leading-relaxed">
                         {deliveryMethod === 'Home Delivery'
-                          ? 'Pay in cash to our delivery executive when your organic parcel arrives at your doorstep.'
+                          ? 'Pay in cash to our delivery executive when your farm parcel arrives at your doorstep.'
                           : 'Pay in cash directly at the Graminum Kashibugga Warangal store counter during pickup.'}
                       </p>
                     </button>

@@ -160,7 +160,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     gallery: ['/assets/products/rose-water.jpeg'],
     shortDescription: '100% pure steam-distilled Damask Rose water for skin hydration, toning, and refreshing radiance.',
     fullDescription:
-      'Graminum Pure & Organic Rose Water is produced through traditional steam hydro-distillation of fresh aromatic Indian roses. Free from alcohol, artificial preservatives, and chemical fragrances. Works wonders as a natural skin toner, makeup setting mist, eye coolant, and radiant face refresher.',
+      'Graminum Pure & Natural Rose Water is produced through traditional steam hydro-distillation of fresh aromatic Indian roses. Free from alcohol, artificial preservatives, and chemical fragrances. Works wonders as a natural skin toner, makeup setting mist, eye coolant, and radiant face refresher.',
     ingredients: ['100% Pure Steam Distilled Damask Rose (Rosa damascena) Water'],
     nutritionalInfo: [],
     benefits: [
@@ -298,15 +298,15 @@ export const INITIAL_PRODUCTS: Product[] = [
     reviewCount: 84,
     image: '/assets/products/neem-oil.jpeg',
     gallery: ['/assets/products/neem-oil.jpeg'],
-    shortDescription: '100% pure cold-pressed organic Neem oil for skin therapies, dandruff control, and natural plant care.',
+    shortDescription: '100% pure cold-pressed natural Neem oil for skin therapies, dandruff control, and natural plant care.',
     fullDescription:
-      'Cold pressed from wild organic neem seeds (Azadirachta indica) to preserve high concentrations of Azadirachtin and active limonoids. Renowned for supreme antifungal, antibacterial, and antiviral potency. Ideal for clearing stubborn dandruff, soothing skin eczema and acne, and serving as an organic non-toxic garden bio-pesticide.',
-    ingredients: ['100% Pure Cold Pressed Organic Neem Seed (Azadirachta indica) Oil'],
+      'Cold pressed from wild farm neem seeds (Azadirachta indica) to preserve high concentrations of Azadirachtin and active limonoids. Renowned for supreme antifungal, antibacterial, and antiviral potency. Ideal for clearing stubborn dandruff, soothing skin eczema and acne, and serving as a natural non-toxic garden bio-pesticide.',
+    ingredients: ['100% Pure Cold Pressed Natural Neem Seed (Azadirachta indica) Oil'],
     nutritionalInfo: [],
     benefits: [
       'Eliminates scalp dandruff and stops head itching',
       'Prevents acne, boils, and fungal skin irritations',
-      'Acts as a natural chemical-free organic garden bio-pesticide',
+      'Acts as a natural chemical-free garden bio-pesticide',
       'Powerful natural antibacterial and antiseptic remedy',
     ],
     storageInfo: 'Neem oil may solidify at cooler temperatures; immerse in warm water to liquefy.',
@@ -741,8 +741,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     gallery: ['/assets/products/zing-chip.jpeg'],
     shortDescription: 'Delectable digestive sun-dried ginger flakes with rock salt and lemon for motion sickness and throat soothing.',
     fullDescription:
-      'Crisp, sun-dried thin slices of organic ginger seasoned with natural rock salt and tangy lemon. Chew 1-2 chips before travel or after meals to eliminate nausea, motion sickness, throat irritation, and heavy digestion.',
-    ingredients: ['Organic Fresh Ginger Slices (Zingiber officinale)', 'Lemon Juice', 'Black Salt', 'Rock Salt'],
+      'Crisp, sun-dried thin slices of fresh farm ginger seasoned with natural rock salt and tangy lemon. Chew 1-2 chips before travel or after meals to eliminate nausea, motion sickness, throat irritation, and heavy digestion.',
+    ingredients: ['Fresh Farm Ginger Slices (Zingiber officinale)', 'Lemon Juice', 'Black Salt', 'Rock Salt'],
     nutritionalInfo: [
       { label: 'Key Active', value: 'Gingerol & Shogaol' },
       { label: 'Action', value: 'Anti-nauseant & Digestive' },
@@ -819,7 +819,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     gallery: ['/assets/products/vamu-water.jpeg'],
     shortDescription: 'Pure hydro-distilled Ajwain water for instantaneous relief from gastric bloating, indigestion, and colic.',
     fullDescription:
-      'Graminum Natural Ajwain Water (Vamu Water / Oma Water / Aavani) is prepared through traditional steam distillation of hand-picked organic carom seeds. Acts as an antacid, anticolic, and natural appetiser for infants, nursing mothers, and adults.',
+      'Graminum Natural Ajwain Water (Vamu Water / Oma Water / Aavani) is prepared through traditional steam distillation of hand-picked farm carom seeds. Acts as an antacid, anticolic, and natural appetiser for infants, nursing mothers, and adults.',
     ingredients: ['100% Pure Steam Distilled Ajwain (Trachyspermum ammi) Water'],
     nutritionalInfo: [
       { label: 'Classification', value: 'Ayurvedic Proprietary Medicine' },
@@ -968,8 +968,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     gallery: ['/assets/products/pacha-karpooram.jpeg'],
     shortDescription: '100% pure crystalline edible camphor (Bhimseni) for temple naivedyam, aarti, and sacred rituals.',
     fullDescription:
-      'Pure organic Bhimseni Pacha Karpooram extracted from tree resin (Cinnamomum camphora). Free from toxic synthetic wax or petroleum adulterants. Used in making sacred Tirupati Laddu naivedyam, sacred water (Theertham), and high-vibration divine pooja aarti.',
-    ingredients: ['100% Pure Organic Crystalline Camphor Resin (Pacha Karpooram)'],
+      'Pure natural Bhimseni Pacha Karpooram extracted from tree resin (Cinnamomum camphora). Free from toxic synthetic wax or petroleum adulterants. Used in making sacred Tirupati Laddu naivedyam, sacred water (Theertham), and high-vibration divine pooja aarti.',
+    ingredients: ['100% Pure Natural Crystalline Camphor Resin (Pacha Karpooram)'],
     nutritionalInfo: [],
     benefits: [
       '100% pure, unadulterated edible grade sacred camphor',

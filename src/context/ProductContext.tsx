@@ -175,7 +175,7 @@ export const ProductProvider: React.FC<{ children: ReactNode }> = ({ children })
   const resetToDefaultCatalog = () => {
     setProducts(INITIAL_PRODUCTS);
     saveToStorage(INITIAL_PRODUCTS);
-    showToast('Catalog restored to default Graminum organic products!', 'success');
+    showToast('Catalog restored to default Graminum farm products!', 'success');
   };
 
   return (

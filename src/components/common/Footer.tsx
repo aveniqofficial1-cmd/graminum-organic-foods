@@ -89,7 +89,7 @@ export const Footer: React.FC = () => {
                   GRAMINUM
                 </span>
                 <span className="text-xs text-[#8CCB55] font-telugu font-bold block -mt-1">
-                  గ్రామీణం ఆర్గానిక్ ఫుడ్స్
+                  గ్రామీణం ఫార్మింగ్ ఫుడ్స్
                 </span>
               </div>
             </Link>
@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Column 2: Organic Categories */}
+          {/* Column 2: Farm Categories */}
           <div>
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#8CCB55]"></span>
@@ -272,7 +272,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar: Copyright & Payment badges */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-emerald-200/60">
           <div className="text-center sm:text-left">
-            © {new Date().getFullYear()} Graminum (గ్రామీణం) Organic Foods. All rights reserved.
+            © {new Date().getFullYear()} Graminum (గ్రామీణం) Traditional & Farm Foods. All rights reserved.
           </div>
 
           <div className="flex items-center gap-2 flex-wrap justify-center text-[10px] sm:text-[11px] text-emerald-200/80">

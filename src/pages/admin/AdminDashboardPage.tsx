@@ -91,7 +91,7 @@ export const AdminDashboardPage: React.FC = () => {
             Executive Operations Dashboard
           </h1>
           <p className="text-xs text-[#667267] mt-0.5">
-            Real-time analytics for organic grain dispatches, revenue, and customer fulfillments.
+            Real-time analytics for farm produce dispatches, revenue, and customer fulfillments.
           </p>
         </div>
 

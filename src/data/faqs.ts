@@ -35,7 +35,7 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-6',
     category: 'Delivery',
     question: 'How does store pickup work at Graminum?',
-    answer: 'All orders on Graminum operate via Direct Store Pickup from our flagship store in Warangal. When you place an order, our store team prepares and packs your fresh organic products. Once ready, you will receive a notification to collect your package from our store counter by showing your Order ID.'
+    answer: 'All orders on Graminum operate via Direct Store Pickup from our flagship store in Warangal or Home Delivery. When you place an order, our store team prepares and packs your fresh farm products. Once ready, you will receive a notification to collect your package from our store counter by showing your Order ID or receive doorstep delivery.'
   },
   {
     id: 'faq-7',
@@ -47,7 +47,7 @@ export const FAQ_DATA: FAQItem[] = [
     id: 'faq-8',
     category: 'Delivery',
     question: 'Are there any delivery or packaging fees?',
-    answer: 'No! Store pickup is 100% FREE on all Graminum orders across our entire organic catalog. There are zero extra charges added to your purchase.'
+    answer: 'Store pickup is 100% FREE on all Graminum orders across our entire farm catalog. For home delivery, standard flat shipping rates apply.'
   },
   {
     id: 'faq-9',

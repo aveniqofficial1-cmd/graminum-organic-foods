@@ -160,9 +160,9 @@ export const ShopPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Breadcrumb Header */}
         <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <Breadcrumb items={[{ label: 'Shop Organic Products' }]} />
+          <Breadcrumb items={[{ label: 'Shop Farm Products' }]} />
           <p className="text-xs text-[#667267] font-medium">
-            Showing <strong className="text-[#075B2A]">{filteredProducts.length}</strong> authentic organic items
+            Showing <strong className="text-[#075B2A]">{filteredProducts.length}</strong> authentic farm items
           </p>
         </div>
 
@@ -419,7 +419,7 @@ export const ShopPage: React.FC = () => {
                   🌾
                 </div>
                 <h3 className="text-xl font-bold text-[#18251B] font-serif-title">
-                  No Organic Products Found
+                  No Farm Products Found
                 </h3>
                 <p className="text-xs sm:text-sm text-[#667267] max-w-md mx-auto">
                   We couldn't find any products matching your current filters. Try changing your search query, increasing price limit, or clearing category selections.
