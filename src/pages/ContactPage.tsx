@@ -236,7 +236,7 @@ export const ContactPage: React.FC = () => {
                 <textarea
                   required
                   rows={5}
-                  placeholder="How can we assist you with our farm products?"
+                  placeholder="How can we assist you with our natural products?"
                   value={message}
                   onChange={(e) => setMessage(e.target.value)}
                   className="w-full bg-[#FBF8EF] text-xs p-3.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"

@@ -206,9 +206,9 @@ export const AdminProductsPage: React.FC = () => {
         name: formName.trim(),
         teluguName: formTeluguName.trim() || undefined,
         category: formCategory,
-        fullDescription: formDescription || 'Authentic traditional farm produce from Telugu soil.',
-        shortDescription: formShortDescription || '100% pure farm produce.',
-        ingredients: ingredientsArr.length > 0 ? ingredientsArr : ['100% Pure Farm Ingredients'],
+        fullDescription: formDescription || 'Authentic pure natural produce from traditional origins.',
+        shortDescription: formShortDescription || '100% pure natural product.',
+        ingredients: ingredientsArr.length > 0 ? ingredientsArr : ['100% Pure Natural Ingredients'],
         image: formImage || PRESET_IMAGES[0].url,
         price: priceNum,
         originalPrice: Number(formOriginalPrice) || undefined,
@@ -229,8 +229,8 @@ export const AdminProductsPage: React.FC = () => {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/(^-|-$)/g, ''),
         category: formCategory,
-        fullDescription: formDescription || 'Authentic traditional farm produce from Telugu soil.',
-        shortDescription: formShortDescription || '100% pure farm produce.',
+        fullDescription: formDescription || 'Authentic pure natural produce from traditional origins.',
+        shortDescription: formShortDescription || '100% pure natural product.',
         price: priceNum,
         originalPrice: Number(formOriginalPrice) || undefined,
         packSize: finalPackOptions[0]?.size || '500g',
@@ -245,12 +245,12 @@ export const AdminProductsPage: React.FC = () => {
         isBestseller: formIsBestseller,
         isOrganic: true,
         published: true,
-        ingredients: ingredientsArr.length > 0 ? ingredientsArr : ['100% Pure Farm Produce'],
+        ingredients: ingredientsArr.length > 0 ? ingredientsArr : ['100% Pure Natural Ingredients'],
         nutritionalInfo: [
           { label: 'Energy', value: '340 kcal / 100g' },
           { label: 'Protein', value: '11 g' },
         ],
-        benefits: ['100% pure farm nourishment', 'Zero chemical additives', 'Farm direct'],
+        benefits: ['100% pure natural nourishment', 'Zero chemical additives', 'Traditionally prepared'],
         storageInfo: formStorageInfo,
         shelfLife: formShelfLife,
       });
@@ -272,9 +272,9 @@ export const AdminProductsPage: React.FC = () => {
           if (Array.isArray(parsed)) {
             const sanitized: Product[] = parsed.map((item, idx) => ({
               id: item.id || `grm-json-${Date.now()}-${idx}`,
-              name: item.name || `Farm Harvest ${idx + 1}`,
+              name: item.name || `Natural Product ${idx + 1}`,
               teluguName: item.teluguName || '',
-              slug: item.slug || (item.name || `harvest-${idx}`).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
+              slug: item.slug || (item.name || `product-${idx}`).toLowerCase().replace(/[^a-z0-9]+/g, '-'),
               category: (item.category as ProductCategory) || 'Personal Care',
               price: Number(item.price) || 150,
               originalPrice: item.originalPrice ? Number(item.originalPrice) : undefined,
@@ -288,13 +288,13 @@ export const AdminProductsPage: React.FC = () => {
               reviewCount: Number(item.reviewCount) || 1,
               image: item.image || PRESET_IMAGES[0].url,
               gallery: Array.isArray(item.gallery) ? item.gallery : [item.image || PRESET_IMAGES[0].url],
-              shortDescription: item.shortDescription || '100% Natural Farm Produce',
-              fullDescription: item.fullDescription || 'Traditional chemical-free farm produce.',
-              ingredients: Array.isArray(item.ingredients) ? item.ingredients : ['100% Pure Farm Produce'],
+              shortDescription: item.shortDescription || '100% Authentic Natural Product',
+              fullDescription: item.fullDescription || 'Traditional chemical-free natural produce.',
+              ingredients: Array.isArray(item.ingredients) ? item.ingredients : ['100% Pure Natural Ingredients'],
               nutritionalInfo: Array.isArray(item.nutritionalInfo)
                 ? item.nutritionalInfo
                 : [{ label: 'Energy', value: '350 kcal' }],
-              benefits: Array.isArray(item.benefits) ? item.benefits : ['Pure farm wellness'],
+              benefits: Array.isArray(item.benefits) ? item.benefits : ['Pure natural wellness'],
               storageInfo: item.storageInfo || 'Store in a cool dry place.',
               shelfLife: item.shelfLife || '9 Months',
               isOrganic: true,
@@ -343,8 +343,8 @@ export const AdminProductsPage: React.FC = () => {
             const stock = headers.indexOf('stock') !== -1 ? Number(rowValues[headers.indexOf('stock')]) : 50;
             const packSizes = headers.indexOf('packsizes') !== -1 ? rowValues[headers.indexOf('packsizes')] : '500g, 1kg';
             const image = headers.indexOf('image') !== -1 && rowValues[headers.indexOf('image')] ? rowValues[headers.indexOf('image')] : PRESET_IMAGES[0].url;
-            const shortDesc = headers.indexOf('shortdescription') !== -1 ? rowValues[headers.indexOf('shortdescription')] : '100% natural farm harvest';
-            const fullDesc = headers.indexOf('fulldescription') !== -1 ? rowValues[headers.indexOf('fulldescription')] : 'Sourced directly from native traditional farmers.';
+            const shortDesc = headers.indexOf('shortdescription') !== -1 ? rowValues[headers.indexOf('shortdescription')] : '100% natural product';
+            const fullDesc = headers.indexOf('fulldescription') !== -1 ? rowValues[headers.indexOf('fulldescription')] : 'Prepared from pure natural ingredients.';
             const isFeatured = headers.indexOf('isfeatured') !== -1 ? rowValues[headers.indexOf('isfeatured')].toLowerCase() === 'true' : true;
             const isBestseller = headers.indexOf('isbestseller') !== -1 ? rowValues[headers.indexOf('isbestseller')].toLowerCase() === 'true' : false;
 
@@ -373,7 +373,7 @@ export const AdminProductsPage: React.FC = () => {
               gallery: [image],
               shortDescription: shortDesc,
               fullDescription: fullDesc,
-              ingredients: ['100% Natural Farm Harvest'],
+              ingredients: ['100% Pure Natural Ingredients'],
               nutritionalInfo: [
                 { label: 'Energy', value: '350 kcal' },
                 { label: 'Fiber', value: '8.5 g' },
@@ -924,7 +924,7 @@ export const AdminProductsPage: React.FC = () => {
                   type="text"
                   value={formShortDescription}
                   onChange={(e) => setFormShortDescription(e.target.value)}
-                  placeholder="e.g. 100% unpolished desi foxtail millets from traditional farm soil."
+                  placeholder="e.g. 100% pure authentic natural products."
                   className="w-full bg-[#FBF8EF] text-xs px-3.5 py-2.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
                 />
               </div>
@@ -938,7 +938,7 @@ export const AdminProductsPage: React.FC = () => {
                   rows={3}
                   value={formDescription}
                   onChange={(e) => setFormDescription(e.target.value)}
-                  placeholder="Elaborate on the farm origins, processing techniques, and health benefits..."
+                  placeholder="Elaborate on the ingredients, traditional processing techniques, and health benefits..."
                   className="w-full bg-[#FBF8EF] text-xs p-3.5 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"
                 ></textarea>
               </div>

@@ -300,7 +300,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     gallery: ['/assets/products/neem-oil.jpeg'],
     shortDescription: '100% pure cold-pressed natural Neem oil for skin therapies, dandruff control, and natural plant care.',
     fullDescription:
-      'Cold pressed from wild farm neem seeds (Azadirachta indica) to preserve high concentrations of Azadirachtin and active limonoids. Renowned for supreme antifungal, antibacterial, and antiviral potency. Ideal for clearing stubborn dandruff, soothing skin eczema and acne, and serving as a natural non-toxic garden bio-pesticide.',
+      'Cold pressed from wild natural neem seeds (Azadirachta indica) to preserve high concentrations of Azadirachtin and active limonoids. Renowned for supreme antifungal, antibacterial, and antiviral potency. Ideal for clearing stubborn dandruff, soothing skin eczema and acne, and serving as a natural non-toxic garden bio-pesticide.',
     ingredients: ['100% Pure Cold Pressed Natural Neem Seed (Azadirachta indica) Oil'],
     nutritionalInfo: [],
     benefits: [
@@ -741,8 +741,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     gallery: ['/assets/products/zing-chip.jpeg'],
     shortDescription: 'Delectable digestive sun-dried ginger flakes with rock salt and lemon for motion sickness and throat soothing.',
     fullDescription:
-      'Crisp, sun-dried thin slices of fresh farm ginger seasoned with natural rock salt and tangy lemon. Chew 1-2 chips before travel or after meals to eliminate nausea, motion sickness, throat irritation, and heavy digestion.',
-    ingredients: ['Fresh Farm Ginger Slices (Zingiber officinale)', 'Lemon Juice', 'Black Salt', 'Rock Salt'],
+      'Crisp, sun-dried thin slices of natural ginger seasoned with natural rock salt and tangy lemon. Chew 1-2 chips before travel or after meals to eliminate nausea, motion sickness, throat irritation, and heavy digestion.',
+    ingredients: ['Natural Fresh Ginger Slices (Zingiber officinale)', 'Lemon Juice', 'Black Salt', 'Rock Salt'],
     nutritionalInfo: [
       { label: 'Key Active', value: 'Gingerol & Shogaol' },
       { label: 'Action', value: 'Anti-nauseant & Digestive' },
@@ -819,7 +819,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     gallery: ['/assets/products/vamu-water.jpeg'],
     shortDescription: 'Pure hydro-distilled Ajwain water for instantaneous relief from gastric bloating, indigestion, and colic.',
     fullDescription:
-      'Graminum Natural Ajwain Water (Vamu Water / Oma Water / Aavani) is prepared through traditional steam distillation of hand-picked farm carom seeds. Acts as an antacid, anticolic, and natural appetiser for infants, nursing mothers, and adults.',
+      'Graminum Natural Ajwain Water (Vamu Water / Oma Water / Aavani) is prepared through traditional steam distillation of hand-picked natural carom seeds. Acts as an antacid, anticolic, and natural appetiser for infants, nursing mothers, and adults.',
     ingredients: ['100% Pure Steam Distilled Ajwain (Trachyspermum ammi) Water'],
     nutritionalInfo: [
       { label: 'Classification', value: 'Ayurvedic Proprietary Medicine' },

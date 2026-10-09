@@ -182,7 +182,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           {
             status: 'Preparing',
             timestamp: 'Estimated within 2-4 hours',
-            description: 'Fresh farm packaging and quality inspection',
+            description: 'Pure natural packaging and quality inspection',
             completed: false,
           },
           {
@@ -219,7 +219,7 @@ export const OrderProvider: React.FC<{ children: ReactNode }> = ({ children }) =
           {
             status: 'Preparing at Store',
             timestamp: 'Estimated within 1-2 hours',
-            description: 'Fresh farm packaging & assembling at Kashibugga store',
+            description: 'Pure natural packaging & assembling at Kashibugga store',
             completed: false,
           },
           {

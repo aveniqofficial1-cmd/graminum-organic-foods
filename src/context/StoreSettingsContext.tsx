@@ -59,7 +59,7 @@ export const StoreSettingsProvider: React.FC<{ children: ReactNode }> = ({ child
     }
     const upiUri = `upi://pay?pa=${encodeURIComponent(settings.upiId)}&pn=${encodeURIComponent(
       settings.merchantName
-    )}&am=${amount !== undefined ? amount : 0}&cu=INR&tn=GraminumFarmOrder`;
+    )}&am=${amount !== undefined ? amount : 0}&cu=INR&tn=GraminumNaturalOrder`;
     return `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUri)}`;
   };
 
@@ -122,10 +122,10 @@ export const StoreSettingsProvider: React.FC<{ children: ReactNode }> = ({ child
       : `*Payment Mode:* Online Mobile Payment (Direct to 9396723139)\n*Total Amount Paid:* ₹${order.grandTotal}${order.paymentUtr ? `\n*UTR / Ref No:* ${order.paymentUtr}` : ''}`;
 
     const requestText = isCOD
-      ? `Namaskaram Graminum Team! I have placed an online home delivery order with Cash on Delivery. Please confirm my order and dispatch fresh farm produce to my doorstep address.`
+      ? `Namaskaram Graminum Team! I have placed an online home delivery order with Cash on Delivery. Please confirm my order and dispatch fresh natural products to my doorstep address.`
       : `Namaskaram Graminum Team! I have placed an order and sent payment of ₹${order.grandTotal} directly to master phone number 9396723139. I am sharing my payment screenshot above. Please verify my receipt and confirm my order.`;
 
-    const message = `🌿 *GRAMINUM TRADITIONAL & FARM STORE — ORDER SUMMARY* 🌿
+    const message = `🌿 *GRAMINUM AUTHENTIC NATURAL PRODUCTS — ORDER SUMMARY* 🌿
 --------------------------------------------------
 *Order ID:* #${order.orderNumber}
 *Date:* ${new Date(order.createdAt).toLocaleDateString('en-IN', {

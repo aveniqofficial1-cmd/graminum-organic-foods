@@ -60,7 +60,7 @@ export const AboutPage: React.FC = () => {
               <div className="relative mx-auto max-w-md lg:max-w-none">
                 <img
                   src="https://images.unsplash.com/photo-1500937386664-56d1dfef3854?auto=format&fit=crop&w=1000&q=80"
-                  alt="Natural farming soil and sunrise"
+                  alt="Authentic natural products herbs and sunrise"
                   className="rounded-3xl shadow-xl w-full h-[400px] object-cover border-4 border-white"
                 />
 
@@ -136,9 +136,9 @@ export const AboutPage: React.FC = () => {
               <div className="w-12 h-12 rounded-2xl bg-[#EFF7E9] text-[#075B2A] flex items-center justify-center">
                 <Sprout className="w-6 h-6 text-[#075B2A]" />
               </div>
-              <h3 className="text-base font-bold text-[#18251B]">Zero Chemical Farming</h3>
+              <h3 className="text-base font-bold text-[#18251B]">100% Pure & Natural</h3>
               <p className="text-xs text-[#667267] leading-relaxed">
-                Grown strictly with Jeevamrutham, Neem-based natural pest management, and natural compost.
+                Prepared strictly with natural ingredients, traditional methods, and zero chemical additives.
               </p>
             </div>
 
@@ -158,9 +158,9 @@ export const AboutPage: React.FC = () => {
               <div className="w-12 h-12 rounded-2xl bg-[#EFF7E9] text-[#075B2A] flex items-center justify-center">
                 <Users className="w-6 h-6 text-[#075B2A]" />
               </div>
-              <h3 className="text-base font-bold text-[#18251B]">Fair Farmer Dignity</h3>
+              <h3 className="text-base font-bold text-[#18251B]">Authentic Sourcing</h3>
               <p className="text-xs text-[#667267] leading-relaxed">
-                Eliminating middlemen allows us to offer 20-30% above market rates directly to our farming families.
+                Direct partnerships and ethical sourcing ensure maximum purity and uncompromising traditional quality.
               </p>
             </div>
 
@@ -257,7 +257,7 @@ export const AboutPage: React.FC = () => {
               to="/shop"
               className="inline-flex items-center gap-2 bg-[#8CCB55] hover:bg-[#4D963C] text-[#06451F] hover:text-white font-extrabold px-8 py-3.5 rounded-2xl shadow-lg transition-all active:scale-95"
             >
-              <span>Explore Farm Harvests</span>
+              <span>Explore Natural Products</span>
               <ArrowRight className="w-4 h-4" />
             </Link>
           </div>

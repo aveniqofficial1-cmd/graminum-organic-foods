@@ -41,7 +41,7 @@ export const CartPage: React.FC = () => {
     const clean = couponCode.trim().toUpperCase();
     if (!clean) return;
 
-    if (clean === 'GRAMINUM10' || clean === 'ORGANIC10' || clean === 'FARM10') {
+    if (clean === 'GRAMINUM10' || clean === 'NATURAL10' || clean === 'ORGANIC10' || clean === 'FARM10') {
       const disc = Math.round(subtotal * 0.1);
       setAppliedCoupon(clean);
       setCouponDiscount(disc);
@@ -70,8 +70,8 @@ export const CartPage: React.FC = () => {
             Your Cart is Empty
           </h2>
           <p className="text-xs sm:text-sm text-[#667267] leading-relaxed">
-            Looks like you haven't added any pure farm grains, oils, or traditional mixes yet.
-            Explore our harvest catalog and nurture your family's health!
+            Looks like you haven't added any pure natural products, herbal oils, or health mixes yet.
+            Explore our catalog and nurture your family's health!
           </p>
           <div className="pt-2">
             <Link
@@ -79,7 +79,7 @@ export const CartPage: React.FC = () => {
               className="inline-flex items-center gap-2 bg-[#075B2A] hover:bg-[#06451F] text-white text-xs sm:text-sm font-bold px-7 py-3 rounded-2xl shadow-md transition-all active:scale-95"
             >
               <ShoppingBag className="w-4 h-4" />
-              <span>Explore Farm Products</span>
+              <span>Explore Natural Products</span>
             </Link>
           </div>
         </div>
@@ -306,7 +306,7 @@ export const CartPage: React.FC = () => {
               <div className="pt-2 text-center text-[11px] text-[#667267] space-y-1">
                 <p className="flex items-center justify-center gap-1.5 font-semibold text-[#075B2A]">
                   <ShieldCheck className="w-3.5 h-3.5 text-[#4D963C]" />
-                  <span>100% Secure Checkout & Native Farm Guarantee</span>
+                  <span>100% Secure Checkout & Natural Products Guarantee</span>
                 </p>
               </div>
             </div>

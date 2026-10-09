@@ -148,11 +148,11 @@ export const HomePage: React.FC = () => {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
             {/* Left Hero Content */}
             <div className="lg:col-span-7 space-y-6 text-center lg:text-left">
-              {/* Organic Badge */}
+              {/* Natural Products Badge */}
               <div className="inline-flex items-center gap-2 bg-white/90 border border-[#8CCB55] px-3.5 py-1.5 rounded-full shadow-xs">
                 <span className="w-2 h-2 rounded-full bg-[#4D963C] animate-ping"></span>
                 <span className="text-xs font-extrabold text-[#075B2A] uppercase tracking-wider">
-                  100% Traditional & Natural Farming
+                  100% Pure & Authentic Natural Products
                 </span>
               </div>
 
@@ -418,10 +418,10 @@ export const HomePage: React.FC = () => {
           <div className="flex flex-col sm:flex-row items-start sm:items-end justify-between mb-10 gap-4">
             <div>
               <span className="text-xs font-extrabold text-[#4D963C] uppercase tracking-wider block mb-1">
-                Handpicked Farm Fresh
+                Handpicked Natural Essentials
               </span>
               <h2 className="text-2xl sm:text-4xl font-extrabold text-[#075B2A] font-serif-title">
-                Featured Farm Products
+                Featured Natural Products
               </h2>
             </div>
             <Link
@@ -456,7 +456,7 @@ export const HomePage: React.FC = () => {
               <div className="relative rounded-3xl overflow-hidden border-4 border-white shadow-2xl aspect-4/3 sm:aspect-16/10">
                 <img
                   src="/assets/combined_image.jpeg"
-                  alt="Graminum Authentic Farm Products Showcase"
+                  alt="Graminum Authentic Natural Products Showcase"
                   className="w-full h-full object-cover"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#06451F]/80 via-transparent to-transparent"></div>
@@ -583,10 +583,10 @@ export const HomePage: React.FC = () => {
       <section className="py-14 bg-[#075B2A] text-white relative overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10 space-y-4">
           <span className="inline-block bg-[#8CCB55] text-[#06451F] text-xs font-black px-3 py-1 rounded-full uppercase tracking-wider">
-            Switch to Pure Farm Living
+            Switch to Pure Natural Living
           </span>
           <h2 className="text-2xl sm:text-4xl font-black font-serif-title max-w-2xl mx-auto">
-            Experience the Authentic Taste of Traditional Indian Farming
+            Experience the Authentic Goodness of Pure Natural Products
           </h2>
           <p className="text-xs sm:text-sm text-emerald-100 max-w-xl mx-auto">
             Order online today for fresh direct store pickup from our Graminum Warangal store counter.

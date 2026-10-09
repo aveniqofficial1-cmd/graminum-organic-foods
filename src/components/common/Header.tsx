@@ -121,7 +121,7 @@ export const Header: React.FC = () => {
               100% PURE & TRADITIONAL
             </span>
             <span className="hidden sm:inline font-medium text-emerald-100 truncate">
-              Direct from Native Indian Farmers • Vedic Cold-Pressed & Chemical-Free Goodness
+              Pure & Authentic Natural Products • Traditional Vedic & Chemical-Free Goodness
             </span>
             <span className="sm:hidden font-medium text-emerald-100 truncate text-[10px]">
               100% Pure Vedic Traditional Living
@@ -235,7 +235,7 @@ export const Header: React.FC = () => {
               {isSearchOpen && searchResults.length > 0 && (
                 <div className="absolute top-full left-0 right-0 mt-2 bg-white rounded-2xl border border-[#E1E9DC] shadow-xl overflow-hidden z-50 p-2">
                   <div className="text-[11px] font-bold text-[#667267] px-3 py-1.5 uppercase tracking-wider">
-                    Matching Farm Products
+                    Matching Natural Products
                   </div>
                   {searchResults.map((product) => (
                     <Link
@@ -409,7 +409,7 @@ export const Header: React.FC = () => {
             <form onSubmit={handleSearchSubmit} className="relative">
               <input
                 type="text"
-                placeholder="Search farm products..."
+                placeholder="Search natural products..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full bg-[#FBF8EF] text-[#18251B] placeholder-[#667267] text-xs pl-8 pr-4 py-2 rounded-xl border border-[#E1E9DC] focus:outline-none focus:border-[#075B2A]"

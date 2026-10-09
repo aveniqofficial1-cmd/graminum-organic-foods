@@ -205,7 +205,7 @@ export const OrderTrackingPage: React.FC = () => {
               Live Order Fulfillment Tracker
             </span>
             <h1 className="text-xl sm:text-3xl font-black text-[#075B2A] font-serif-title">
-              Track Your Farm Order
+              Track Your Order
             </h1>
             <p className="text-xs sm:text-sm text-[#667267]">
               Monitor packaging, doorstep dispatch, and live payment status.
@@ -529,7 +529,7 @@ export const OrderTrackingPage: React.FC = () => {
                   ) : (
                     <div className="p-3.5 bg-[#EFF7E9] rounded-2xl border border-[#8CCB55] space-y-2">
                       <p className="font-black text-[#075B2A] text-xs">
-                        Graminum Herbal & Farm Store
+                        Graminum Herbal & Natural Store
                       </p>
                       <div className="text-xs text-[#18251B] space-y-1">
                         <p className="font-semibold">11-18-356/3/A</p>

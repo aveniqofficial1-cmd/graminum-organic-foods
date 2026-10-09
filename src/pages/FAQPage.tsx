@@ -54,7 +54,7 @@ export const FAQPage: React.FC = () => {
           </h1>
 
           <p className="text-xs sm:text-sm text-[#667267] max-w-lg mx-auto leading-relaxed">
-            Find immediate answers regarding our traditional farming methods, order fulfillment, payment verification, and traditional shelf-life recommendations.
+            Find immediate answers regarding our authentic natural products, order fulfillment, payment verification, and traditional shelf-life recommendations.
           </p>
 
           {/* Search Input Bar */}
@@ -138,7 +138,7 @@ export const FAQPage: React.FC = () => {
         <div className="bg-[#EFF7E9] rounded-3xl border border-[#8CCB55] p-6 sm:p-8 flex flex-col sm:flex-row items-center justify-between gap-6 shadow-xs">
           <div className="space-y-1 text-center sm:text-left">
             <h3 className="text-base font-bold text-[#075B2A] font-serif-title">
-              Still have questions about our farm harvests?
+              Still have questions about our natural products?
             </h3>
             <p className="text-xs text-[#667267]">
               Our customer happiness team in Hyderabad is available Mon-Sat, 9:00 AM - 7:00 PM IST.

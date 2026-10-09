@@ -52,10 +52,10 @@ export const Footer: React.FC = () => {
             </div>
           </div>
           <div className="flex items-center gap-2.5 sm:gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
-            <span className="text-xl sm:text-2xl">🌾</span>
+            <span className="text-xl sm:text-2xl">🌿</span>
             <div>
-              <h4 className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">Direct Farm</h4>
-              <p className="text-[10px] sm:text-[11px] text-emerald-200">Native farmers</p>
+              <h4 className="text-[10px] sm:text-xs font-bold text-white uppercase tracking-wider">100% Natural</h4>
+              <p className="text-[10px] sm:text-[11px] text-emerald-200">Pure formulations</p>
             </div>
           </div>
           <div className="flex items-center gap-2.5 sm:gap-3 p-3 bg-emerald-900/40 rounded-2xl border border-emerald-700/40">
@@ -89,7 +89,7 @@ export const Footer: React.FC = () => {
                   GRAMINUM
                 </span>
                 <span className="text-xs text-[#8CCB55] font-telugu font-bold block -mt-1">
-                  గ్రామీణం ఫార్మింగ్ ఫుడ్స్
+                  గ్రామీణం నేచురల్ ప్రొడక్ట్స్
                 </span>
               </div>
             </Link>
@@ -122,7 +122,7 @@ export const Footer: React.FC = () => {
             </div>
           </div>
 
-          {/* Column 2: Farm Categories */}
+          {/* Column 2: Natural Product Categories */}
           <div>
             <h3 className="text-sm font-bold text-white uppercase tracking-wider mb-4 flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#8CCB55]"></span>
@@ -272,7 +272,7 @@ export const Footer: React.FC = () => {
         {/* Bottom Bar: Copyright & Payment badges */}
         <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-emerald-200/60">
           <div className="text-center sm:text-left">
-            © {new Date().getFullYear()} Graminum (గ్రామీణం) Traditional & Farm Foods. All rights reserved.
+            © {new Date().getFullYear()} Graminum (గ్రామీణం) Authentic Natural Products. All rights reserved.
           </div>
 
           <div className="flex items-center gap-2 flex-wrap justify-center text-[10px] sm:text-[11px] text-emerald-200/80">

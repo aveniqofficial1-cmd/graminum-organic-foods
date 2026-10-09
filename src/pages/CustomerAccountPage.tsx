@@ -312,8 +312,8 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
             </h1>
             <p className="text-xs text-[#667267]">
               {authMode === 'login'
-                ? 'Sign in to access your farm harvest orders & saved addresses.'
-                : 'Join our family for 100% natural, authentic farm-fresh groceries.'}
+                ? 'Sign in to access your natural products orders & saved addresses.'
+                : 'Join our family for 100% pure, authentic natural products.'}
             </p>
           </div>
 
@@ -956,7 +956,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                         to="/shop"
                         className="inline-block mt-2 text-xs font-bold text-[#075B2A] hover:underline"
                       >
-                        Start shopping pure farm harvests →
+                        Start shopping pure natural products →
                       </Link>
                     </div>
                   )}
@@ -1084,7 +1084,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                       Saved Delivery Addresses
                     </h2>
                     <p className="text-xs text-[#667267]">
-                      Manage multiple home, farm, and office destinations.
+                      Manage multiple home and office destinations.
                     </p>
                   </div>
                   <button
@@ -1212,7 +1212,7 @@ export const CustomerAccountPage: React.FC<CustomerAccountPageProps> = ({ initia
                     Your Verified Reviews
                   </h2>
                   <p className="text-xs text-[#667267]">
-                    Feedback you shared with the Graminum farming community.
+                    Feedback you shared with the Graminum natural community.
                   </p>
                 </div>
 
